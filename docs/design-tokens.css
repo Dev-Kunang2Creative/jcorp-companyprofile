@@ -1,0 +1,94 @@
+/*
+ * Token desain — Sweetness Things
+ * Diturunkan dari DESIGN_SYSTEM.md. Jangan mengubah nilai di sini tanpa
+ * memperbarui dokumen itu lebih dulu.
+ *
+ * Berkas ini siap disalin ke resources/css/app.css di Fase 3.
+ */
+
+@theme {
+    /* ---------- Huruf ---------- */
+    --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Jost', ui-sans-serif, system-ui, sans-serif;
+
+    /* ---------- Latar & permukaan ---------- */
+    --color-cream: #FDFBF6;
+    --color-cream-warm: #FBF7EF;
+
+    /* ---------- Titik gradasi ----------
+       grad-deep adalah titik TERGELAP — jadikan acuan saat menguji
+       kontras warna teks baru, bukan putih. */
+    --color-grad-gold: #F7E7C4;
+    --color-grad-blush: #F3E8DC;
+    --color-grad-deep: #EADCC0;
+
+    /* ---------- Emas: tiga peran, jangan ditukar ----------
+       gold      -> logo, garis, ikon besar. TIDAK PERNAH untuk teks (2.32 di gradasi tergelap)
+       gold-mid  -> judul >= 24px di atas putih/krem saja
+       gold-deep -> semua teks emas & latar tombol (5.63 terburuk, 7.64 di putih) */
+    --color-gold: #B28C27;
+    --color-gold-mid: #8A6A15;
+    --color-gold-deep: #6B4F0F;
+    --color-gold-hover: #563F0B;
+
+    /* ---------- Teks ---------- */
+    --color-ink: #2E2A24;
+    --color-ink-soft: #5B5348;
+
+    /* ---------- Garis ---------- */
+    --color-line: #EDE6D8;
+
+    /* ---------- Sudut ---------- */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+}
+
+:root {
+    /* ---------- Kaca ----------
+       Opasitas boleh 0.55–0.78; seluruh rentang sudah diuji lolos AA.
+       glass-fallback WAJIB ditulis sebelum blok @supports. */
+    --glass-bg: rgba(255, 255, 255, 0.68);
+    --glass-blur: 16px;
+    --glass-fallback: #FDFBF6;
+    --glass-border: rgba(255, 255, 255, 0.85);
+    --glass-shadow: 0 8px 32px rgba(90, 72, 40, 0.1);
+
+    /* ---------- Gradasi hero ----------
+       Menempel di sudut, bukan latar penuh — ini yang membedakannya
+       dari gradasi template. */
+    --hero-gradient:
+        radial-gradient(120% 95% at 88% 0%, var(--color-grad-gold) 0%, transparent 56%),
+        radial-gradient(100% 85% at 2% 100%, var(--color-grad-blush) 0%, transparent 60%),
+        var(--color-cream);
+
+    /* ---------- Motif bintang ----------
+       Benang merah dari taburan bintang di logo. Jangan menaikkan
+       opasitasnya, dan jangan menaruhnya di belakang blok teks padat. */
+    --star-motif:
+        radial-gradient(2.5px 2.5px at 12% 26%, rgba(178, 140, 39, 0.30) 50%, transparent 51%),
+        radial-gradient(1.8px 1.8px at 26% 68%, rgba(178, 140, 39, 0.22) 50%, transparent 51%),
+        radial-gradient(2.2px 2.2px at 74% 18%, rgba(178, 140, 39, 0.26) 50%, transparent 51%),
+        radial-gradient(1.6px 1.6px at 88% 62%, rgba(178, 140, 39, 0.20) 50%, transparent 51%),
+        radial-gradient(2px 2px at 55% 88%, rgba(178, 140, 39, 0.18) 50%, transparent 51%);
+}
+
+/*
+ * Pola panel kaca — salin utuh, jangan hanya sebagian.
+ * Cadangan ditulis lebih dulu; tanpa itu browser lama merender panel
+ * transparan penuh dan teksnya tidak terbaca (spec §7 poin 2).
+ */
+.glass-panel {
+    background: var(--glass-fallback);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    border-radius: var(--radius-lg);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .glass-panel {
+        background: var(--glass-bg);
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+    }
+}

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pemeriksaan Logo Sweetness Things</title>
+<style>
+  :root { --gold: #B28C27; --ink: #2E2A24; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px;
+    font: 15px/1.6 system-ui, sans-serif;
+    color: var(--ink); background: #fafaf9;
+  }
+  h1 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: #78716c; margin: 0 0 32px; font-size: 14px; }
+  h2 { font-size: 15px; margin: 32px 0 12px; padding-bottom: 6px; border-bottom: 1px solid #e7e5e4; }
+  .note { font-size: 13px; color: #78716c; margin: 0 0 12px; }
+  .row { display: flex; flex-wrap: wrap; gap: 16px; }
+  .tile {
+    border-radius: 10px; padding: 24px;
+    display: flex; align-items: center; justify-content: center;
+    min-width: 190px; min-height: 190px; flex: 1;
+  }
+  .tile img { max-width: 150px; height: auto; display: block; }
+  .label { font-size: 12px; color: #78716c; margin-top: 6px; text-align: center; }
+  /* Latar uji — inilah yang menentukan apakah masih ada halo putih */
+  .bg-white  { background: #ffffff; border: 1px solid #e7e5e4; }
+  .bg-cream  { background: #FDFBF6; border: 1px solid #e7e5e4; }
+  .bg-grad   { background: linear-gradient(135deg, #FDF6E8 0%, #F3E3C3 45%, #E8D5F0 100%); }
+  .bg-gold   { background: var(--gold); }
+  .bg-dark   { background: #2E2A24; }
+  .bg-check  {
+    background-image:
+      linear-gradient(45deg, #d6d3d1 25%, transparent 25%),
+      linear-gradient(-45deg, #d6d3d1 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #d6d3d1 75%),
+      linear-gradient(-45deg, transparent 75%, #d6d3d1 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    background-color: #fff;
+  }
+  .sizes { display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap;
+           background: #FDFBF6; padding: 24px; border-radius: 10px; border: 1px solid #e7e5e4; }
+  .zoom { background: var(--bg, #fff); border: 1px solid #e7e5e4; border-radius: 10px; padding: 16px; }
+  .zoom img { width: 320px; image-rendering: pixelated; }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .check { background: #fff; border: 1px solid #e7e5e4; border-radius: 10px; padding: 16px 20px; }
+  .check h3 { font-size: 14px; margin: 0 0 8px; }
+  .check ul { margin: 0; padding-left: 18px; font-size: 14px; }
+  .check li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Pemeriksaan Logo — Sweetness Things</h1>
+<p class="sub">Latar putih sudah dihapus dari JPEG asli. Halaman ini untuk memastikan hasilnya benar secara visual, bukan cuma benar secara angka.</p>
+
+<h2>1. Uji halo — logo di atas berbagai latar</h2>
+<p class="note">Yang dicari: garis atau bayangan <strong>keputihan</strong> di sekeliling kurva emas. Kalau ada, berarti sisa latar masih terbawa. Paling mudah terlihat di kotak gelap dan kotak emas.</p>
+<div class="row">
+  <div>
+    <div class="tile bg-white"><img src="/images/brand/sweetness-logo-300.png" alt="Logo di atas putih"></div>
+    <p class="label">Putih polos</p>
+  </div>
+  <div>
+    <div class="tile bg-cream"><img src="/images/brand/sweetness-logo-300.png" alt="Logo di atas krem"></div>
+    <p class="label">Krem</p>
+  </div>
+  <div>
+    <div class="tile bg-grad"><img src="/images/brand/sweetness-logo-300.png" alt="Logo di atas gradasi"></div>
+    <p class="label">Gradasi lembut</p>
+  </div>
+  <div>
+    <div class="tile bg-gold"><img src="/images/brand/sweetness-logo-300.png" alt="Logo di atas emas"></div>
+    <p class="label">Emas #B28C27</p>
+  </div>
+  <div>
+    <div class="tile bg-dark"><img src="/images/brand/sweetness-logo-300.png" alt="Logo di atas gelap"></div>
+    <p class="label">Gelap — paling jujur</p>
+  </div>
+  <div>
+    <div class="tile bg-check"><img src="/images/brand/sweetness-logo-300.png" alt="Logo di atas kotak-kotak"></div>
+    <p class="label">Kotak-kotak transparansi</p>
+  </div>
+</div>
+
+<h2>2. Uji ketajaman — perbesaran 100%</h2>
+<p class="note">Perbesaran tanpa penghalusan. Tepi bergerigi atau bertangga di sini adalah alasan konkret untuk meminta berkas SVG/PNG asli ke pembuat logo (spec §7).</p>
+<div class="grid2">
+  <div class="zoom" style="--bg:#fff">
+    <img src="/images/brand/sweetness-badge-256.png" alt="Perbesaran di atas putih">
+    <p class="label">di atas putih</p>
+  </div>
+  <div class="zoom" style="--bg:#2E2A24">
+    <img src="/images/brand/sweetness-badge-256.png" alt="Perbesaran di atas gelap">
+    <p class="label">di atas gelap</p>
+  </div>
+</div>
+
+<h2>3. Uji ukuran kecil — masih terbaca?</h2>
+<p class="note">Logo ini sangat ornamen. Di ukuran favicon, detail bintang dan sabitnya bisa berubah jadi bercak tak jelas.</p>
+<div class="sizes">
+  <div><img src="/images/brand/sweetness-badge-256.png" width="128" alt="128px"><p class="label">128px — foto profil</p></div>
+  <div><img src="/images/brand/sweetness-badge-96.png" width="64" alt="64px"><p class="label">64px — navigasi</p></div>
+  <div><img src="/images/brand/sweetness-badge-48.png" width="32" alt="32px"><p class="label">32px — favicon</p></div>
+  <div><img src="/images/brand/sweetness-badge-48.png" width="16" alt="16px"><p class="label">16px — tab browser</p></div>
+</div>
+
+<h2>Yang perlu Anda putuskan</h2>
+<div class="check">
+  <h3>Periksa tiga hal ini:</h3>
+  <ul>
+    <li><strong>Halo putih</strong> — ada garis keputihan mengelilingi kurva emas di kotak gelap/emas?</li>
+    <li><strong>Ketajaman tepi</strong> — di perbesaran, kurvanya mulus atau bertangga?</li>
+    <li><strong>Keterbacaan kecil</strong> — di 32px dan 16px, masih terlihat sebagai monogram atau sudah jadi bercak?</li>
+  </ul>
+  <p style="font-size:14px;margin:12px 0 0;color:#78716c">
+    Kalau ada satu saja yang mengganggu, itu alasan konkret untuk meminta berkas <strong>SVG atau PNG latar transparan</strong> ke pembuat logo — bukan kekurangan yang harus dipaksakan lewat pemrosesan otomatis.
+  </p>
+</div>
+
+</body>
+</html>

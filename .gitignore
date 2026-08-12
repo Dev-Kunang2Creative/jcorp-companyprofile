@@ -1,0 +1,59 @@
+# Dependencies
+node_modules/
+/vendor
+
+# Build output
+dist/
+build/
+.next/
+out/
+/public/build
+/public/hot
+/public/storage
+/public/fonts-manifest.dev.json
+/bootstrap/ssr
+
+# Dihasilkan otomatis oleh Wayfinder saat build — jangan di-commit
+/resources/js/actions
+/resources/js/routes
+/resources/js/wayfinder
+
+# Environment & secrets — jangan pernah di-commit
+.env
+.env.*
+!.env.example
+/auth.json
+/storage/*.key
+
+# Log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/storage/pail
+
+# Cache hasil test
+/.phpunit.cache
+.phpunit.result.cache
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+/.fleet
+/.nova
+/.zed
+/.phpactor.json
+
+# Homestead (tidak dipakai — project ini jalan di Laragon)
+Homestead.json
+Homestead.yaml
+
+# Scratch Superpowers (ledger, brief, review package — bukan bagian dari project)
+.superpowers/
