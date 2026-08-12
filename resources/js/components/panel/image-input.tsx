@@ -91,7 +91,7 @@ export default function ImageInput({
                     <img
                         src={shownImage}
                         alt={preview ? 'Pratinjau foto baru' : 'Foto tersimpan'}
-                        className="h-24 w-24 rounded-md border border-border object-cover"
+                        className="h-24 w-24 rounded-lg border border-glass-edge object-cover"
                     />
 
                     <div className="text-sm">
@@ -124,7 +124,7 @@ export default function ImageInput({
                 accept="image/jpeg,image/png,image/webp"
                 required={required}
                 onChange={handleChange}
-                className="block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-2 file:text-sm file:font-medium"
+                className="block w-full text-sm file:mr-3 file:rounded-full file:border file:border-line-strong file:bg-glass-soft file:px-4 file:py-2 file:text-sm file:font-medium file:text-ink"
             />
 
             <p className="text-xs text-muted-foreground">

@@ -42,7 +42,9 @@ export default function BusinessProfile({
                 )}
             </Head>
 
-            <div className="min-h-svh bg-cream font-sans">
+            {/* Tanpa bg: aurora di <body> membentang di seluruh halaman, dan
+                itulah yang dibiaskan setiap panel kaca di atasnya. */}
+            <div className="min-h-svh font-sans">
                 <SiteNav
                     businessName={business.name}
                     logoUrl={business.logo_url}
@@ -93,11 +95,13 @@ export default function BusinessProfile({
                     />
                 )}
 
-                <footer className="bg-ink px-4 py-8 text-center text-[13px] text-[#CFC7B8] md:px-8">
+                {/* Footer ikut terang. Balok gelap di dasar halaman memotong
+                    aurora dan membuat seluruh temanya terbaca setengah jadi. */}
+                <footer className="glass-veil border-t px-4 py-8 text-center text-[13px] text-ink-soft md:px-8">
                     {business.name} — bagian dari{' '}
                     <a
                         href="/"
-                        className="text-[#E8DCC0] underline-offset-4 hover:underline"
+                        className="text-gold-deep underline-offset-4 hover:underline"
                     >
                         J Corp
                     </a>

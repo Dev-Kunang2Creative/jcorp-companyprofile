@@ -21,8 +21,11 @@ export default function Home({ parent, subsidiaries, contact }: HomeProps) {
                 )}
             </Head>
 
-            <div className="min-h-svh bg-cream font-sans">
-                {/* HERO — panel kaca pertama dari tiga yang diizinkan */}
+            {/* Tanpa bg: aurora di <body> membentang di seluruh halaman, dan
+                itulah yang dibiaskan setiap panel kaca di atasnya. */}
+            <div className="min-h-svh font-sans">
+                {/* HERO — gradasinya lebih pekat dari aurora halaman, supaya
+                    tetap jadi titik fokus */}
                 <header
                     className="relative px-4 py-16 md:px-8 md:py-24"
                     style={{ background: 'var(--hero-gradient)' }}
@@ -73,25 +76,27 @@ export default function Home({ parent, subsidiaries, contact }: HomeProps) {
 
                 <main>
                     {parent.description && (
-                        <section className="bg-white px-4 py-12 md:px-8 md:py-16">
+                        <section className="px-4 py-12 md:px-8 md:py-16">
                             <div className="mx-auto max-w-6xl">
-                                <h2 className="mb-6 font-display text-2xl leading-tight font-semibold text-ink md:text-[30px]">
-                                    Tentang J Corp
-                                </h2>
+                                <div className="glass-panel rounded-brand-lg p-6 md:p-9">
+                                    <h2 className="mb-6 font-display text-2xl leading-tight font-semibold text-ink md:text-[30px]">
+                                        Tentang J Corp
+                                    </h2>
 
-                                <div className="max-w-[58ch] space-y-4">
-                                    {parent.description
-                                        .split(/\n\s*\n/)
-                                        .map((p) => p.trim())
-                                        .filter(Boolean)
-                                        .map((paragraph, index) => (
-                                            <p
-                                                key={index}
-                                                className="text-[15px] leading-[1.75] text-ink-soft md:text-[15.5px]"
-                                            >
-                                                {paragraph}
-                                            </p>
-                                        ))}
+                                    <div className="max-w-[58ch] space-y-4">
+                                        {parent.description
+                                            .split(/\n\s*\n/)
+                                            .map((p) => p.trim())
+                                            .filter(Boolean)
+                                            .map((paragraph, index) => (
+                                                <p
+                                                    key={index}
+                                                    className="text-[15px] leading-[1.75] text-ink-soft md:text-[15.5px]"
+                                                >
+                                                    {paragraph}
+                                                </p>
+                                            ))}
+                                    </div>
                                 </div>
                             </div>
                         </section>
@@ -102,10 +107,6 @@ export default function Home({ parent, subsidiaries, contact }: HomeProps) {
                         <section
                             id="usaha"
                             className="px-4 py-12 md:px-8 md:py-16"
-                            style={{
-                                background:
-                                    'linear-gradient(180deg, var(--color-cream) 0%, #FFFFFF 100%)',
-                            }}
                         >
                             <div className="mx-auto max-w-6xl">
                                 <h2 className="mb-2 font-display text-2xl leading-tight font-semibold text-ink md:text-[30px]">
@@ -140,7 +141,9 @@ export default function Home({ parent, subsidiaries, contact }: HomeProps) {
                     )}
                 </main>
 
-                <footer className="bg-ink px-4 py-8 text-center text-[13px] text-[#CFC7B8] md:px-8">
+                {/* Footer ikut terang. Balok gelap di dasar halaman memotong
+                    aurora dan membuat seluruh temanya terbaca setengah jadi. */}
+                <footer className="glass-veil border-t px-4 py-8 text-center text-[13px] text-ink-soft md:px-8">
                     © {new Date().getFullYear()} {parent.name}
                 </footer>
             </div>

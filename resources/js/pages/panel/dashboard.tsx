@@ -35,7 +35,7 @@ export default function PanelDashboard({
                 />
 
                 {business.is_published ? (
-                    <p className="rounded-md border border-border bg-muted/50 p-3 text-sm">
+                    <p className="glass-card rounded-brand-md p-3 text-sm">
                         Profil ini <strong>sudah tayang</strong> dan bisa dibuka
                         publik di{' '}
                         <a
@@ -49,7 +49,7 @@ export default function PanelDashboard({
                         .
                     </p>
                 ) : (
-                    <p className="rounded-md border border-gold/40 bg-cream-warm p-3 text-sm">
+                    <p className="glass-card rounded-brand-md border-gold/40 bg-accent p-3 text-sm">
                         Profil ini <strong>belum diterbitkan</strong> — belum
                         bisa dilihat publik. Kontennya tetap bisa diisi dari
                         sini, dan diterbitkan lewat satu sakelar kalau sudah
@@ -58,7 +58,7 @@ export default function PanelDashboard({
                 )}
 
                 <dl className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-md border border-border p-4">
+                    <div className="glass-card rounded-brand-md p-4">
                         <dt className="text-sm text-muted-foreground">
                             Item katalog
                         </dt>
@@ -75,7 +75,7 @@ export default function PanelDashboard({
                         </Button>
                     </div>
 
-                    <div className="rounded-md border border-border p-4">
+                    <div className="glass-card rounded-brand-md p-4">
                         <dt className="text-sm text-muted-foreground">
                             Foto portfolio
                         </dt>
@@ -95,7 +95,7 @@ export default function PanelDashboard({
                     </div>
                 </dl>
 
-                <section className="rounded-md border border-border p-4">
+                <section className="glass-card rounded-brand-md p-4">
                     <h2 className="mb-1 text-sm font-medium">Info kontak</h2>
                     <p className="mb-3 text-sm text-muted-foreground">
                         Nomor WhatsApp, Instagram, alamat, jam buka, dan sebutan
@@ -107,7 +107,7 @@ export default function PanelDashboard({
                 </section>
 
                 {switchableBusinesses && (
-                    <section className="rounded-md border border-border p-4">
+                    <section className="glass-card rounded-brand-md p-4">
                         <h2 className="mb-1 text-sm font-medium">
                             Pindah anak usaha
                         </h2>

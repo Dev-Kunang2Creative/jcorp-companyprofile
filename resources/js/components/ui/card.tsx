@@ -7,7 +7,9 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
+        // Blur-nya dipasang lewat [data-slot='card'] di app.css, bukan di
+        // sini — supaya komponen ini tetap bisa disalin ulang dari upstream.
+        "bg-card text-card-foreground border-glass-edge flex flex-col gap-6 rounded-2xl border py-6 shadow-glass-sm",
         className
       )}
       {...props}

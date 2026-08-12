@@ -14,10 +14,7 @@ type Props = {
 
 export default function PortfolioSection({ label, items }: Props) {
     return (
-        <section
-            id="portfolio"
-            className="bg-white px-4 py-12 md:px-8 md:py-16"
-        >
+        <section id="portfolio" className="px-4 py-12 md:px-8 md:py-16">
             <div className="mx-auto max-w-6xl">
                 <h2 className="mb-6 font-display text-2xl leading-tight font-semibold text-ink md:text-[30px]">
                     {label}
@@ -30,7 +27,7 @@ export default function PortfolioSection({ label, items }: Props) {
                                 href={item.full_url ?? undefined}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="block overflow-hidden rounded-brand-md border border-line"
+                                className="glass-card block overflow-hidden rounded-brand-md p-1 transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-glass"
                             >
                                 <img
                                     src={item.image_url ?? undefined}
@@ -38,7 +35,7 @@ export default function PortfolioSection({ label, items }: Props) {
                                     // alt tetap bermakna, bukan nama berkas.
                                     alt={item.caption ?? `Hasil kerja ${label}`}
                                     loading="lazy"
-                                    className="aspect-square w-full bg-[#F7F1E4] object-cover"
+                                    className="aspect-square w-full rounded-xl bg-glass-tint object-cover"
                                 />
                             </a>
 

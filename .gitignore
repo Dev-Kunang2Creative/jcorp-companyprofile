@@ -4,14 +4,31 @@ node_modules/
 
 # Build output
 dist/
-build/
 .next/
 out/
-/public/build
 /public/hot
 /public/storage
 /public/fonts-manifest.dev.json
 /bootstrap/ssr
+
+# `build/` sengaja TIDAK di-ignore secara umum: pola tanpa garis miring
+# cocok dengan folder bernama "build" di kedalaman mana pun, termasuk
+# /public/build yang justru ingin kita commit.
+
+# /public/build IKUT DI-COMMIT — hasil `npm run build`.
+#
+# Ini keputusan sadar, bukan kelalaian. Konsekuensinya:
+#
+#   1. Nama berkasnya ber-hash isi, jadi setiap perubahan CSS/TSX
+#      menghasilkan nama baru. Diff-nya tidak pernah bisa dibaca manusia,
+#      dan riwayat repo bertambah ~1 MB tiap kali aset dibangun ulang.
+#   2. WAJIB dibangun ulang sebelum commit kalau ada yang menyentuh
+#      resources/. Kalau lupa, halaman yang tayang masih memakai aset
+#      lama sementara kodenya sudah berubah — dan tidak ada yang
+#      memperingatkan.
+#
+# Karena itu jangan menyunting isi folder ini dengan tangan; jalankan
+# `npm run build` dan commit hasilnya apa adanya.
 
 # Dihasilkan otomatis oleh Wayfinder saat build — jangan di-commit
 /resources/js/actions

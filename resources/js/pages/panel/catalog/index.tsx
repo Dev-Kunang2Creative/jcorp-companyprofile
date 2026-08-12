@@ -15,10 +15,11 @@ import { destroy, store, update } from '@/routes/panel/catalog';
 /**
  * Kelola katalog.
  *
- * Panel sengaja TIDAK memakai gaya glassmorphism halaman publik: admin
- * membuka halaman ini berjam-jam untuk mengisi data, dan efek kaca beserta
- * ruang kosong yang membuat etalase terasa mewah justru memperlambat kerja.
- * Yang tetap sama: warna merek, huruf, dan bahasa.
+ * Sejak revisi 12 Agustus, panel ikut berpermukaan kaca seperti halaman
+ * publik (DESIGN_SYSTEM §5). Yang TIDAK ikut: ruang kosong leganya. Admin
+ * membuka halaman ini berjam-jam untuk mengisi data, dan jarak selega
+ * etalase memperlambat kerja — barisnya tetap rapat, hanya permukaannya
+ * yang berubah.
  *
  * Form tambah dan ubah keduanya modal — daftar item tetap terlihat sebagai
  * isi utama halaman, dan tidak ada form panjang yang mendorong daftarnya ke
@@ -67,7 +68,7 @@ export default function CatalogIndex({ business, items }: Props) {
 
                 <section>
                     {items.length === 0 ? (
-                        <div className="rounded-md border border-dashed border-border p-8 text-center">
+                        <div className="rounded-brand-md border border-dashed border-line-strong p-8 text-center">
                             <p className="text-sm text-muted-foreground">
                                 Belum ada item. Selama katalog kosong,
                                 sectionnya tidak muncul di halaman publik.
@@ -91,7 +92,7 @@ export default function CatalogIndex({ business, items }: Props) {
                                 {items.map((item) => (
                                     <li
                                         key={item.id}
-                                        className="flex items-center gap-4 rounded-md border border-border p-3"
+                                        className="glass-card flex items-center gap-4 rounded-brand-md p-3"
                                     >
                                         {item.thumb_url ? (
                                             <img
@@ -209,7 +210,7 @@ function Fields({
                     defaultValue={item?.description ?? ''}
                     rows={2}
                     maxLength={2000}
-                    className="rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs"
+                    className="glass-field rounded-lg px-3 py-2 text-sm"
                 />
                 <InputError message={errors.description} />
             </div>

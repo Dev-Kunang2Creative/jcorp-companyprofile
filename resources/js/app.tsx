@@ -33,6 +33,7 @@ createInertiaApp({
         );
     },
     progress: {
-        color: '#4B5563',
+        // Emas merek, bukan abu-abu bawaan starter kit.
+        color: '#B28C27',
     },
 });

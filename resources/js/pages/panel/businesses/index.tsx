@@ -90,7 +90,7 @@ export default function BusinessesIndex({ businesses }: Props) {
                     {businesses.map((business) => (
                         <li
                             key={business.id}
-                            className="flex flex-col gap-3 rounded-md border border-border p-3 sm:flex-row sm:items-center sm:justify-between"
+                            className="glass-card flex flex-col gap-3 rounded-brand-md p-3 sm:flex-row sm:items-center sm:justify-between"
                         >
                             <div className="min-w-0">
                                 <p className="font-medium">

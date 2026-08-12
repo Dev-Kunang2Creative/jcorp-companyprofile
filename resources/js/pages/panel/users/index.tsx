@@ -37,7 +37,7 @@ export default function UsersIndex({ users }: Props) {
                     {users.map((user) => (
                         <li
                             key={user.id}
-                            className="flex flex-col gap-1 rounded-md border border-border p-3 sm:flex-row sm:items-center sm:justify-between"
+                            className="glass-card flex flex-col gap-1 rounded-brand-md p-3 sm:flex-row sm:items-center sm:justify-between"
                         >
                             <div className="min-w-0">
                                 <p className="truncate font-medium">
@@ -58,13 +58,13 @@ export default function UsersIndex({ users }: Props) {
                     ))}
                 </ul>
 
-                <section className="rounded-md border border-border bg-muted/40 p-4 text-sm">
+                <section className="glass-card rounded-brand-md p-4 text-sm">
                     <h2 className="mb-2 font-medium">Menambah akun</h2>
                     <p className="mb-3 text-muted-foreground">
                         Akun dibuat lewat terminal, bukan dari halaman ini —
                         supaya password tidak pernah melewati form web:
                     </p>
-                    <code className="block rounded bg-background px-3 py-2 font-mono text-xs">
+                    <code className="glass-field block rounded-lg px-3 py-2 font-mono text-xs">
                         php artisan jcorp:make-admin
                     </code>
                     <p className="mt-3 text-muted-foreground">

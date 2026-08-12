@@ -3,11 +3,12 @@ import WhatsappButton from '@/components/public/whatsapp-button';
 import type { PublicCatalogItem } from '@/types/public';
 
 /**
- * Kartu katalog — latar PADAT, bukan kaca (DESIGN_SYSTEM §5.1).
+ * Kartu katalog — kaca TIPIS (.glass-card), bukan panel penuh.
  *
  * backdrop-filter dihitung ulang saat halaman digulir dan berat bagi HP kelas
- * bawah. Dengan 20 kartu di layar, bedanya terasa. Secara visual nyaris tidak
- * terbedakan dari versi kaca.
+ * bawah; dengan 20 kartu di layar, bedanya terasa. Yang menahan biayanya
+ * bukan menghindari kaca sama sekali, tapi besar blur-nya: .glass-card memakai
+ * 12px (panel 22px) dan turun ke 8px di bawah 768px — lihat app.css.
  *
  * PERATAAN TOMBOL
  * ---------------
@@ -42,11 +43,11 @@ export default function CatalogCard({ item, businessName, whatsapp }: Props) {
     const noteLine = item.formatted_price ? item.price_note : null;
 
     return (
-        <article className="flex h-full flex-col overflow-hidden rounded-brand-md border border-line bg-white transition-shadow hover:shadow-[0_6px_20px_rgb(90_72_40/0.10)]">
+        <article className="glass-card flex h-full flex-col overflow-hidden rounded-brand-md transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-glass">
             {showFallback ? (
                 // Kotak inisial, bukan ikon rusak (spec §10).
                 <div
-                    className="flex aspect-[4/3] shrink-0 items-center justify-center bg-[#F7F1E4] font-display text-[26px] font-semibold text-gold-deep"
+                    className="flex aspect-[4/3] shrink-0 items-center justify-center bg-glass-tint font-display text-[26px] font-semibold text-gold-deep"
                     aria-hidden="true"
                 >
                     {item.initials}
@@ -57,7 +58,7 @@ export default function CatalogCard({ item, businessName, whatsapp }: Props) {
                     alt={item.name}
                     loading="lazy"
                     onError={() => setImageFailed(true)}
-                    className="aspect-[4/3] w-full shrink-0 bg-[#F7F1E4] object-cover"
+                    className="aspect-[4/3] w-full shrink-0 bg-glass-tint object-cover"
                 />
             )}
 

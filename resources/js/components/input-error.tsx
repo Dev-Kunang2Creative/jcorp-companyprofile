@@ -9,7 +9,9 @@ export default function InputError({
     return message ? (
         <p
             {...props}
-            className={cn('text-sm text-red-600 dark:text-red-400', className)}
+            // --destructive #9B2C1F: merah bata yang senada dengan palet
+            // hangat, dan rasionya 6.5 di atas krem — lolos AA.
+            className={cn('text-sm text-destructive', className)}
         >
             {message}
         </p>

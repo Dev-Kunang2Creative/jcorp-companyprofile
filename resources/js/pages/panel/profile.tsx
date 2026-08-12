@@ -46,7 +46,7 @@ export default function PanelBusinessProfile({ business }: Props) {
                 >
                     {({ processing, errors }) => (
                         <>
-                            <section className="grid gap-4 rounded-md border border-border p-4">
+                            <section className="glass-card grid gap-4 rounded-brand-md p-4">
                                 <h2 className="text-sm font-medium">
                                     Cara dihubungi
                                 </h2>
@@ -145,7 +145,7 @@ export default function PanelBusinessProfile({ business }: Props) {
                                 </p>
                             </section>
 
-                            <section className="grid gap-4 rounded-md border border-border p-4">
+                            <section className="glass-card grid gap-4 rounded-brand-md p-4">
                                 <h2 className="text-sm font-medium">
                                     Sebutan section
                                 </h2>

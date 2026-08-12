@@ -1,6 +1,7 @@
 # DESIGN SYSTEM — J Corp Company Profile
 
 **Dibuat:** 11 Agustus 2026 · **Fase 2**
+**Direvisi:** 12 Agustus 2026 — glassmorphism diperluas ke seluruh aplikasi (§5 ditulis ulang)
 **Arah terpilih:** Butik Pâtisserie dengan panel kaca — gabungan arah A dan B
 **Mockup:** [`public/preview/mockup.html`](public/preview/mockup.html)
 
@@ -18,7 +19,7 @@ Yang membedakannya dari template dessert kebanyakan:
 
 - Gradasi menempel di **sudut**, tidak jadi latar penuh — terang tanpa terasa seperti template
 - Serif tebal berkarakter (Fraunces), bukan serif netral
-- Panel kaca **dibatasi tiga per layar** — bukan ditempel di mana-mana
+- Kaca punya **tiga tingkat ketebalan**, bukan satu opasitas yang ditempel rata di mana-mana
 - Motif bintang dari logo dipakai sangat samar sebagai benang merah
 
 ---
@@ -37,6 +38,7 @@ Yang membedakannya dari template dessert kebanyakan:
   /* Titik gradasi */
   --grad-gold:     #F7E7C4;   /* emas muda — sudut terang */
   --grad-blush:    #F3E8DC;   /* krem merah muda */
+  --grad-rose:     #F6E4E0;   /* merah muda pucat — sudut kanan bawah */
   --grad-deep:     #EADCC0;   /* titik TERGELAP — acuan uji kontras */
 
   /* Emas — TIGA PERAN BERBEDA, jangan ditukar (lihat §2.1) */
@@ -50,9 +52,16 @@ Yang membedakannya dari template dessert kebanyakan:
   --ink-soft:      #5B5348;   /* teks sekunder & deskripsi */
   --ink-invert:    #FFFFFF;   /* teks di atas tombol emas */
 
-  /* Garis */
-  --line:          #EDE6D8;   /* garis kartu & pemisah */
-  --line-glass:    rgba(255,255,255,.85);
+  /* Garis — tembus pandang sejak revisi 12 Agu. Garis PADAT memotong
+     permukaan kaca dan membuatnya terbaca sebagai kotak biasa yang
+     kebetulan buram. */
+  --line:          rgba(160,132,74,.18);  /* garis kartu & pemisah */
+  --line-strong:   rgba(160,132,74,.28);  /* garis tombol & kotak isian */
+  --line-glass:    rgba(255,255,255,.70); /* tepi sorot panel kaca */
+
+  /* Merah — untuk pesan galat & tombol hapus. Merah bata, bukan merah
+     layar bawaan: yang terakhir menabrak seluruh palet hangat. */
+  --danger:        #9B2C1F;
 }
 ```
 
@@ -72,21 +81,29 @@ Jadi emasnya dipecah tiga, dengan nada yang sama tapi ketuaan berbeda:
 
 ### 2.2 Hasil pemeriksaan kontras
 
-Semua pasangan yang benar-benar dipakai, diuji pada kondisi terburuk (panel kaca 0,68 di atas titik gradasi tergelap):
+Sejak seluruh aplikasi berpermukaan kaca, ujinya bukan lagi satu opasitas melainkan **tiap tingkat kaca × tiap titik gradasi**. Angka di bawah adalah **yang terburuk** dari seluruh kombinasi itu — termasuk `--grad-deep`, titik tergelap.
+
+Diuji ulang 12 Agustus 2026 dengan tingkat kaca di §5.1:
+
+| Teks | Kaca tipis (0,42) | Kartu (0,52) | Bar (0,55) | Panel (0,62) | Menonjol (0,80) | Syarat | |
+|---|---|---|---|---|---|---|---|
+| `--ink` — judul & teks utama | 12,00 | 12,37 | 12,48 | 12,75 | 13,45 | 4,5 | AAA |
+| `--ink-soft` — teks sekunder | 6,37 | 6,56 | 6,62 | 6,76 | 7,14 | 4,5 | AA |
+| `--gold-deep` — eyebrow, harga, tautan | 6,42 | 6,62 | 6,68 | 6,83 | 7,20 | 4,5 | AA |
+| `--danger` — pesan galat | 6,37 | 6,57 | 6,63 | 6,77 | 7,14 | 4,5 | AA |
+| `--gold-mid` — judul ≥24px saja | 4,25 | 4,39 | 4,43 | 4,52 | 4,77 | **3,0** | lulus |
+
+Pasangan yang tidak bergantung pada kaca:
 
 | Pasangan | Rasio | Syarat | |
 |---|---|---|---|
-| Judul & teks utama di panel kaca | 12,99 | 4,5 | AAA |
-| Teks sekunder di panel kaca | 6,89 | 4,5 | AA |
-| Eyebrow emas di panel kaca | 6,96 | 4,5 | AA |
-| Teks di kartu katalog | 14,26 | 4,5 | AAA |
-| Deskripsi kartu | 7,57 | 4,5 | AAA |
-| Harga & kategori di kartu | 7,64 | 4,5 | AAA |
 | Teks putih di tombol emas | 7,64 | 4,5 | AAA |
 | Teks putih di tombol saat hover | 9,95 | 4,5 | AAA |
-| Teks footer | 8,50 | 4,5 | AAA |
-| Tautan footer | 10,48 | 4,5 | AAA |
-| Inisial di kotak gambar gagal | 6,78 | 3,0 | lulus |
+| Teks putih di tombol hapus | 7,57 | 4,5 | AAA |
+| Inisial di kotak gambar gagal | 6,71 | 3,0 | lulus |
+| `--ink-soft` di krem polos | 7,32 | 4,5 | AAA |
+
+**Perhatikan baris `--gold-mid`.** Di permukaan kaca angkanya turun ke 4,25 — **di bawah 4,5**. Itu masih benar karena §2.1 sudah membatasinya untuk judul ≥24px, yang syaratnya 3,0. Tapi artinya batasan itu sekarang **mengikat secara teknis, bukan sekadar kerapian**: memakai `--gold-mid` untuk teks kecil di atas kaca akan gagal AA. Untuk teks apa pun di bawah 24px, pakai `--gold-deep`.
 
 **Satu pengecualian yang disengaja:** garis tepi panel kaca (`--line-glass`) rasionya hanya 1,11 terhadap gradasi. Dibiarkan samar dengan sadar — garis itu murni dekoratif, tidak membawa informasi, dan batas panel sudah jelas dari perbedaan warna latarnya sendiri. Menaikkan kontrasnya akan membuat garisnya keras dan merusak kesan kaca.
 
@@ -149,13 +166,15 @@ Kelipatan 4. Jangan memakai angka di luar daftar ini.
 ### Sudut membulat
 
 ```css
---r-sm:8px;    /* kotak kecil, tombol menu */
---r-md:12px;   /* kartu katalog & portfolio */
---r-lg:20px;   /* panel kaca */
---r-full:999px;/* tombol */
+--r-sm:10px;   /* kotak kecil, tombol menu, kotak isian */
+--r-md:16px;   /* kartu katalog & portfolio */
+--r-lg:24px;   /* panel kaca */
+--r-full:999px;/* tombol — SEMUA tombol, termasuk di panel admin */
 ```
 
 Sudutnya **tidak seragam** — panel kaca lebih membulat daripada kartu, dan tombol berbentuk kapsul penuh. Keseragaman sudut di semua elemen adalah salah satu penanda tampilan generik.
+
+Ketiga angka pertama naik 2–4px pada revisi 12 Agustus. Alasannya bukan selera: sudut yang lebih membulat membuat tepi sorot `--glass-highlight` terbaca melengkung mengelilingi panel, dan itu yang memberi kesan lembaran kaca. Pada sudut 12px, sorot yang sama terlihat seperti garis lurus yang terpotong.
 
 ---
 
@@ -163,35 +182,42 @@ Sudutnya **tidak seragam** — panel kaca lebih membulat daripada kartu, dan tom
 
 Spec §7 menetapkan empat batasan teknis. Berikut penerapannya.
 
-### 5.1 Jumlah panel kaca dibatasi
+> **Revisi 12 Agustus 2026.** Sebelumnya kaca dibatasi tiga panel per layar dan hanya dipakai di halaman publik. Sekarang kaca adalah bahasa visual **seluruh aplikasi** — termasuk panel admin, halaman masuk, dan halaman error. Yang menahan biayanya bukan lagi jumlah panelnya, tapi **besar blur-nya** (§5.1). Alasan perubahannya ada di §5.5.
+>
+> Ini membatalkan catatan lama di berkas panel admin yang menyebut panel "sengaja tidak memakai gaya kaca". Yang tetap berlaku dari catatan itu: **panel admin tidak ikut ruang kosong lega halaman publik.** Admin mengisi data berjam-jam di sana; kepadatan barisnya tetap rapat, hanya permukaannya yang berubah.
 
-**Maksimal tiga panel kaca per layar.** `backdrop-filter: blur()` dihitung ulang saat halaman digulir dan berat bagi HP kelas bawah.
+### 5.1 Lima tingkat kaca, dibedakan menurut peran
 
-| Elemen | Kaca? |
-|---|---|
-| Navigasi | Ya |
-| Panel hero | Ya |
-| Panel kontak | Ya |
-| **Kartu katalog & portfolio** | **Tidak** — latar padat `#FFFFFF` + garis `--line` |
+Satu opasitas untuk semua permukaan membuat tumpukan panel terlihat seperti satu bidang datar yang kotor. Permukaan yang saling menumpuk harus bisa dibedakan mata.
 
-Kartu dalam grid nyaris tidak terbedakan secara visual dari versi kaca, tapi jauh berbeda bebannya — terutama saat digulir dengan 20 kartu di layar.
+| Tingkat | Opasitas | Blur | Dipakai untuk |
+|---|---|---|---|
+| `.glass-veil` | 0,55 | 18px | Bar navigasi, header panel, footer |
+| `.glass-card` | 0,52 | **12px** | Kartu dalam grid — katalog, portfolio, anak usaha, kotak panel admin |
+| `.glass-panel` | 0,62 | 22px | Permukaan utama — hero, kontak, tentang, kotak masuk |
+| `.glass-raised` | 0,80 | 28px | Yang menumpuk di atas konten lain — dialog, dropdown, sheet |
+| `.glass-field` | 0,55 | — | Kotak isian. Bayangan ke **dalam**, bukan melayang |
+
+**Blur kartu grid sengaja lebih kecil** — 12px, dan turun lagi ke **8px di bawah 768px**. Di situlah biaya sebenarnya: dengan 20 kartu di layar, blur 22px terasa saat digulir di HP kelas bawah. Perbedaan 12px vs 22px nyaris tak terlihat pada kotak sekecil kartu, tapi bebannya jauh berbeda.
+
+Semua nilai saturasi dinaikkan ke `1.5` — tanpa itu, warna gradasi yang lewat di belakang kaca terlihat pudar setelah di-blur.
 
 ### 5.2 Cadangan wajib
 
-Setiap panel kaca **wajib** menuliskan warna latar padat lebih dulu, baru menambahkan blur di dalam `@supports`. Tanpa ini, browser lama merender panel transparan penuh dan teksnya tidak terbaca.
+Setiap permukaan kaca **wajib** menuliskan warna latar padat lebih dulu, baru menambahkan blur di dalam `@supports`. Tanpa ini, browser lama merender panel transparan penuh dan teksnya tidak terbaca.
 
 ```css
-.panel {
-  background: var(--cream);              /* cadangan — ditulis LEBIH DULU */
+.glass-panel {
+  background: var(--glass-fallback);     /* cadangan — ditulis LEBIH DULU */
   border: 1px solid var(--line-glass);
-  box-shadow: 0 8px 32px rgba(90,72,40,.10);
+  box-shadow: var(--glass-shadow), var(--glass-highlight);
 }
 
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .panel {
-    background: rgba(255,255,255,.68);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+  .glass-panel {
+    background: rgba(255,255,255,.62);
+    backdrop-filter: blur(22px) saturate(1.5);
+    -webkit-backdrop-filter: blur(22px) saturate(1.5);
   }
 }
 ```
@@ -199,21 +225,41 @@ Setiap panel kaca **wajib** menuliskan warna latar padat lebih dulu, baru menamb
 Nilai kaca:
 
 ```css
---glass-bg:       rgba(255,255,255,.68);
---glass-blur:     16px;
---glass-fallback: #FDFBF6;
---glass-shadow:   0 8px 32px rgba(90,72,40,.10);
+--glass-panel-bg:   rgba(255,255,255,.62);
+--glass-card-bg:    rgba(255,255,255,.52);
+--glass-veil-bg:    rgba(255,255,255,.55);
+--glass-panel-blur: 22px;
+--glass-card-blur:  12px;   /* 8px di bawah 768px */
+--glass-veil-blur:  18px;
+--glass-saturate:   1.5;
+--glass-fallback:   #FDFBF6;
+--glass-shadow:     0 10px 34px rgba(90,72,40,.10), 0 2px 8px rgba(90,72,40,.05);
+--glass-highlight:  inset 0 1px 0 rgba(255,255,255,.75);
 ```
 
-Opasitas boleh disetel antara **0,55–0,78** — seluruh rentang itu sudah diuji dan lolos AA di semua titik gradasi.
+Opasitas boleh disetel antara **0,42–0,82** — seluruh rentang itu sudah diuji dan lolos AA di semua titik gradasi (§2.2).
+
+**Bayangan kaca punya dua bagian:** bayangan jatuh yang lembut, **dan** garis sorot 1px di tepi atas (`--glass-highlight`). Garis sorot itu yang membuat permukaannya terbaca sebagai lembaran kaca, bukan kotak transparan. Jangan menghilangkannya.
 
 ### 5.3 Kontras diuji terhadap seluruh gradasi
 
-Sudah dikerjakan — lihat §2.2. **Setiap warna teks baru wajib diuji ulang terhadap `--grad-deep` `#EADCC0`**, bukan terhadap putih. Itu titik tergelap gradasi dan penentu sebenarnya.
+Sudah dikerjakan — lihat §2.2. **Setiap warna teks baru wajib diuji terhadap seluruh titik gradasi pada tingkat kaca TERTIPIS yang akan memuatnya** (0,42), bukan terhadap putih. Menguji di atas putih saja akan meloloskan warna yang gagal di lapangan.
 
 ### 5.4 Mobile dirancang sendiri
 
-Lihat §7. Mobile bukan hasil pengecilan desktop.
+Lihat §7. Mobile bukan hasil pengecilan desktop. Khusus kaca: blur kartu turun ke 8px di bawah 768px (§5.1).
+
+### 5.5 Latar halaman wajib bergradasi
+
+Kaca perlu sesuatu untuk dibiaskan. **Di atas latar putih polos, `backdrop-filter` tidak menghasilkan apa pun** — panelnya hanya terlihat seperti kotak abu-abu, dan seluruh efeknya sia-sia sambil tetap membayar biaya render.
+
+Karena itu `<body>` membawa `--page-aurora`: empat titik gradasi di sudut, dipaku ke viewport dengan `background-attachment: fixed`. Kalau ikut menggulir, warna di belakang tiap panel berubah terus dan efeknya berkedip di layar panjang.
+
+Konsekuensinya, **section tidak boleh punya latar padat sendiri.** Yang dulu `bg-white` sekarang transparan, dan panel kaca di dalamnyalah yang jadi permukaan bacanya. Satu blok padat di tengah halaman memotong aurora dan membuat temanya terbaca setengah jadi — itu juga alasan footer tidak lagi `bg-ink`.
+
+### 5.6 Menghormati setelan sistem
+
+Sebagian pengguna mematikan efek tembus pandang di tingkat OS karena membuat teks sulit dibaca. Di bawah `prefers-reduced-transparency: reduce`, **seluruh** permukaan jadi padat `--glass-fallback` dan blur dimatikan. Tata letaknya tidak berubah — hanya permukaannya.
 
 ---
 
@@ -225,9 +271,13 @@ Lihat §7. Mobile bukan hasil pengecilan desktop.
 |---|---|
 | Utama | Latar `--gold-deep`, teks putih, `--r-full`, padding `14px 28px`. Hover → `--gold-hover` |
 | Sekunder | Transparan, teks `--gold-deep`, garis 1px `--gold`, `--r-full`. Hover → latar `--gold-deep`, teks putih |
+| Garis (panel admin) | `.glass-field` + garis `--line-strong`, teks `--ink`, `--r-full`. Hover → latar `--accent` |
 | Navigasi WA | Sama seperti utama, padding lebih kecil `9px 18px` |
+| Hapus | Latar `--danger`, teks putih, `--r-full` |
 
 Semua tombol dan tautan wajib punya **target sentuh minimal 44×44px** di mobile.
+
+**Semua tombol berbentuk kapsul**, termasuk di panel admin. Tombol bersudut `rounded-md` adalah bawaan shadcn/ui yang dibiarkan apa adanya — §10 melarangnya.
 
 ### Kartu katalog
 
@@ -239,7 +289,7 @@ Semua tombol dan tautan wajib punya **target sentuh minimal 44×44px** di mobile
 [harga] [tombol]    baris terpisah di mobile
 ```
 
-Latar putih padat, garis `--line`, sudut `--r-md`. Hover: naik 2px + bayangan halus.
+Permukaan `.glass-card` (§5.1), sudut `--r-md`. Hover: naik 2px + bayangan `--glass-shadow`.
 
 **Gambar gagal dimuat** → kotak `#F7F1E4` berisi inisial nama item, Fraunces 600 26px warna `--gold-deep` (spec §10). Bukan ikon rusak.
 
@@ -247,7 +297,11 @@ Latar putih padat, garis `--line`, sudut `--r-md`. Hover: naik 2px + bayangan ha
 
 ### Panel kaca
 
-Sudut `--r-lg`, padding `--s6` (desktop) / `--s5 --s4` (mobile), garis `--line-glass`, bayangan `--glass-shadow`.
+Sudut `--r-lg`, padding `--s6` (desktop) / `--s5 --s4` (mobile), garis `--line-glass`, bayangan `--glass-shadow` **beserta** sorot tepi `--glass-highlight` (§5.2).
+
+### Kotak isian
+
+`.glass-field` (§5.1), sudut `--r-sm`. Bedanya dari kartu: bayangannya mengarah ke **dalam**, sehingga permukaan yang bisa diketik terasa cekung di antara kartu yang melayang. Saat difokus, opasitasnya naik ke 0,78 — bukan berganti warna garis saja.
 
 ### Garis aksen
 
@@ -332,6 +386,9 @@ Diperiksa ulang sebelum setiap deliverable:
 - Bola/blob 3D melayang, gradasi ungu-biru sebagai penanda "teknologi"
 - Teks berkesan placeholder
 - Komposisi terlalu simetris tanpa titik fokus
+- **Kaca di atas latar putih polos** — tidak ada yang dibiaskan, biayanya tetap dibayar (§5.5)
+- **Satu opasitas kaca untuk semua permukaan** — tumpukan panel jadi terlihat datar (§5.1)
+- **Blok padat gelap** di halaman bertema kaca — memotong aurora dan membuat temanya terbaca setengah jadi
 
 ---
 
@@ -342,7 +399,16 @@ Token di §2, §3, dan §4 dituangkan ke `resources/css/app.css` sebagai CSS cus
 Yang perlu diingat saat menulis kode:
 
 1. **Jangan** menaruh `dark:` di komponen baru — project ini bertema terang saja. Baris `@custom-variant dark` di `app.css` wajib dipertahankan (alasannya ada di komentar berkas itu).
-2. Cadangan panel kaca ditulis **sebelum** blok `@supports`, selalu.
-3. Warna teks emas selalu `--gold-deep`, tidak pernah `--gold`.
-4. Maksimal tiga panel kaca per layar.
-5. Mobile dikerjakan sebagai pass tersendiri, bukan hasil pengecilan.
+2. Cadangan permukaan kaca ditulis **sebelum** blok `@supports`, selalu.
+3. Warna teks emas selalu `--gold-deep`, tidak pernah `--gold`. Di atas kaca, `--gold-mid` pun hanya untuk judul ≥24px — lihat peringatan di §2.2.
+4. Pilih tingkat kaca menurut **peran** permukaannya (§5.1), jangan memakai `.glass-panel` untuk semuanya.
+5. Section **tidak** membawa latar padat sendiri — aurora di `<body>` yang jadi latarnya (§5.5).
+6. Mobile dikerjakan sebagai pass tersendiri, bukan hasil pengecilan.
+
+### Menempelkan kaca ke komponen shadcn/ui
+
+Blur untuk komponen shadcn/ui dipasang di `app.css` lewat selector `[data-slot='…']`, **bukan** dengan menyunting satu per satu berkas komponennya. Warna permukaannya sudah tembus pandang dari token di `:root`.
+
+Alasannya: komponen di `resources/js/components/ui/` disalin dari upstream dan sesekali perlu disalin ulang. Kalau blur ditulis di dalam berkasnya, setiap penyalinan ulang menghapus temanya diam-diam. Dengan cara ini, komponen boleh ditimpa kapan saja dan tetap ikut tema.
+
+Pengecualiannya yang disengaja: **tooltip tetap padat emas.** Kotaknya terlalu kecil dan terlalu sebentar tampil untuk dibaca kalau tembus pandang.

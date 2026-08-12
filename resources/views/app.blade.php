@@ -5,12 +5,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         {{-- Warna latar disetel di sini juga agar tidak ada kedipan putih
-             sebelum app.css termuat. Project ini bertema terang saja. --}}
+             sebelum app.css termuat. Project ini bertema terang saja, dan
+             krem-lah warna dasarnya — bukan putih. --}}
         <style>
             html {
-                background-color: oklch(1 0 0);
+                background-color: #fdfbf6;
             }
         </style>
+
+        <meta name="theme-color" content="#FDFBF6">
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">

@@ -12,7 +12,10 @@ export default function TextLink({
     return (
         <Link
             className={cn(
-                'text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500',
+                // Garis bawah emas samar, bukan abu-abu netral — tautan ikut
+                // palet merek (DESIGN_SYSTEM §2). Warna teksnya --gold-deep,
+                // tidak pernah --gold (§2.1).
+                'text-gold-deep underline decoration-gold/50 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current!',
                 className,
             )}
             {...props}

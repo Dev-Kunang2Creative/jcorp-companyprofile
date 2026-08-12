@@ -47,7 +47,7 @@ export default function PortfolioIndex({ business, items }: Props) {
 
                 <section>
                     {items.length === 0 ? (
-                        <div className="rounded-md border border-dashed border-border p-8 text-center">
+                        <div className="rounded-brand-md border border-dashed border-line-strong p-8 text-center">
                             <p className="text-sm text-muted-foreground">
                                 Belum ada foto. Selama kosong, section portfolio
                                 tidak muncul di halaman publik.
@@ -71,7 +71,7 @@ export default function PortfolioIndex({ business, items }: Props) {
                                 {items.map((item) => (
                                     <li
                                         key={item.id}
-                                        className="flex flex-col overflow-hidden rounded-md border border-border"
+                                        className="glass-card flex flex-col overflow-hidden rounded-brand-md"
                                     >
                                         {item.thumb_url && (
                                             <img

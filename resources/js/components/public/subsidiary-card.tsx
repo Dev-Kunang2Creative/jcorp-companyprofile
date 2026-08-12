@@ -4,8 +4,8 @@ import { useState } from 'react';
 /**
  * Kartu anak usaha di etalase induk.
  *
- * Latar PADAT, bukan kaca — sama alasannya dengan kartu katalog
- * (DESIGN_SYSTEM §5.1): kartu dalam grid tidak memakai backdrop-filter.
+ * Kaca TIPIS (.glass-card) — sama seperti kartu katalog: blur kecil supaya
+ * grid tetap ringan saat digulir (DESIGN_SYSTEM §5.1).
  */
 
 type Props = {
@@ -30,13 +30,13 @@ export default function SubsidiaryCard({
     return (
         <Link
             href={`/${slug}`}
-            className="group flex flex-col rounded-brand-md border border-line bg-white p-5 transition-shadow hover:shadow-[0_6px_20px_rgb(90_72_40/0.10)] md:p-6"
+            className="glass-card group flex flex-col rounded-brand-md p-5 transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-glass md:p-6"
         >
             {showFallback ? (
                 // Anak usaha yang belum punya logo tetap tampil rapi lewat
                 // lencana inisial, bukan kotak kosong (spec §10).
                 <div
-                    className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#F7F1E4] font-display text-lg font-semibold text-gold-deep"
+                    className="mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-glass-edge-soft bg-glass-tint font-display text-lg font-semibold text-gold-deep"
                     aria-hidden="true"
                 >
                     {initials}

@@ -3,9 +3,13 @@ import WhatsappButton from '@/components/public/whatsapp-button';
 import { cn } from '@/lib/utils';
 
 /**
- * Navigasi — salah satu dari TIGA panel kaca yang diizinkan per layar
- * (DESIGN_SYSTEM §5.1). Kelas .glass-panel sudah memuat cadangan untuk
- * browser tanpa dukungan backdrop-filter.
+ * Navigasi — bar kaca yang menempel di atas.
+ *
+ * Memakai .glass-veil, bukan .glass-panel: bar ini membentang selebar layar
+ * dan isi halaman lewat persis di belakangnya saat digulir. Pada opasitas
+ * panel, teks yang lewat di bawahnya masih terbaca samar dan mengganggu.
+ * Kelas .glass-veil sudah memuat cadangan padat untuk browser tanpa
+ * dukungan backdrop-filter (DESIGN_SYSTEM §5.2).
  *
  * Mobile: tautan berubah jadi panel geser di bawah tombol menu — bukan
  * tautan mendatar yang dikecilkan (DESIGN_SYSTEM §7).
@@ -29,7 +33,7 @@ export default function SiteNav({
     const [open, setOpen] = useState(false);
 
     return (
-        <header className="glass-panel sticky top-0 z-30 border-x-0 border-t-0">
+        <header className="glass-veil sticky top-0 z-30 border-b">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-8">
                 <a
                     href="#top"
@@ -82,7 +86,7 @@ export default function SiteNav({
                         aria-expanded={open}
                         aria-controls="nav-mobile"
                         aria-label={open ? 'Tutup menu' : 'Buka menu'}
-                        className="flex h-11 w-11 items-center justify-center rounded-lg border border-line bg-white/60 md:hidden"
+                        className="glass-field flex h-11 w-11 items-center justify-center rounded-brand-sm md:hidden"
                     >
                         <span className="sr-only">
                             {open ? 'Tutup menu' : 'Buka menu'}
@@ -115,7 +119,7 @@ export default function SiteNav({
                 <nav
                     id="nav-mobile"
                     aria-label="Navigasi utama"
-                    className="border-t border-line/70 px-4 pb-4 md:hidden"
+                    className="border-t border-line px-4 pb-4 md:hidden"
                 >
                     <ul className="flex flex-col">
                         {links.map((link) => (

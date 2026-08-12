@@ -23,14 +23,9 @@ export default function CatalogSection({
     whatsapp,
 }: Props) {
     return (
-        <section
-            id="katalog"
-            className="px-4 py-12 md:px-8 md:py-16"
-            style={{
-                background:
-                    'linear-gradient(180deg, var(--color-cream) 0%, #FFFFFF 100%)',
-            }}
-        >
+        // Tanpa latar sendiri: aurora di <body> yang terlihat di celah antar
+        // kartu, dan itu yang dibiaskan permukaan kaca tiap kartu.
+        <section id="katalog" className="px-4 py-12 md:px-8 md:py-16">
             <div className="mx-auto max-w-6xl">
                 <h2 className="mb-6 font-display text-2xl leading-tight font-semibold text-ink md:text-[30px]">
                     {label}
