@@ -18,7 +18,7 @@
 | **4** | Halaman induk J Corp (etalase) — website bisa diakses publik | ✅ Selesai |
 | **5** | Empat profil sisanya, menyusul seiring konten terkumpul | ⬜ Menunggu materi dari client |
 
-**Arah visual terpilih:** Butik Pâtisserie dengan panel kaca — gabungan arah A dan B. Mockupnya di `public/preview/mockup.html`.
+**Arah visual terpilih:** Butik Pâtisserie dengan panel kaca — gabungan arah A dan B. Mockupnya dulu di `public/preview/` — dihapus sebelum deploy karena akan bisa dibuka publik; masih ada di riwayat git commit `edb9419`.
 
 ---
 
@@ -234,7 +234,7 @@ Sesuai `CLAUDE.md` (global, berlaku otomatis):
 
 **Membaca gambar lewat path file GAGAL** — dicoba di Fase 2 dengan `Logo-Sweetness.jpeg`, hasilnya kosong. Catatan asli dari Fase 0 ternyata benar; koreksi yang sempat ditulis di Fase 1 keliru dan sudah dicabut.
 
-Akibatnya, analisis logo dikerjakan lewat **pembacaan piksel dengan GD** (warna dominan, HSL, kualitas tepi) alih-alih melihat gambarnya. Itu cukup untuk keputusan warna dan pemrosesan latar, tapi **penilaian akhir apakah logonya terlihat bagus tetap perlu mata user** — itu sebabnya `public/preview/logo.html` dibuat.
+Akibatnya, analisis logo dikerjakan lewat **pembacaan piksel dengan GD** (warna dominan, HSL, kualitas tepi) alih-alih melihat gambarnya. Itu cukup untuk keputusan warna dan pemrosesan latar, tapi **penilaian akhir apakah logonya terlihat bagus tetap perlu mata user** — itu sebabnya halaman pemeriksaan logo dibuat (sudah dihapus sebelum deploy).
 
 ---
 
@@ -270,7 +270,7 @@ Akibatnya, analisis logo dikerjakan lewat **pembacaan piksel dengan GD** (warna 
 - Kontras diuji menyeluruh: 11 pasangan warna, satu gagal dan diperbaiki
 - Ditemukan: emas logo `#B28C27` gagal AA sebagai teks → dipecah jadi tiga peran
 - `DESIGN_SYSTEM.md` dan `docs/design-tokens.css` ditulis
-- Mockup desktop + mobile di `public/preview/mockup.html`
+- Mockup desktop + mobile di `public/preview/` (dihapus sebelum deploy — lihat riwayat git)
 
 **11 Agustus 2026 — Fase 1 selesai**
 - Scaffold `laravel/react-starter-kit` (`--stability=dev`), fitur auth berlebih dipangkas lewat Chisel resmi

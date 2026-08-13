@@ -3,7 +3,7 @@
 **Dibuat:** 11 Agustus 2026 · **Fase 2**
 **Direvisi:** 12 Agustus 2026 — glassmorphism diperluas ke seluruh aplikasi (§5 ditulis ulang)
 **Arah terpilih:** Butik Pâtisserie dengan panel kaca — gabungan arah A dan B
-**Mockup:** [`public/preview/mockup.html`](public/preview/mockup.html)
+**Mockup:** dulu ada di `public/preview/`, dihapus sebelum deploy karena ikut ter-commit dan akan bisa dibuka publik. Masih bisa dilihat dari riwayat git — commit `edb9419`.
 
 > Dokumen ini **mengikat**. Saat menulis kode UI di Fase 3 dan seterusnya, ikuti angka di sini — jangan menentukan warna, ukuran huruf, atau jarak baru secara mandiri. Kalau ada yang terasa kurang pas saat diterapkan, ubah dokumen ini lebih dulu, baru kodenya.
 

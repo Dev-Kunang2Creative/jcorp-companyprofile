@@ -2,6 +2,13 @@
 node_modules/
 /vendor
 
+# Hasil pengemasan untuk deploy — dibuat ulang dengan
+# deploy/siapkan-paket.ps1, tidak perlu masuk riwayat.
+# Panduan dan skripnya sendiri TETAP di-commit.
+/deploy/paket/
+/deploy/*.zip
+/deploy/*.sql
+
 # Build output
 dist/
 .next/
