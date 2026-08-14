@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Actions\Fortify\ResetUserPassword;
+use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
@@ -39,6 +41,31 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureActions(): void
     {
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
+
+        /**
+         * Menolak akun nonaktif dan akun yang undangannya belum dibuka —
+         * SEJAK login, bukan menunggu sampai membuka panel.
+         *
+         * Middleware EnsureUserIsActive sudah menjaga halaman panel, tapi
+         * tanpa pemeriksaan di sini akun nonaktif tetap bisa "berhasil"
+         * masuk lalu langsung dilempar keluar. Selain membingungkan, itu
+         * juga membocorkan bahwa passwordnya benar.
+         *
+         * Akun undangan sengaja tidak pernah lolos: passwordnya null, dan
+         * Hash::check terhadap null selalu gagal — tapi diperiksa eksplisit
+         * supaya niatnya jelas, bukan bergantung pada perilaku itu.
+         */
+        Fortify::authenticateUsing(function (Request $request) {
+            $user = User::where('email', $request->email)->first();
+
+            if (! $user || ! $user->canAccessPanel()) {
+                return null;
+            }
+
+            return Hash::check($request->password, (string) $user->password)
+                ? $user
+                : null;
+        });
     }
 
     /**

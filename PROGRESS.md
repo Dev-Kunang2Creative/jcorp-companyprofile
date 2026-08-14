@@ -39,7 +39,7 @@ Semua diverifikasi dengan dijalankan, bukan diasumsikan.
 **Verifikasi menyeluruh — semuanya hijau:**
 
 ```
-php artisan test        139 lulus
+php artisan test        197 lulus
 vendor/bin/pint         passed
 vendor/bin/phpstan      0 error
 npm run types:check     bersih
@@ -239,6 +239,21 @@ Akibatnya, analisis logo dikerjakan lewat **pembacaan piksel dengan GD** (warna 
 ---
 
 ## Riwayat
+
+**14 Agustus 2026 — Kelola akun lewat panel**
+- Super-admin bisa mengundang admin baru tanpa SSH: akun dibuat tanpa password, tautan sekali pakai dikirim lewat WhatsApp, yang diundang membuat passwordnya sendiri
+- Token undangan disimpan sebagai hash, berlaku 7 hari, sekali pakai
+- Nonaktifkan akun: akses dicabut **seketika**, diperiksa di setiap permintaan — bukan menunggu sesi kedaluwarsa
+- Ditolak juga sejak login lewat `Fortify::authenticateUsing`, supaya akun nonaktif tidak "berhasil" masuk lalu langsung dilempar keluar
+- Aturan satu-anak-usaha-satu-admin kini menghitung hanya admin **aktif**, jadi penggantian admin tidak perlu menghapus akun lama
+- `jcorp:make-admin` dipertahankan untuk super-admin pertama dan jalan keluar darurat
+- **Tidak** dikerjakan: hapus akun (tidak bisa dipulihkan) dan pindah anak usaha (rumit untuk kasus langka)
+- 197 test lulus (naik dari 162)
+
+**13 Agustus 2026 — Terjemahan pesan validasi**
+- Ditemukan saat membuat akun admin di server: pesan tampil sebagai kunci mentah (`validation.password.mixed`, `auth.failed`)
+- Penyebabnya `APP_LOCALE` dan `APP_FALLBACK_LOCALE` sama-sama `id`, sementara Laravel hanya membawa terjemahan `en` — tidak ada tempat mundur
+- Lolos dari 145 test yang ada karena test memeriksa ADA tidaknya error, bukan bunyinya
 
 **11 Agustus 2026 — Data contoh lengkap + perbaikan logo**
 - **Logo Sweetness akhirnya dipakai.** Berkasnya sudah diproses di Fase 2 tapi `logo_path` tidak pernah diisi, jadi menganggur — kelalaian yang ditemukan user

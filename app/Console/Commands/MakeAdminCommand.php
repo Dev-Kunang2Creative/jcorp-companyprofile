@@ -135,12 +135,24 @@ class MakeAdminCommand extends Command
                 'nullable',
                 'string',
                 Rule::exists(Business::class, 'slug')->whereNull('deleted_at'),
-                // Satu anak usaha hanya boleh dipegang satu admin (spec §4).
+                // Satu anak usaha hanya boleh dipegang satu admin AKTIF
+                // (spec §4). Aturan yang sama dipakai InviteUserRequest —
+                // keduanya harus sepakat, kalau tidak akun bisa dibuat lewat
+                // satu jalur padahal ditolak jalur lain.
                 function (string $attribute, mixed $value, \Closure $fail) {
                     $businessId = Business::where('slug', $value)->value('id');
 
-                    if ($businessId && User::where('business_id', $businessId)->exists()) {
-                        $fail('Anak usaha ini sudah punya admin.');
+                    if (! $businessId) {
+                        return;
+                    }
+
+                    $sudahAda = User::query()
+                        ->active()
+                        ->where('business_id', $businessId)
+                        ->exists();
+
+                    if ($sudahAda) {
+                        $fail('Anak usaha ini sudah punya admin aktif.');
                     }
                 },
             ],
@@ -149,14 +161,17 @@ class MakeAdminCommand extends Command
     }
 
     /**
-     * Anak usaha yang belum dipegang admin mana pun.
+     * Anak usaha yang belum dipegang admin AKTIF.
+     *
+     * Yang adminnya dinonaktifkan tetap muncul sebagai pilihan — itu yang
+     * membuat penggantian admin bisa dilakukan tanpa menghapus akun lama.
      *
      * @return Collection<string, string>
      */
     private function assignableBusinesses(): Collection
     {
         return Business::query()
-            ->whereDoesntHave('admins')
+            ->whereDoesntHave('admins', fn ($q) => $q->where('is_active', true))
             ->orderBy('sort_order')
             ->pluck('name', 'slug');
     }

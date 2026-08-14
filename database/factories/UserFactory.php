@@ -32,8 +32,46 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'role' => UserRole::BusinessAdmin,
             'business_id' => Business::factory(),
+            'is_active' => true,
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Akses dimatikan super-admin. Datanya utuh, hanya tidak bisa masuk.
+     */
+    public function inactive(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_active' => false,
+        ]);
+    }
+
+    /**
+     * Akun yang sudah diundang tapi undangannya belum dibuka.
+     *
+     * Ditandai `password` null — itu yang membedakannya dari akun aktif.
+     * Tokennya disimpan sebagai hash, sama seperti di InvitationService.
+     */
+    public function invited(string $token = 'token-undangan-uji'): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'password' => null,
+            'invitation_token' => hash('sha256', $token),
+            'invitation_expires_at' => now()->addDays(User::INVITATION_VALID_DAYS),
+        ]);
+    }
+
+    /**
+     * Undangan yang sudah lewat masa berlakunya.
+     */
+    public function invitationExpired(string $token = 'token-kedaluwarsa'): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'password' => null,
+            'invitation_token' => hash('sha256', $token),
+            'invitation_expires_at' => now()->subDay(),
+        ]);
     }
 
     /**

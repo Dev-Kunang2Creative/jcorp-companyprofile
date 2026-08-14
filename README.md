@@ -91,13 +91,15 @@ php artisan migrate --seed
 
 Seeder mengisi enam entitas (J Corp + lima anak usaha). **Tidak ada akun admin yang dibuat** — akun dengan password yang bisa ditebak berbahaya kalau seeder ikut jalan di server sungguhan.
 
-**5. Buat akun admin:**
+**5. Buat akun super-admin pertama:**
 
 ```bash
 php artisan jcorp:make-admin
 ```
 
 Interaktif — menanyakan nama, email, peran, dan anak usaha. Password diminta dalam mode tersembunyi.
+
+Perintah ini hanya diperlukan untuk **akun pertama**. Setelah ada satu super-admin, admin berikutnya diundang lewat panel — lihat [Kelola Akun](#kelola-akun) di bawah.
 
 **6. Jalankan:**
 
@@ -206,11 +208,41 @@ Terpasang dan terverifikasi 11 Agustus 2026.
 - **Pengecekan kepemilikan di server.** Setiap simpan/ubah/hapus diperiksa lewat Policy. Menyembunyikan tombol di tampilan tidak dianggap pengamanan — permintaan tetap bisa dikirim langsung dengan mengubah angka di alamat.
 - **Sisi baca juga dijaga.** Business_admin hanya menerima data miliknya; data anak usaha lain tidak pernah dikirim ke browsernya.
 - **`role` dan `business_id` tidak fillable.** Kalau ikut terisi dari form, seorang admin bisa menaikkan dirinya jadi super_admin dengan menambah satu field di request.
-- **Tidak ada halaman pendaftaran.** Akun dibuat lewat artisan; password tidak pernah melintas sebagai argumen perintah.
+- **Tidak ada halaman pendaftaran.** Akun dibuat lewat undangan dari super-admin atau perintah artisan; password tidak pernah melintas sebagai argumen perintah maupun lewat form super-admin.
+- **Akun nonaktif langsung ditolak**, bukan menunggu sesinya kedaluwarsa — diperiksa di setiap permintaan, bukan hanya saat login.
 - **Percobaan login dibatasi** 5 kali per menit per kombinasi email + IP.
 - **Header `noindex`** di seluruh `/jcorp-panel/*`, termasuk halaman login dan setiap redirect.
 
 `.env` tidak pernah di-commit. Tidak ada satu pun kredensial di dalam kode.
+
+---
+
+## Kelola Akun
+
+Super-admin bisa mengundang admin baru lewat panel, tanpa perlu SSH.
+
+**Cara kerjanya:**
+
+1. Super-admin mengisi nama, email, dan anak usaha — **tanpa password**
+2. Sistem membuat tautan sekali pakai yang disalin dan dikirim lewat WhatsApp
+3. Admin baru membuka tautan itu dan membuat passwordnya sendiri
+
+Password tidak pernah diketahui super-admin dan tidak pernah melewati form panel. Ini menghormati alasan di balik spec §6 — password tidak boleh melintas lewat form web — tanpa mempertahankan keterbatasannya.
+
+| | |
+|---|---|
+| Masa berlaku tautan | 7 hari, sekali pakai |
+| Token di database | Disimpan sebagai hash, bukan apa adanya |
+| Kalau tautan kedaluwarsa | Tombol **Buat tautan baru** di baris akunnya |
+
+**Menonaktifkan akun** mencabut akses seketika — bahkan kalau orangnya sedang login, permintaan berikutnya langsung ditolak. Datanya tidak dihapus, jadi bisa dinyalakan lagi kapan saja.
+
+Dua hal yang **tidak** bisa dilakukan lewat panel, sengaja:
+
+- **Menghapus akun.** Tabel `users` tidak memakai soft delete, jadi sekali hilang tidak bisa dipulihkan. "Nonaktifkan" menjawab hampir semua alasan ingin menghapus.
+- **Memindahkan admin antar anak usaha.** Aturannya satu anak usaha satu admin; memindahkan berarti yang lama jadi tanpa pengelola. Caranya: nonaktifkan yang lama, undang yang baru.
+
+`php artisan jcorp:make-admin` tetap ada sebagai jalan membuat super-admin pertama, dan jalan keluar kalau semua super-admin kehilangan akses.
 
 ---
 
@@ -220,7 +252,7 @@ Terpasang dan terverifikasi 11 Agustus 2026.
 php artisan test
 ```
 
-133 test. Yang dijaga (spec §11):
+197 test. Yang dijaga (spec §11):
 
 **Kepemilikan & akses**
 
@@ -244,6 +276,19 @@ php artisan test
 - Nama berkas dibuat ulang sistem; nama asli tidak pernah dipakai
 - Berkas lama dihapus saat gambar diganti, tapi dipertahankan saat soft delete
 - Unggahan lewat POST + `_method=put` membawa berkasnya (jalur browser sungguhan)
+
+**Kelola akun**
+
+- Undangan membuat akun tanpa password; token disimpan sebagai hash
+- Tautan undangan hanya bisa dipakai sekali, dan mati setelah kedaluwarsa
+- Akun nonaktif **langsung** tidak bisa mengubah atau menghapus data
+- Akun yang undangannya belum dibuka tidak bisa masuk sama sekali
+- Super-admin tidak bisa menonaktifkan akunnya sendiri
+- business_admin ditolak di seluruh route kelola akun
+
+**Pesan validasi**
+
+- Tidak ada pesan yang masih berupa kunci mentah seperti `validation.required`
 
 **Data contoh**
 
