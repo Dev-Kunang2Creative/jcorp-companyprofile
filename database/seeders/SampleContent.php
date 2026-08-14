@@ -42,6 +42,20 @@ class SampleContent
                 'business_hours' => 'Senin–Jumat, 09.00–17.00',
             ],
 
+            'sweetness-things' => [
+                'tagline' => 'Dibuat sedikit-sedikit tiap hari, supaya yang sampai ke meja Anda masih sehangat waktu keluar oven.',
+                'description' => implode("\n\n", [
+                    'Sweetness Things berawal dari dapur rumah — dari kebiasaan membuat kue untuk keluarga, lalu untuk tetangga, lalu untuk siapa saja yang menanyakan resepnya.',
+                    'Sampai sekarang cara kerjanya belum berubah. Setiap pesanan dibuat setelah dipesan, bukan diambil dari stok. Bahan yang dipakai sama dengan yang dipakai di rumah sendiri.',
+                    'Manisnya sengaja ditahan. Yang kami cari bukan yang paling manis, tapi yang masih enak dimakan sampai potongan terakhir.',
+                ]),
+                'whatsapp' => '6281234567890',
+                'instagram' => 'sweetnessthings',
+                'address' => 'Jl. Contoh Raya No. 12, Bekasi',
+                'business_hours' => 'Senin–Sabtu, 09.00–18.00',
+                'catalog_label' => 'Menu Kami',
+            ],
+
             'nails-by-me' => [
                 'tagline' => 'Nail art yang dikerjakan pelan-pelan, karena tangan yang rapi tidak bisa diburu-buru.',
                 'description' => implode("\n\n", [
