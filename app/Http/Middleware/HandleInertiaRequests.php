@@ -46,6 +46,30 @@ class HandleInertiaRequests extends Middleware
         $user = $request->user();
         $business = $this->activeBusiness($request);
 
+        $businessContext = $business ? [
+            'slug' => $business->slug,
+            'name' => $business->name,
+            'isParent' => $business->is_parent,
+            'isPublished' => $business->is_published,
+            'hasPortfolio' => $business->has_portfolio,
+            'accentColor' => $business->safeAccentColor(),
+            'publicUrl' => $business->is_parent ? '/' : "/{$business->slug}",
+        ] : null;
+
+        // Daftar perpindahan konteks tetap hanya dikirim ke super-admin.
+        // Ini memindahkan pemilih yang sebelumnya hanya ada di Dashboard ke
+        // topbar global tanpa mengubah cara konteks disimpan di sesi.
+        $switchableBusinesses = $user?->isSuperAdmin()
+            ? Business::query()
+                ->orderBy('sort_order')
+                ->get()
+                ->map(fn (Business $item) => [
+                    'slug' => $item->slug,
+                    'name' => $item->name,
+                    'accentColor' => $item->safeAccentColor(),
+                ])
+            : null;
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -64,6 +88,8 @@ class HandleInertiaRequests extends Middleware
                 // semua anak usaha memamerkan hasil kerja — dessert, logistik,
                 // dan properti menampilkan katalog saja (spec §3).
                 'hasPortfolio' => $business !== null && $business->has_portfolio,
+                'business' => $businessContext,
+                'switchableBusinesses' => $switchableBusinesses,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];

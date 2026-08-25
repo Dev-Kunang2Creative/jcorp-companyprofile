@@ -6,6 +6,9 @@ import { whatsappUrl } from '@/lib/whatsapp';
  * Mayoritas pengunjung datang dari tautan Instagram di HP, dan tujuan
  * utamanya menghubungi lewat WA. Tombol itu tidak boleh hilang saat halaman
  * digulir. Di desktop tidak perlu, karena navigasi sudah menempel di atas.
+ *
+ * Warnanya mengikuti aksen unit usaha, sama seperti tombol lain sejak
+ * arah A+B — jadi di halaman Ayodya ia merah, bukan emas dessert.
  */
 
 type Props = {
@@ -20,7 +23,7 @@ export default function FloatingWa({ number, businessName }: Props) {
                 href={whatsappUrl(number, businessName)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex min-h-12 w-full items-center justify-center rounded-full bg-gold-deep px-5 py-4 text-[15px] font-medium text-white shadow-[0_6px_20px_rgb(107_79_15/0.32)] transition-colors hover:bg-gold-hover"
+                className="flex min-h-12 w-full items-center justify-center rounded-[2px] bg-[var(--unit-accent)] px-5 py-4 text-[14px] font-medium tracking-[0.02em] text-white shadow-[0_6px_20px_rgb(26_26_26/0.22)] transition-opacity hover:opacity-90"
             >
                 Pesan lewat WhatsApp
             </a>

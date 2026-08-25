@@ -13,6 +13,12 @@ export type FlashToast = {
     message: string;
 };
 
+export type InvitationFlash = {
+    name: string;
+    url: string;
+    expires_in_days: number;
+};
+
 export type AuthLayoutProps = {
     children?: ReactNode;
     name?: string;

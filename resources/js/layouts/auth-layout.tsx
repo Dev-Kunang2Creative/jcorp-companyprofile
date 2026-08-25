@@ -10,8 +10,12 @@ export default function AuthLayout({
     children: React.ReactNode;
 }) {
     return (
-        <AuthLayoutTemplate title={title} description={description}>
-            {children}
-        </AuthLayoutTemplate>
+        // Lihat catatan di app-layout.tsx — halaman auth memakai
+        // tipografi yang sama dengan panel.
+        <div className="font-panel">
+            <AuthLayoutTemplate title={title} description={description}>
+                {children}
+            </AuthLayoutTemplate>
+        </div>
     );
 }

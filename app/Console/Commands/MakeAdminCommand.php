@@ -30,7 +30,7 @@ class MakeAdminCommand extends Command
                             {--role= : super_admin atau business_admin}
                             {--business= : Slug anak usaha (wajib untuk business_admin)}';
 
-    protected $description = 'Membuat akun admin panel J Corp';
+    protected $description = 'Membuat akun admin panel J-Corporate Group';
 
     public function handle(): int
     {

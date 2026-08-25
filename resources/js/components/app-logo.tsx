@@ -11,8 +11,11 @@ export default function AppLogo() {
                 <AppLogoIcon className="size-5 fill-current text-white" />
             </div>
             <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate font-display leading-tight font-semibold text-ink">
+                <span className="truncate font-display leading-tight font-semibold text-ink">
                     {name}
+                </span>
+                <span className="truncate text-[0.66rem] leading-tight tracking-[0.12em] text-muted-foreground uppercase">
+                    Panel Konten
                 </span>
             </div>
         </>

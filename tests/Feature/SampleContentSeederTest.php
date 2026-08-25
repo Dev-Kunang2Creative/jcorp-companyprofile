@@ -6,13 +6,16 @@ use App\Models\Business;
 use App\Models\CatalogItem;
 use App\Models\PortfolioItem;
 use Database\Seeders\BusinessSeeder;
+use Database\Seeders\ClientContent;
+use Database\Seeders\ClientContentSeeder;
 use Database\Seeders\SampleContent;
 use Database\Seeders\SampleContentSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
- * Seeder data contoh harus mengisi SELURUH anak usaha.
+ * Setelah seluruh seeder jalan, TIDAK BOLEH ada anak usaha yang tertinggal
+ * kosong.
  *
  * Latar belakangnya: Sweetness Things sempat terlewat dari
  * SampleContent::businesses() — sisa dari penggabungan dua seeder lama, saat
@@ -22,8 +25,14 @@ use Tests\TestCase;
  * Tidak ketahuan di localhost karena datanya sudah terisi seeder lama sebelum
  * digabung. Baru terlihat saat mencoba mengisi server yang kosong.
  *
- * Test di sini menjalankan seeder pada database kosong — kondisi yang sama
- * dengan server baru.
+ * Sejak materi asli client masuk, pengisinya ada DUA: ClientContentSeeder
+ * untuk yang materinya sudah datang, SampleContentSeeder untuk sisanya —
+ * yang pertama dilewati seeder contoh supaya produk karangan tidak
+ * berdampingan dengan produk asli.
+ *
+ * Karena itu test di sini menjalankan keduanya. Yang dijaga tetap sama:
+ * tidak ada yang tertinggal kosong, siapa pun yang mengisinya. Menguji satu
+ * seeder saja akan meloloskan anak usaha yang jatuh di antara keduanya.
  */
 class SampleContentSeederTest extends TestCase
 {
@@ -33,6 +42,7 @@ class SampleContentSeederTest extends TestCase
     private function seedAll(): void
     {
         $this->seed(BusinessSeeder::class);
+        $this->seed(ClientContentSeeder::class);
         $this->seed(SampleContentSeeder::class);
     }
 
@@ -54,11 +64,21 @@ class SampleContentSeederTest extends TestCase
         );
     }
 
-    public function test_every_business_gets_contact_details(): void
+    /**
+     * Setiap ANAK USAHA harus punya nomor yang bisa dihubungi.
+     *
+     * Induk dikecualikan sejak 21 Agustus: perannya etalase, dan nomor yang
+     * diberikan client masih diragukan (sembilan digit — lihat catatan di
+     * ClientContent), jadi bagian kontaknya sengaja dibiarkan kosong sampai
+     * dipastikan. Halaman induk tetap layak tayang tanpa itu; pengunjung
+     * menghubungi unit usaha yang dituju, bukan induknya.
+     */
+    public function test_every_subsidiary_gets_contact_details(): void
     {
         $this->seedAll();
 
         $tanpaKontak = Business::query()
+            ->subsidiaries()
             ->whereNull('whatsapp')
             ->pluck('slug')
             ->all();
@@ -86,12 +106,21 @@ class SampleContentSeederTest extends TestCase
         );
     }
 
-    public function test_every_subsidiary_gets_catalog_items(): void
+    /**
+     * Anak usaha yang materinya BELUM masuk harus terisi produk contoh.
+     *
+     * Yang materinya sudah masuk dikecualikan: daftar produknya bergantung
+     * pada apa yang client kirim. ngelash sudah mengirim profil lengkap tapi
+     * belum daftar harga, jadi section "Layanan & Harga"-nya memang kosong
+     * — dan itu disengaja, bukan terlewat (lihat ClientContentSeederTest).
+     */
+    public function test_every_subsidiary_without_client_material_gets_catalog_items(): void
     {
         $this->seedAll();
 
         $tanpaProduk = Business::query()
             ->subsidiaries()
+            ->whereNotIn('slug', array_keys(ClientContent::businesses()))
             ->whereDoesntHave('catalogItems')
             ->pluck('slug')
             ->all();
@@ -107,24 +136,63 @@ class SampleContentSeederTest extends TestCase
      * Penjaga terhadap penyebab bug aslinya.
      *
      * Setiap slug yang punya daftar produk harus punya profil juga —
-     * kalau tidak, produknya masuk tapi halamannya kosong.
+     * kalau tidak, produknya masuk tapi halamannya kosong. Diperiksa di
+     * kedua berkas, karena keduanya sekarang jadi sumber isi.
      */
     public function test_catalog_and_profile_lists_cover_the_same_businesses(): void
     {
-        $profil = array_keys(SampleContent::businesses());
-        $katalog = array_keys(SampleContent::catalogItems());
+        foreach ([SampleContent::class, ClientContent::class] as $source) {
+            $profil = array_keys($source::businesses());
+            $katalog = array_keys($source::catalogItems());
 
-        $adaProdukTanpaProfil = array_diff($katalog, $profil);
+            $adaProdukTanpaProfil = array_diff($katalog, $profil);
 
-        $this->assertSame(
-            [],
-            $adaProdukTanpaProfil,
-            'Punya produk tapi tidak punya profil: '.implode(', ', $adaProdukTanpaProfil),
-        );
+            $this->assertSame(
+                [],
+                $adaProdukTanpaProfil,
+                "{$source}: punya produk tapi tidak punya profil: ".implode(', ', $adaProdukTanpaProfil),
+            );
+        }
     }
 
     /**
-     * Portfolio hanya untuk yang sakelarnya menyala, dan sebaliknya.
+     * Anak usaha yang materi aslinya sudah masuk TIDAK BOLEH ikut terisi
+     * teks contoh.
+     *
+     * Kalau keduanya mengisi anak usaha yang sama, produk karangan berdiri
+     * berdampingan dengan produk asli di halaman yang sama — dan pengunjung
+     * tidak punya cara membedakannya.
+     */
+    public function test_the_two_content_sources_never_overlap(): void
+    {
+        $bertabrakan = array_intersect(
+            array_keys(ClientContent::businesses()),
+            array_keys(SampleContent::catalogItems()),
+        );
+
+        $this->seedAll();
+
+        foreach ($bertabrakan as $slug) {
+            $business = Business::where('slug', $slug)->firstOrFail();
+
+            $this->assertSame(
+                0,
+                $business->catalogItems()
+                    ->where('category', CatalogItem::SAMPLE_MARKER)
+                    ->count(),
+                "[{$slug}] punya materi asli tapi kemasukan produk contoh.",
+            );
+        }
+    }
+
+    /**
+     * Foto tidak boleh nyasar ke anak usaha yang sakelarnya mati.
+     *
+     * Pasangan sebaliknya — sakelar menyala tapi belum ada foto — TIDAK
+     * lagi dianggap salah: ngelash sakelarnya menyala sementara foto hasil
+     * kerjanya belum dikirim client. Section-nya hilang sendiri selama
+     * kosong, dan sakelar yang sudah menyala membuat admin bisa langsung
+     * mengunggah tanpa menyalakan apa pun lebih dulu.
      */
     public function test_portfolio_photos_only_go_to_businesses_that_use_them(): void
     {
@@ -138,8 +206,12 @@ class SampleContentSeederTest extends TestCase
 
         $this->assertSame([], $punyaFotoTapiMati);
 
+        // Yang materinya belum masuk tetap harus punya foto contoh kalau
+        // sakelarnya menyala — kalau tidak, sakelarnya menyala percuma dan
+        // itu tanda ada yang terlewat di daftar foto contoh.
         $menyalaTapiKosong = Business::query()
             ->where('has_portfolio', true)
+            ->whereNotIn('slug', array_keys(ClientContent::businesses()))
             ->whereDoesntHave('portfolioItems')
             ->pluck('slug')
             ->all();
@@ -147,12 +219,17 @@ class SampleContentSeederTest extends TestCase
         $this->assertSame([], $menyalaTapiKosong);
     }
 
+    /**
+     * Logonya sekarang dipasang ClientContentSeeder — berkas itu materi asli
+     * dari client, bukan data contoh. Yang dijaga tetap sama: setelah semua
+     * seeder jalan, logonya terpasang.
+     */
     public function test_the_sweetness_logo_is_attached(): void
     {
         $this->seedAll();
 
         $this->assertSame(
-            SampleContent::SWEETNESS_LOGO,
+            ClientContent::SWEETNESS_LOGO,
             Business::where('slug', 'sweetness-things')->value('logo_path'),
         );
     }

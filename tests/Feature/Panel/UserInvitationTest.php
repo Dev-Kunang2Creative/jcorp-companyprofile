@@ -39,7 +39,10 @@ class UserInvitationTest extends TestCase
                 'role' => 'business_admin',
                 'business' => 'sweetness-things',
             ])
-            ->assertSessionHasNoErrors();
+            ->assertSessionHasNoErrors()
+            ->assertInertiaFlash('invitation.name', 'Admin Sweetness')
+            ->assertInertiaFlash('invitation.url')
+            ->assertInertiaFlash('invitation.expires_in_days', User::INVITATION_VALID_DAYS);
 
         $user = User::where('email', 'sweetness@jcorp.test')->firstOrFail();
 
@@ -242,7 +245,10 @@ class UserInvitationTest extends TestCase
 
         $this->actingAs($this->superAdmin())
             ->post(route('panel.users.resend', $user))
-            ->assertSessionHasNoErrors();
+            ->assertSessionHasNoErrors()
+            ->assertInertiaFlash('invitation.name', $user->name)
+            ->assertInertiaFlash('invitation.url')
+            ->assertInertiaFlash('invitation.expires_in_days', User::INVITATION_VALID_DAYS);
 
         $user->refresh();
 

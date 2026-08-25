@@ -20,4 +20,20 @@ export type Auth = {
     isSuperAdmin: boolean;
     /** Menentukan apakah menu Portfolio muncul di sidebar. */
     hasPortfolio: boolean;
+    /** Konteks usaha aktif yang tampil di topbar panel. */
+    business: {
+        slug: string;
+        name: string;
+        isParent: boolean;
+        isPublished: boolean;
+        hasPortfolio: boolean;
+        accentColor: string;
+        publicUrl: string;
+    } | null;
+    /** Hanya tersedia untuk super-admin. */
+    switchableBusinesses: Array<{
+        slug: string;
+        name: string;
+        accentColor: string;
+    }> | null;
 };

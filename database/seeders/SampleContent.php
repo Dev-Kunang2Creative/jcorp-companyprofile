@@ -15,6 +15,15 @@ namespace Database\Seeders;
  * perbandingan ini, perintah pembersih berisiko menghapus tulisan sungguhan.
  *
  * SEMUA TEKS DI SINI KARANGAN. Diganti begitu materi dari client masuk.
+ *
+ * JANGAN MENGHAPUS entri anak usaha yang materi aslinya sudah datang.
+ * ClientContentSeeder membandingkan isi database dengan daftar di sini untuk
+ * mengetahui mana yang masih teks contoh dan boleh ditimpa. Kalau entrinya
+ * dihapus, perbandingan itu gagal dan teks contoh lama tertinggal di halaman
+ * berdampingan dengan materi asli.
+ *
+ * Yang sudah TIDAK dipakai lagi untuk mengisi: SampleContentSeeder melewati
+ * anak usaha yang ada di ClientContent.
  */
 class SampleContent
 {
@@ -101,6 +110,15 @@ class SampleContent
                 'catalog_label' => 'Layanan Kami',
             ],
 
+            // SLUG INI SUDAH TIDAK ADA di database — Lumintu Property
+            // berganti jadi J-Land Property beserta alamat halamannya
+            // (lihat migrasi 2026_08_22_000001).
+            //
+            // Entrinya SENGAJA DIPERTAHANKAN: ClientContentSeeder memakai
+            // daftar ini untuk mengenali teks karangan yang masih tersimpan
+            // di database. Dihapus, nomor `6281277778888` dan alamat
+            // "Jl. Contoh Damai No. 3" tidak lagi dikenali sebagai contoh —
+            // dan bertahan di halaman J-Land tanpa satu pun error.
             'lumintu-property' => [
                 'tagline' => 'Kos dan properti sewa yang pemiliknya masih bisa dihubungi langsung.',
                 'description' => implode("\n\n", [

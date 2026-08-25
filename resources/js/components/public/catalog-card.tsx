@@ -3,12 +3,13 @@ import WhatsappButton from '@/components/public/whatsapp-button';
 import type { PublicCatalogItem } from '@/types/public';
 
 /**
- * Kartu katalog — kaca TIPIS (.glass-card), bukan panel penuh.
+ * Kartu katalog — garis rambut, bukan kaca (arah A+B, 23 Agustus 2026).
  *
- * backdrop-filter dihitung ulang saat halaman digulir dan berat bagi HP kelas
- * bawah; dengan 20 kartu di layar, bedanya terasa. Yang menahan biayanya
- * bukan menghindari kaca sama sekali, tapi besar blur-nya: .glass-card memakai
- * 12px (panel 22px) dan turun ke 8px di bawah 768px — lihat app.css.
+ * Perpindahan ini juga menyelesaikan masalah biaya yang dulu ditangani
+ * setengah-setengah: `backdrop-filter` dihitung ulang setiap kali halaman
+ * digulir, dan dengan 20 kartu di layar bebannya terasa di HP kelas bawah.
+ * Dulu ditahan dengan mengecilkan blur (12px, lalu 8px di layar sempit);
+ * sekarang biayanya nol karena tidak ada blur sama sekali.
  *
  * PERATAAN TOMBOL
  * ---------------
@@ -43,11 +44,11 @@ export default function CatalogCard({ item, businessName, whatsapp }: Props) {
     const noteLine = item.formatted_price ? item.price_note : null;
 
     return (
-        <article className="glass-card flex h-full flex-col overflow-hidden rounded-brand-md transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-glass">
+        <article className="hairline-card flex h-full flex-col overflow-hidden">
             {showFallback ? (
                 // Kotak inisial, bukan ikon rusak (spec §10).
                 <div
-                    className="flex aspect-[4/3] shrink-0 items-center justify-center bg-glass-tint font-display text-[26px] font-semibold text-gold-deep"
+                    className="flex aspect-[4/3] shrink-0 items-center justify-center border-b border-hair-soft bg-wash font-display text-[26px] text-[var(--unit-accent)]"
                     aria-hidden="true"
                 >
                     {item.initials}
@@ -58,18 +59,18 @@ export default function CatalogCard({ item, businessName, whatsapp }: Props) {
                     alt={item.name}
                     loading="lazy"
                     onError={() => setImageFailed(true)}
-                    className="aspect-[4/3] w-full shrink-0 bg-glass-tint object-cover"
+                    className="aspect-[4/3] w-full shrink-0 border-b border-hair-soft bg-wash object-cover"
                 />
             )}
 
             <div className="flex flex-1 flex-col p-3 md:p-4">
                 {item.category && (
-                    <p className="mb-1 text-[10.5px] font-medium tracking-[0.16em] text-gold-deep uppercase">
+                    <p className="mb-1.5 text-[10px] font-medium tracking-[0.14em] text-[var(--unit-accent)] uppercase">
                         {item.category}
                     </p>
                 )}
 
-                <h3 className="mb-1 font-display text-[15px] font-semibold text-ink md:text-[17px]">
+                <h3 className="mb-1.5 font-display text-[16px] font-normal tracking-[-0.01em] text-ink md:text-[18px]">
                     {item.name}
                 </h3>
 
@@ -97,7 +98,7 @@ export default function CatalogCard({ item, businessName, whatsapp }: Props) {
 
                         <span
                             aria-hidden={mainLine ? undefined : 'true'}
-                            className="block min-h-5 text-[14.5px] leading-5 font-medium text-gold-deep"
+                            className="block min-h-5 text-[14.5px] leading-5 font-medium text-[var(--unit-accent)]"
                         >
                             {mainLine ?? ' '}
                         </span>

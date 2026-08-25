@@ -40,9 +40,37 @@ class PublicProfileController extends Controller
                 'tagline' => $business->tagline,
                 'description' => $business->description,
                 'logo_url' => $this->images->url($business->logo_path),
+
+                // Warna aksen halaman (DESIGN_SYSTEM §2.3). Lewat
+                // safeAccentColor(), bukan kolomnya langsung: nilainya
+                // berakhir di atribut `style`, jadi bentuknya harus
+                // dipastikan lebih dulu.
+                'accent_color' => $business->safeAccentColor(),
+
+                // Ikon tab browser. Halaman anak usaha dibuka di tab
+                // sendiri dari etalase induk, jadi ikonnya yang
+                // membedakan tab mana milik siapa.
+                'favicon_url' => $this->images->url($business->faviconPath()),
+
                 'catalog_label' => $business->catalog_label,
+                'catalog_note' => $business->catalog_note,
                 'portfolio_label' => $business->portfolio_label,
+
+                // Bagian profil yang bentuknya menyusul materi client. Yang
+                // bernilai null menghilangkan sectionnya, sama seperti
+                // katalog dan portfolio di bawah.
+                'vision' => $business->vision,
+                'mission' => $business->mission ?: null,
+                'featured_services' => $business->featured_services ?: null,
+                'services' => $business->services ?: null,
+                'services_label' => $business->services_label,
+                'highlights' => $business->highlights ?: null,
             ],
+
+            // Nama induk untuk footer ("bagian dari …"). Diambil dari
+            // database, bukan ditulis di komponen — kalau nama induk berubah,
+            // footer lima halaman anak usaha tidak perlu ikut disunting.
+            'parentName' => Business::where('is_parent', true)->value('name'),
 
             // Aturan section kosong (spec §3) ditegakkan DI SINI, bukan di
             // React: section yang tidak dirender datanya juga tidak dikirim
@@ -142,13 +170,42 @@ class PublicProfileController extends Controller
      */
     private function contact(Business $business): array
     {
-        return array_filter([
+        $filled = fn (?string $value) => $value !== null && $value !== '';
+
+        $rows = array_filter([
             'whatsapp' => $business->whatsapp,
+            'whatsapp_alt' => $business->whatsapp_alt,
             'instagram' => $business->instagram,
             'tiktok' => $business->tiktok,
             'address' => $business->address,
             'business_hours' => $business->business_hours,
-        ], fn (?string $value) => $value !== null && $value !== '');
+        ], $filled);
+
+        // `contact_note` menyertai baris kontak, bukan menggantikannya: kalau
+        // tidak ada satu pun cara menghubungi, catatan cara pemesanan tidak
+        // ada gunanya — sectionnya akan berisi judul dan satu kalimat tanpa
+        // nomor atau akun yang bisa dituju.
+        if ($rows === []) {
+            return [];
+        }
+
+        // Nama pemilik nomor ikut HANYA kalau nomornya ada. Label sendirian
+        // bukan cara menghubungi — dan kalau ikut lolos ke penyaringan di
+        // atas, sebuah label yatim bisa membuat section kontak muncul tanpa
+        // satu pun nomor di dalamnya.
+        foreach (['whatsapp', 'whatsapp_alt'] as $column) {
+            $label = $business->{$column.'_label'};
+
+            if (isset($rows[$column]) && $filled($label)) {
+                $rows[$column.'_label'] = $label;
+            }
+        }
+
+        if ($filled($business->contact_note)) {
+            $rows['contact_note'] = $business->contact_note;
+        }
+
+        return $rows;
     }
 
     /**

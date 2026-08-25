@@ -53,7 +53,7 @@ const STATUS_LABEL: Record<AccountStatus, string> = {
 };
 
 const STATUS_CLASS: Record<AccountStatus, string> = {
-    aktif: 'text-gold-deep',
+    aktif: 'text-brass',
     menunggu_aktivasi: 'text-ink-soft',
     undangan_kedaluwarsa: 'text-destructive',
     nonaktif: 'text-muted-foreground',
@@ -67,12 +67,10 @@ export default function UsersIndex({ users, availableBusinesses }: Props) {
     // Tautan undangan datang lewat flash setelah form berhasil. Ini
     // satu-satunya kesempatan menyalinnya — tokennya tidak disimpan mentah.
     //
-    // Dibaca langsung dari props, bukan disalin ke state lewat useEffect:
-    // flash Inertia sudah hilang sendiri pada navigasi berikutnya, jadi
-    // menyalinnya cuma menambah render tanpa guna. `dismissed` menangani
-    // penutupan dialog tanpa perlu menyentuh datanya.
-    const flash = usePage().props.invitation as
-        { name: string; url: string; expires_in_days: number } | undefined;
+    // Inertia v3 memisahkan flash dari props halaman. Membacanya dari
+    // `usePage().flash` memastikan tautan sekali pakai sampai ke dialog tanpa
+    // ikut disimpan di history atau props bersama.
+    const flash = usePage().flash.invitation;
 
     const [dismissed, setDismissed] = useState(false);
 
@@ -102,48 +100,134 @@ export default function UsersIndex({ users, availableBusinesses }: Props) {
         <>
             <Head title="Kelola Akun" />
 
-            <div className="space-y-6 px-4 py-6">
-                <div className="flex flex-wrap items-start justify-between gap-3">
+            <main className="panel-page space-y-6">
+                <div className="panel-page-header">
                     <Heading
-                        title="Kelola Akun"
+                        title="Akun & Akses"
                         description={`${users.length} akun terdaftar`}
                     />
 
-                    <Button onClick={() => setInviting(true)}>
-                        <UserPlus className="size-4" />
-                        Undang admin
-                    </Button>
+                    <div className="panel-page-actions">
+                        <Button onClick={() => setInviting(true)}>
+                            <UserPlus className="size-4" />
+                            Undang admin
+                        </Button>
+                    </div>
                 </div>
 
-                <ul className="grid gap-2">
-                    {users.map((user) => (
-                        <li
-                            key={user.id}
-                            className="flex flex-col gap-3 rounded-md border border-border p-3 sm:flex-row sm:items-center sm:justify-between"
-                        >
-                            <div className="min-w-0">
-                                <p className="truncate font-medium">
-                                    {user.name}
-                                    {user.is_self && (
-                                        <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs font-normal">
-                                            Anda
+                <div className="panel-table-shell">
+                    <table className="panel-table">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>Peran</th>
+                                <th>Usaha</th>
+                                <th>Status</th>
+                                <th className="text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => (
+                                <tr key={user.id}>
+                                    <td>
+                                        <p className="font-medium text-ink">
+                                            {user.name}
+                                            {user.is_self && (
+                                                <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-[0.65rem] font-normal text-muted-foreground">
+                                                    Anda
+                                                </span>
+                                            )}
+                                        </p>
+                                    </td>
+                                    <td className="text-muted-foreground">
+                                        {user.email}
+                                    </td>
+                                    <td>{user.role_label}</td>
+                                    <td>
+                                        {user.business_name ?? 'Semua usaha'}
+                                    </td>
+                                    <td>
+                                        <span
+                                            className={`text-sm font-medium ${STATUS_CLASS[user.status]}`}
+                                        >
+                                            {STATUS_LABEL[user.status]}
                                         </span>
-                                    )}
-                                </p>
-                                <p className="truncate text-sm text-muted-foreground">
-                                    {user.email} · {user.role_label}
-                                    {user.business_name &&
-                                        ` · ${user.business_name}`}
-                                </p>
-                            </div>
+                                    </td>
+                                    <td>
+                                        <div className="flex justify-end gap-2">
+                                            {(user.status ===
+                                                'menunggu_aktivasi' ||
+                                                user.status ===
+                                                    'undangan_kedaluwarsa') && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() => {
+                                                        setDismissed(false);
+                                                        router.post(
+                                                            resend(user.id).url,
+                                                            {},
+                                                            {
+                                                                preserveScroll: true,
+                                                            },
+                                                        );
+                                                    }}
+                                                >
+                                                    Buat tautan baru
+                                                </Button>
+                                            )}
+                                            {!user.is_self && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setPendingToggle(user)
+                                                    }
+                                                >
+                                                    {user.status === 'nonaktif'
+                                                        ? 'Nyalakan akses'
+                                                        : 'Matikan akses'}
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-                            <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <ul className="panel-mobile-list">
+                    {users.map((user) => (
+                        <li key={user.id} className="panel-mobile-card">
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                    <p className="truncate font-medium text-ink">
+                                        {user.name}
+                                        {user.is_self && (
+                                            <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-[0.65rem] font-normal text-muted-foreground">
+                                                Anda
+                                            </span>
+                                        )}
+                                    </p>
+                                    <p className="mt-1 truncate text-sm text-muted-foreground">
+                                        {user.email}
+                                    </p>
+                                    <p className="mt-1 text-xs text-muted-foreground">
+                                        {user.role_label}
+                                        {user.business_name &&
+                                            ` · ${user.business_name}`}
+                                    </p>
+                                </div>
                                 <span
-                                    className={`text-sm font-medium ${STATUS_CLASS[user.status]}`}
+                                    className={`shrink-0 text-sm font-medium ${STATUS_CLASS[user.status]}`}
                                 >
                                     {STATUS_LABEL[user.status]}
                                 </span>
+                            </div>
 
+                            <div className="mt-4 flex flex-wrap gap-2">
                                 {(user.status === 'menunggu_aktivasi' ||
                                     user.status === 'undangan_kedaluwarsa') && (
                                     <Button
@@ -168,6 +252,7 @@ export default function UsersIndex({ users, availableBusinesses }: Props) {
                                     <Button
                                         variant="outline"
                                         size="sm"
+                                        className="flex-1"
                                         onClick={() => setPendingToggle(user)}
                                     >
                                         {user.status === 'nonaktif'
@@ -180,7 +265,7 @@ export default function UsersIndex({ users, availableBusinesses }: Props) {
                     ))}
                 </ul>
 
-                <section className="rounded-md border border-border bg-muted/40 p-4 text-sm">
+                <section className="panel-surface p-4 text-sm">
                     <h2 className="mb-2 font-medium">Cara kerja undangan</h2>
                     <p className="mb-2 text-muted-foreground">
                         Anda membuat akun tanpa password, lalu mengirim
@@ -193,7 +278,7 @@ export default function UsersIndex({ users, availableBusinesses }: Props) {
                         baris akunnya.
                     </p>
                 </section>
-            </div>
+            </main>
 
             {/* ---------- Modal undang ---------- */}
 
@@ -306,12 +391,17 @@ function CopyableLink({ url }: { url: string }) {
     }
 
     return (
-        <div className="flex items-center gap-2">
-            <code className="min-w-0 flex-1 truncate rounded border border-border bg-background px-3 py-2 font-mono text-xs">
+        <div className="flex w-full max-w-full min-w-0 flex-col gap-2 sm:flex-row sm:items-center">
+            <code className="block w-full min-w-0 flex-1 truncate rounded border border-border bg-background px-3 py-2 font-mono text-xs sm:w-auto">
                 {url}
             </code>
 
-            <Button variant="outline" size="sm" onClick={copy}>
+            <Button
+                variant="outline"
+                size="sm"
+                onClick={copy}
+                className="w-full shrink-0 sm:w-auto"
+            >
                 {copied ? (
                     <>
                         <Check className="size-4" />

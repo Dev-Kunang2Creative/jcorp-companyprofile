@@ -3,13 +3,15 @@ import WhatsappButton from '@/components/public/whatsapp-button';
 import { cn } from '@/lib/utils';
 
 /**
- * Navigasi — bar kaca yang menempel di atas.
+ * Navigasi — putih 88% dengan garis rambut di bawahnya.
  *
- * Memakai .glass-veil, bukan .glass-panel: bar ini membentang selebar layar
- * dan isi halaman lewat persis di belakangnya saat digulir. Pada opasitas
- * panel, teks yang lewat di bawahnya masih terbaca samar dan mengganggu.
- * Kelas .glass-veil sudah memuat cadangan padat untuk browser tanpa
- * dukungan backdrop-filter (DESIGN_SYSTEM §5.2).
+ * Sejak arah A+B (23 Agustus 2026) bar ini tidak lagi berpermukaan kaca.
+ * Alasannya sederhana: latar halaman sudah putih, dan kaca di atas putih
+ * polos tidak membiaskan apa pun — efeknya sia-sia sambil tetap membayar
+ * biaya render (DESIGN_SYSTEM §5.5).
+ *
+ * Yang dipertahankan dari kaca cuma satu: sedikit blur, supaya teks yang
+ * lewat di belakangnya saat digulir tidak terbaca mengganggu.
  *
  * Mobile: tautan berubah jadi panel geser di bawah tombol menu — bukan
  * tautan mendatar yang dikecilkan (DESIGN_SYSTEM §7).
@@ -33,7 +35,7 @@ export default function SiteNav({
     const [open, setOpen] = useState(false);
 
     return (
-        <header className="glass-veil sticky top-0 z-30 border-b">
+        <header className="sticky top-0 z-30 border-b border-hair bg-paper/[.88] backdrop-blur-md">
             <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-8">
                 <a
                     href="#top"
@@ -49,7 +51,7 @@ export default function SiteNav({
                             height={40}
                         />
                     )}
-                    <span className="font-display text-[15px] font-semibold tracking-tight text-ink md:text-base">
+                    <span className="text-[11.5px] font-semibold tracking-[0.13em] text-ink uppercase md:text-xs">
                         {businessName}
                     </span>
                 </a>
@@ -62,7 +64,7 @@ export default function SiteNav({
                         <a
                             key={link.href}
                             href={link.href}
-                            className="text-sm font-medium text-ink-soft transition-colors hover:text-gold-deep"
+                            className="text-[11px] tracking-[0.1em] text-ink-soft uppercase transition-colors hover:text-brass"
                         >
                             {link.label}
                         </a>
@@ -86,7 +88,7 @@ export default function SiteNav({
                         aria-expanded={open}
                         aria-controls="nav-mobile"
                         aria-label={open ? 'Tutup menu' : 'Buka menu'}
-                        className="glass-field flex h-11 w-11 items-center justify-center rounded-brand-sm md:hidden"
+                        className="flex h-11 w-11 items-center justify-center rounded-sm border border-hair md:hidden"
                     >
                         <span className="sr-only">
                             {open ? 'Tutup menu' : 'Buka menu'}
@@ -119,7 +121,7 @@ export default function SiteNav({
                 <nav
                     id="nav-mobile"
                     aria-label="Navigasi utama"
-                    className="border-t border-line px-4 pb-4 md:hidden"
+                    className="border-t border-hair px-4 pb-4 md:hidden"
                 >
                     <ul className="flex flex-col">
                         {links.map((link) => (
@@ -127,7 +129,7 @@ export default function SiteNav({
                                 <a
                                     href={link.href}
                                     onClick={() => setOpen(false)}
-                                    className="block py-3 text-[15px] font-medium text-ink-soft"
+                                    className="block border-b border-hair-soft py-3 text-[13px] tracking-[0.08em] text-ink-soft uppercase last:border-b-0"
                                 >
                                     {link.label}
                                 </a>

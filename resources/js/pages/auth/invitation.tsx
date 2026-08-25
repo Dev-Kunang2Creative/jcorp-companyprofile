@@ -31,12 +31,12 @@ export default function Invitation({
         <>
             <Head title="Aktifkan Akun" />
 
-            <div className="mb-6 rounded-brand-md border border-line bg-cream-warm p-4 text-sm">
+            <div className="mb-6 rounded-sm border border-hair bg-wash p-4 text-sm">
                 <p className="font-medium text-ink">Halo, {name}.</p>
                 <p className="mt-1 text-ink-soft">
                     {businessName
                         ? `Anda diundang sebagai admin ${businessName}.`
-                        : 'Anda diundang sebagai super admin J Corp.'}{' '}
+                        : 'Anda diundang sebagai super admin J-Corporate Group.'}{' '}
                     Buat password untuk mengaktifkan akun.
                 </p>
             </div>
@@ -91,5 +91,5 @@ export default function Invitation({
 
 Invitation.layout = {
     title: 'Aktifkan Akun',
-    description: 'Buat password untuk akun panel J Corp Anda',
+    description: 'Buat password untuk akun panel J-Corporate Group Anda',
 };

@@ -1,4 +1,5 @@
 import { Breadcrumbs } from '@/components/breadcrumbs';
+import { BusinessContextSwitcher } from '@/components/panel/business-context-switcher';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types';
 
@@ -14,11 +15,13 @@ export function AppSidebarHeader({
         //
         // Sengaja TIDAK sticky — yang menggulir di layout ini dokumennya,
         // bukan inset-nya, jadi `sticky` di sini tidak akan pernah aktif.
-        <header className="glass-veil flex h-16 shrink-0 items-center gap-2 rounded-t-2xl border-b px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4">
-            <div className="flex items-center gap-2">
-                <SidebarTrigger className="-ml-1" />
+        <header className="glass-veil flex min-h-16 shrink-0 items-center justify-between gap-3 rounded-t-2xl border-b px-3 py-2 transition-[width,height] duration-200 md:px-5">
+            <div className="flex min-w-0 items-center gap-2">
+                <SidebarTrigger />
                 <Breadcrumbs breadcrumbs={breadcrumbs} />
             </div>
+
+            <BusinessContextSwitcher />
         </header>
     );
 }

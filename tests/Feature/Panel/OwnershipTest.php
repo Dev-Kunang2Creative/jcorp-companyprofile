@@ -194,6 +194,28 @@ class OwnershipTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->where('switchableBusinesses', null)
                 ->where('business.name', 'Punya Saya')
+                ->where('auth.switchableBusinesses', null)
+                ->where('auth.business.slug', $this->mine->slug)
+            );
+    }
+
+    public function test_super_admin_receives_the_global_business_switcher_context(): void
+    {
+        $superAdmin = User::factory()->superAdmin()->create();
+
+        $this->actingAs($superAdmin)
+            ->get(route('panel.dashboard', ['business' => $this->theirs->slug]))
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('auth.business.slug', $this->theirs->slug)
+                ->has('auth.switchableBusinesses', 2)
+                ->where('auth.switchableBusinesses', fn ($businesses) => $businesses
+                    ->pluck('slug')
+                    ->sort()
+                    ->values()
+                    ->all() === collect([$this->mine->slug, $this->theirs->slug])
+                    ->sort()
+                    ->values()
+                    ->all())
             );
     }
 

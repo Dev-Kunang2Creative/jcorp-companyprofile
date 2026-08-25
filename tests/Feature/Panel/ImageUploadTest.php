@@ -362,4 +362,143 @@ class ImageUploadTest extends TestCase
         $this->assertStringEndsWith('.webp', $item->image_path);
         Storage::disk('public')->assertExists($item->image_path);
     }
+    // -------------------------------------------------------- hapus foto
+
+    /**
+     * Admin bisa MENGHAPUS foto tanpa menghapus itemnya.
+     *
+     * Sebelum 23 Agustus 2026 tidak ada caranya sama sekali: satu-satunya
+     * jalan adalah menghapus itemnya lalu membuatnya lagi dari nol —
+     * beserta harga, keterangan, dan urutannya.
+     *
+     * Item katalog memang boleh tanpa foto; kartunya menampilkan kotak
+     * inisial (spec §10).
+     */
+    public function test_an_admin_can_remove_a_photo_without_deleting_the_item(): void
+    {
+        $item = CatalogItem::factory()->for($this->business)->create();
+
+        $this->actingAs($this->admin)->put(route('panel.catalog.update', $item), [
+            'name' => $item->name,
+            'is_available' => true,
+            'sort_order' => 0,
+            'image' => UploadedFile::fake()->image('foto.jpg'),
+        ]);
+
+        $path = $item->refresh()->image_path;
+        $this->assertNotNull($path);
+
+        $this->actingAs($this->admin)
+            ->put(route('panel.catalog.update', $item), [
+                'name' => $item->name,
+                'is_available' => true,
+                'sort_order' => 0,
+                'remove_image' => '1',
+            ])
+            ->assertSessionHasNoErrors();
+
+        // Itemnya masih ada, fotonya yang hilang.
+        $this->assertNotNull($item->fresh());
+        $this->assertNull($item->refresh()->image_path);
+    }
+
+    public function test_removing_a_photo_deletes_the_files_from_disk(): void
+    {
+        // Berkas yatim yang tidak lagi dirujuk baris mana pun hanya
+        // memenuhi disk. Berbeda dari destroy(), yang MENYIMPAN berkasnya
+        // karena itemnya cuma di-soft-delete dan masih bisa dipulihkan.
+        $item = CatalogItem::factory()->for($this->business)->create();
+
+        $this->actingAs($this->admin)->put(route('panel.catalog.update', $item), [
+            'name' => $item->name,
+            'is_available' => true,
+            'sort_order' => 0,
+            'image' => UploadedFile::fake()->image('foto.jpg'),
+        ]);
+
+        $path = $item->refresh()->image_path;
+        $thumb = app(ImageService::class)->thumbnailPath($path);
+
+        Storage::disk('public')->assertExists($path);
+        Storage::disk('public')->assertExists($thumb);
+
+        $this->actingAs($this->admin)->put(route('panel.catalog.update', $item), [
+            'name' => $item->name,
+            'is_available' => true,
+            'sort_order' => 0,
+            'remove_image' => '1',
+        ]);
+
+        Storage::disk('public')->assertMissing($path);
+        Storage::disk('public')->assertMissing($thumb);
+    }
+
+    /**
+     * PENJAGA TERPENTING dari fitur ini.
+     *
+     * Form tanpa berkas berarti admin cuma mengubah harga atau keterangan
+     * — dan itu yang PALING SERING terjadi. Kalau perubahan biasa ikut
+     * menghapus foto, admin kehilangan berkasnya tanpa pernah memintanya.
+     */
+    public function test_an_ordinary_edit_never_touches_the_photo(): void
+    {
+        $item = CatalogItem::factory()->for($this->business)->create();
+
+        $this->actingAs($this->admin)->put(route('panel.catalog.update', $item), [
+            'name' => $item->name,
+            'is_available' => true,
+            'sort_order' => 0,
+            'image' => UploadedFile::fake()->image('foto.jpg'),
+        ]);
+
+        $path = $item->refresh()->image_path;
+
+        // Mengubah harga saja — tanpa berkas, tanpa remove_image.
+        $this->actingAs($this->admin)->put(route('panel.catalog.update', $item), [
+            'name' => 'Nama Baru',
+            'price' => 99000,
+            'is_available' => true,
+            'sort_order' => 0,
+        ]);
+
+        $this->assertSame($path, $item->refresh()->image_path);
+        Storage::disk('public')->assertExists($path);
+        $this->assertSame('Nama Baru', $item->name);
+    }
+
+    public function test_uploading_a_new_photo_wins_over_the_remove_flag(): void
+    {
+        // Kalau keduanya terkirim — misalnya penanda tertinggal dari
+        // interaksi sebelumnya — yang dimaksud admin jelas MENGGANTI,
+        // bukan mengosongkan.
+        $item = CatalogItem::factory()->for($this->business)->create();
+
+        $this->actingAs($this->admin)->put(route('panel.catalog.update', $item), [
+            'name' => $item->name,
+            'is_available' => true,
+            'sort_order' => 0,
+            'image' => UploadedFile::fake()->image('baru.jpg'),
+            'remove_image' => '1',
+        ]);
+
+        $this->assertNotNull($item->refresh()->image_path);
+    }
+
+    public function test_removing_a_photo_that_does_not_exist_is_harmless(): void
+    {
+        $item = CatalogItem::factory()->for($this->business)->create([
+            'image_path' => null,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->put(route('panel.catalog.update', $item), [
+                'name' => $item->name,
+                'is_available' => true,
+                'sort_order' => 0,
+                'remove_image' => '1',
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertNull($item->refresh()->image_path);
+    }
 }

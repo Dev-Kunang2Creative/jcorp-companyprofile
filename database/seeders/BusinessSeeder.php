@@ -39,7 +39,7 @@ class BusinessSeeder extends Seeder
         return [
             [
                 'slug' => 'jcorp',
-                'name' => 'J Corp',
+                'name' => 'J-Corporate Group',
                 'is_parent' => true,
                 // Halaman induk baru dibangun di Fase 4; sampai saat itu
                 // tidak ada yang bisa dilihat siapa pun.
@@ -85,8 +85,8 @@ class BusinessSeeder extends Seeder
                 'portfolio_label' => 'Portfolio',
             ],
             [
-                'slug' => 'lumintu-property',
-                'name' => 'Lumintu Property',
+                'slug' => 'j-land-property',
+                'name' => 'J-Land Property',
                 'is_parent' => false,
                 'is_published' => false,
                 'sort_order' => 5,

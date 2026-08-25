@@ -32,6 +32,21 @@ require __DIR__.'/settings.php';
 
 /*
 |--------------------------------------------------------------------------
+| Alamat lama yang sudah berganti
+|--------------------------------------------------------------------------
+|
+| Harus di ATAS route `/{slug}` — kalau di bawah, slug generik menangkapnya
+| lebih dulu dan mengembalikan 404.
+|
+| 301, bukan 302: alamatnya berpindah permanen, dan itu yang memberitahu
+| mesin pencari supaya mengalihkan peringkat halaman lamanya.
+|
+*/
+
+Route::permanentRedirect('/lumintu-property', '/j-land-property');
+
+/*
+|--------------------------------------------------------------------------
 | Profil anak usaha — DIDAFTARKAN PALING AKHIR (Fase 3)
 |--------------------------------------------------------------------------
 |

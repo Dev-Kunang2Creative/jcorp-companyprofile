@@ -22,5 +22,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(BusinessSeeder::class);
+
+        // Materi asli dari client. Aman ikut jalan di server: isinya bukan
+        // karangan, dan kolom yang sudah disunting admin tidak ditimpa.
+        //
+        // SampleContentSeeder TIDAK dipanggil di sini — isinya karangan, dan
+        // memasukkannya ke server yang sudah tayang berarti data palsu ikut
+        // terbaca pengunjung. Dijalankan terpisah saat dibutuhkan:
+        //
+        //     php artisan db:seed --class=SampleContentSeeder
+        $this->call(ClientContentSeeder::class);
     }
 }

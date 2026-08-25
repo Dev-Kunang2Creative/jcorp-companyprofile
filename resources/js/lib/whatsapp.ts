@@ -37,10 +37,16 @@ export function whatsappUrl(
     number: string,
     businessName: string,
     itemName?: string,
+    locale: 'id' | 'en' = 'id',
 ): string {
-    const message = itemName
-        ? `Halo ${businessName}, saya mau tanya soal ${itemName}`
-        : `Halo ${businessName}, saya mau tanya-tanya dulu`;
+    const message =
+        locale === 'en'
+            ? itemName
+                ? `Hello ${businessName}, I would like to ask about ${itemName}`
+                : `Hello ${businessName}, I would like to ask for more information`
+            : itemName
+              ? `Halo ${businessName}, saya mau tanya soal ${itemName}`
+              : `Halo ${businessName}, saya mau tanya-tanya dulu`;
 
     return `https://wa.me/${normalizeWhatsappNumber(number)}?text=${encodeURIComponent(message)}`;
 }

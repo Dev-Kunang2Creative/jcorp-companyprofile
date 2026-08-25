@@ -53,34 +53,38 @@ export default function CatalogIndex({ business, items }: Props) {
         <>
             <Head title={business.catalog_label} />
 
-            <div className="space-y-6 px-4 py-6">
-                <div className="flex flex-wrap items-start justify-between gap-3">
+            <main className="panel-page space-y-6">
+                <div className="panel-page-header">
                     <Heading
                         title={business.catalog_label}
                         description={`Mengelola katalog ${business.name}`}
                     />
 
-                    <Button onClick={() => setCreating(true)}>
-                        <Plus className="size-4" />
-                        Tambah item
-                    </Button>
+                    <div className="panel-page-actions">
+                        <Button onClick={() => setCreating(true)}>
+                            <Plus className="size-4" />
+                            Tambah item
+                        </Button>
+                    </div>
                 </div>
 
                 <section>
                     {items.length === 0 ? (
-                        <div className="rounded-brand-md border border-dashed border-line-strong p-8 text-center">
-                            <p className="text-sm text-muted-foreground">
-                                Belum ada item. Selama katalog kosong,
-                                sectionnya tidak muncul di halaman publik.
-                            </p>
-                            <Button
-                                variant="outline"
-                                className="mt-4"
-                                onClick={() => setCreating(true)}
-                            >
-                                <Plus className="size-4" />
-                                Tambah item pertama
-                            </Button>
+                        <div className="panel-empty-state">
+                            <div>
+                                <p className="text-sm text-muted-foreground">
+                                    Belum ada item. Selama katalog kosong,
+                                    sectionnya tidak muncul di halaman publik.
+                                </p>
+                                <Button
+                                    variant="outline"
+                                    className="mt-4"
+                                    onClick={() => setCreating(true)}
+                                >
+                                    <Plus className="size-4" />
+                                    Tambah item pertama
+                                </Button>
+                            </div>
                         </div>
                     ) : (
                         <>
@@ -88,47 +92,123 @@ export default function CatalogIndex({ business, items }: Props) {
                                 {items.length} item tersimpan
                             </p>
 
-                            <ul className="grid gap-2">
+                            <div className="panel-table-shell">
+                                <table className="panel-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Foto</th>
+                                            <th>Nama</th>
+                                            <th>Kategori</th>
+                                            <th>Harga</th>
+                                            <th>Status</th>
+                                            <th>Urutan</th>
+                                            <th className="text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {items.map((item) => (
+                                            <tr key={item.id}>
+                                                <td>
+                                                    <ItemThumbnail
+                                                        item={item}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <p className="max-w-64 font-medium text-ink">
+                                                        {item.name}
+                                                    </p>
+                                                </td>
+                                                <td className="text-muted-foreground">
+                                                    {item.category ?? '—'}
+                                                </td>
+                                                <td>
+                                                    {item.formatted_price ??
+                                                        'Tanpa harga'}
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        className={
+                                                            item.is_available
+                                                                ? 'panel-status panel-status--published'
+                                                                : 'panel-status panel-status--draft'
+                                                        }
+                                                    >
+                                                        {item.is_available
+                                                            ? 'Tampil'
+                                                            : 'Disembunyikan'}
+                                                    </span>
+                                                </td>
+                                                <td className="tabular-nums">
+                                                    {item.sort_order}
+                                                </td>
+                                                <td>
+                                                    <div className="flex justify-end gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() =>
+                                                                setEditing(item)
+                                                            }
+                                                        >
+                                                            Ubah
+                                                        </Button>
+                                                        <ConfirmDelete
+                                                            url={
+                                                                destroy(item.id)
+                                                                    .url
+                                                            }
+                                                            itemName={item.name}
+                                                        />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <ul className="panel-mobile-list">
                                 {items.map((item) => (
                                     <li
                                         key={item.id}
-                                        className="glass-card flex items-center gap-4 rounded-brand-md p-3"
+                                        className="panel-mobile-card"
                                     >
-                                        {item.thumb_url ? (
-                                            <img
-                                                src={item.thumb_url}
-                                                alt=""
-                                                className="h-14 w-14 shrink-0 rounded object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded bg-muted text-center text-xs leading-tight text-muted-foreground">
-                                                tanpa
-                                                <br />
-                                                foto
-                                            </div>
-                                        )}
-
-                                        <div className="min-w-0 flex-1">
-                                            <p className="truncate font-medium">
-                                                {item.name}
-                                            </p>
-                                            <p className="text-sm text-muted-foreground">
-                                                {item.formatted_price ??
-                                                    'Tanpa harga'}
-                                                {' · urutan '}
-                                                {item.sort_order}
-                                                {!item.is_available && (
-                                                    <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs">
-                                                        disembunyikan
+                                        <div className="flex items-start gap-3">
+                                            <ItemThumbnail item={item} />
+                                            <div className="min-w-0 flex-1">
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <p className="font-medium text-ink">
+                                                        {item.name}
+                                                    </p>
+                                                    <span
+                                                        className={
+                                                            item.is_available
+                                                                ? 'panel-status panel-status--published'
+                                                                : 'panel-status panel-status--draft'
+                                                        }
+                                                    >
+                                                        {item.is_available
+                                                            ? 'Tampil'
+                                                            : 'Tersembunyi'}
                                                     </span>
-                                                )}
-                                            </p>
+                                                </div>
+                                                <p className="mt-1 text-sm text-muted-foreground">
+                                                    {item.formatted_price ??
+                                                        'Tanpa harga'}
+                                                    {item.category &&
+                                                        ` · ${item.category}`}
+                                                </p>
+                                                <p className="mt-1 text-xs text-muted-foreground">
+                                                    Urutan {item.sort_order}
+                                                </p>
+                                            </div>
                                         </div>
 
-                                        <div className="flex shrink-0 gap-2">
+                                        <div className="mt-4 flex gap-2">
                                             <Button
                                                 variant="outline"
                                                 size="sm"
+                                                className="flex-1"
                                                 onClick={() => setEditing(item)}
                                             >
                                                 Ubah
@@ -145,7 +225,7 @@ export default function CatalogIndex({ business, items }: Props) {
                         </>
                     )}
                 </section>
-            </div>
+            </main>
 
             <FormModal
                 open={creating}
@@ -176,6 +256,22 @@ export default function CatalogIndex({ business, items }: Props) {
                 </FormModal>
             )}
         </>
+    );
+}
+
+function ItemThumbnail({ item }: { item: CatalogItem }) {
+    return item.thumb_url ? (
+        <img
+            src={item.thumb_url}
+            alt=""
+            className="h-14 w-14 shrink-0 rounded-sm object-cover"
+        />
+    ) : (
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-sm bg-muted text-center text-[0.65rem] leading-tight text-muted-foreground">
+            tanpa
+            <br />
+            foto
+        </div>
     );
 }
 
@@ -273,7 +369,14 @@ function Fields({
                 </div>
             </div>
 
-            <ImageInput currentUrl={item?.image_url} error={errors.image} />
+            <ImageInput
+                currentUrl={item?.image_url}
+                error={errors.image}
+                // Foto katalog boleh kosong — kartunya menampilkan kotak
+                // inisial. Portfolio tidak: foto portfolio tanpa gambar
+                // tidak ada isinya.
+                removable
+            />
 
             <div className="flex items-center gap-2">
                 <input type="hidden" name="is_available" value="0" />

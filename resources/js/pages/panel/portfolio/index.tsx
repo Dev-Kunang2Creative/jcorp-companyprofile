@@ -32,34 +32,38 @@ export default function PortfolioIndex({ business, items }: Props) {
         <>
             <Head title={business.portfolio_label} />
 
-            <div className="space-y-6 px-4 py-6">
-                <div className="flex flex-wrap items-start justify-between gap-3">
+            <main className="panel-page space-y-6">
+                <div className="panel-page-header">
                     <Heading
                         title={business.portfolio_label}
                         description={`Foto hasil kerja ${business.name}`}
                     />
 
-                    <Button onClick={() => setCreating(true)}>
-                        <Plus className="size-4" />
-                        Tambah foto
-                    </Button>
+                    <div className="panel-page-actions">
+                        <Button onClick={() => setCreating(true)}>
+                            <Plus className="size-4" />
+                            Tambah foto
+                        </Button>
+                    </div>
                 </div>
 
                 <section>
                     {items.length === 0 ? (
-                        <div className="rounded-brand-md border border-dashed border-line-strong p-8 text-center">
-                            <p className="text-sm text-muted-foreground">
-                                Belum ada foto. Selama kosong, section portfolio
-                                tidak muncul di halaman publik.
-                            </p>
-                            <Button
-                                variant="outline"
-                                className="mt-4"
-                                onClick={() => setCreating(true)}
-                            >
-                                <Plus className="size-4" />
-                                Unggah foto pertama
-                            </Button>
+                        <div className="panel-empty-state">
+                            <div>
+                                <p className="text-sm text-muted-foreground">
+                                    Belum ada foto. Selama kosong, section
+                                    portfolio tidak muncul di halaman publik.
+                                </p>
+                                <Button
+                                    variant="outline"
+                                    className="mt-4"
+                                    onClick={() => setCreating(true)}
+                                >
+                                    <Plus className="size-4" />
+                                    Unggah foto pertama
+                                </Button>
+                            </div>
                         </div>
                     ) : (
                         <>
@@ -67,11 +71,70 @@ export default function PortfolioIndex({ business, items }: Props) {
                                 {items.length} foto tersimpan
                             </p>
 
-                            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                            <div className="panel-table-shell">
+                                <table className="panel-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Foto</th>
+                                            <th>Keterangan</th>
+                                            <th>Urutan</th>
+                                            <th className="text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {items.map((item) => (
+                                            <tr key={item.id}>
+                                                <td>
+                                                    {item.thumb_url && (
+                                                        <img
+                                                            src={item.thumb_url}
+                                                            alt=""
+                                                            className="h-16 w-16 rounded-sm object-cover"
+                                                        />
+                                                    )}
+                                                </td>
+                                                <td className="font-medium text-ink">
+                                                    {item.caption ??
+                                                        'Tanpa keterangan'}
+                                                </td>
+                                                <td className="tabular-nums">
+                                                    {item.sort_order}
+                                                </td>
+                                                <td>
+                                                    <div className="flex justify-end gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            onClick={() =>
+                                                                setEditing(item)
+                                                            }
+                                                        >
+                                                            Ubah
+                                                        </Button>
+                                                        <ConfirmDelete
+                                                            url={
+                                                                destroy(item.id)
+                                                                    .url
+                                                            }
+                                                            itemName={
+                                                                item.caption ??
+                                                                'foto ini'
+                                                            }
+                                                            note="Foto akan hilang dari halaman publik. Berkasnya tetap tersimpan di server dan bisa dipulihkan lewat database."
+                                                        />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <ul className="panel-mobile-list grid-cols-2">
                                 {items.map((item) => (
                                     <li
                                         key={item.id}
-                                        className="glass-card flex flex-col overflow-hidden rounded-brand-md"
+                                        className="panel-mobile-card flex flex-col overflow-hidden p-0"
                                     >
                                         {item.thumb_url && (
                                             <img
@@ -90,7 +153,7 @@ export default function PortfolioIndex({ business, items }: Props) {
                                                 urutan {item.sort_order}
                                             </p>
 
-                                            <div className="mt-auto flex gap-2">
+                                            <div className="mt-auto grid gap-2 sm:grid-cols-2">
                                                 <Button
                                                     variant="outline"
                                                     size="sm"
@@ -117,7 +180,7 @@ export default function PortfolioIndex({ business, items }: Props) {
                         </>
                     )}
                 </section>
-            </div>
+            </main>
 
             <FormModal
                 open={creating}

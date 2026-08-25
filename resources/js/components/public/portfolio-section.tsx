@@ -1,3 +1,5 @@
+import ChapterHeading from '@/components/public/chapter-heading';
+import { stagger } from '@/hooks/use-reveal';
 import type { PublicPortfolioItem } from '@/types/public';
 
 /**
@@ -10,24 +12,27 @@ import type { PublicPortfolioItem } from '@/types/public';
 type Props = {
     label: string;
     items: PublicPortfolioItem[];
+    chapter: string;
 };
 
-export default function PortfolioSection({ label, items }: Props) {
+export default function PortfolioSection({ label, items, chapter }: Props) {
     return (
         <section id="portfolio" className="px-4 py-12 md:px-8 md:py-16">
             <div className="mx-auto max-w-6xl">
-                <h2 className="mb-6 font-display text-2xl leading-tight font-semibold text-ink md:text-[30px]">
-                    {label}
-                </h2>
+                <ChapterHeading number={chapter} title={label} />
 
                 <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-                    {items.map((item) => (
-                        <li key={item.id}>
+                    {items.map((item, index) => (
+                        <li
+                            key={item.id}
+                            className="reveal"
+                            style={stagger(index)}
+                        >
                             <a
                                 href={item.full_url ?? undefined}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="glass-card block overflow-hidden rounded-brand-md p-1 transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-glass"
+                                className="block overflow-hidden border border-hair-soft bg-wash p-1 transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-hair"
                             >
                                 <img
                                     src={item.image_url ?? undefined}
@@ -35,7 +40,7 @@ export default function PortfolioSection({ label, items }: Props) {
                                     // alt tetap bermakna, bukan nama berkas.
                                     alt={item.caption ?? `Hasil kerja ${label}`}
                                     loading="lazy"
-                                    className="aspect-square w-full rounded-xl bg-glass-tint object-cover"
+                                    className="aspect-square w-full bg-wash object-cover"
                                 />
                             </a>
 

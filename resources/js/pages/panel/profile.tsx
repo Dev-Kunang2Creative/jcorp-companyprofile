@@ -19,11 +19,14 @@ type Props = {
         slug: string;
         name: string;
         whatsapp: string | null;
+        whatsapp_alt: string | null;
         instagram: string | null;
         tiktok: string | null;
         address: string | null;
         business_hours: string | null;
+        contact_note: string | null;
         catalog_label: string;
+        catalog_note: string | null;
         portfolio_label: string;
     };
 };
@@ -33,21 +36,22 @@ export default function PanelBusinessProfile({ business }: Props) {
         <>
             <Head title="Info Kontak" />
 
-            <div className="space-y-6 px-4 py-6">
+            <main className="panel-page space-y-6">
                 <Heading
-                    title="Info Kontak"
+                    title="Kontak & Label"
                     description={`Kontak dan label section ${business.name}`}
                 />
 
                 <Form
                     {...update.form()}
                     options={{ preserveScroll: true }}
-                    className="grid max-w-xl gap-6"
+                    setDefaultsOnSuccess
+                    className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(22rem,0.85fr)]"
                 >
-                    {({ processing, errors }) => (
+                    {({ processing, errors, isDirty }) => (
                         <>
-                            <section className="glass-card grid gap-4 rounded-brand-md p-4">
-                                <h2 className="text-sm font-medium">
+                            <section className="panel-surface grid gap-5 p-5 sm:p-6">
+                                <h2 className="font-legacy-display text-xl font-semibold text-ink">
                                     Cara dihubungi
                                 </h2>
 
@@ -68,6 +72,27 @@ export default function PanelBusinessProfile({ business }: Props) {
                                         semua tombol WhatsApp di halaman publik.
                                     </p>
                                     <InputError message={errors.whatsapp} />
+                                </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="whatsapp_alt">
+                                        Nomor WhatsApp kedua
+                                    </Label>
+                                    <Input
+                                        id="whatsapp_alt"
+                                        name="whatsapp_alt"
+                                        defaultValue={
+                                            business.whatsapp_alt ?? ''
+                                        }
+                                        placeholder="6281234567890"
+                                        inputMode="numeric"
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Opsional. Ditampilkan di section Kontak,
+                                        tapi tombol WhatsApp tetap memakai nomor
+                                        pertama.
+                                    </p>
+                                    <InputError message={errors.whatsapp_alt} />
                                 </div>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
@@ -138,6 +163,27 @@ export default function PanelBusinessProfile({ business }: Props) {
                                     />
                                 </div>
 
+                                <div className="grid gap-2">
+                                    <Label htmlFor="contact_note">
+                                        Catatan pemesanan
+                                    </Label>
+                                    <Input
+                                        id="contact_note"
+                                        name="contact_note"
+                                        defaultValue={
+                                            business.contact_note ?? ''
+                                        }
+                                        placeholder="Pemesanan hanya lewat chat WhatsApp atau DM Instagram."
+                                        maxLength={255}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Muncul sebagai kalimat pembuka di
+                                        section Kontak. Kalau dikosongkan,
+                                        dipakai kalimat bawaan.
+                                    </p>
+                                    <InputError message={errors.contact_note} />
+                                </div>
+
                                 <p className="text-xs text-muted-foreground">
                                     Kalau semua kolom di atas dikosongkan,
                                     section Kontak tidak muncul sama sekali di
@@ -145,8 +191,8 @@ export default function PanelBusinessProfile({ business }: Props) {
                                 </p>
                             </section>
 
-                            <section className="glass-card grid gap-4 rounded-brand-md p-4">
-                                <h2 className="text-sm font-medium">
+                            <section className="panel-surface grid content-start gap-5 p-5 sm:p-6">
+                                <h2 className="font-legacy-display text-xl font-semibold text-ink">
                                     Sebutan section
                                 </h2>
 
@@ -194,9 +240,40 @@ export default function PanelBusinessProfile({ business }: Props) {
                                         />
                                     </div>
                                 </div>
+
+                                <div className="grid gap-2">
+                                    <Label htmlFor="catalog_note">
+                                        Catatan harga
+                                    </Label>
+                                    <Input
+                                        id="catalog_note"
+                                        name="catalog_note"
+                                        defaultValue={
+                                            business.catalog_note ?? ''
+                                        }
+                                        placeholder="Biaya sudah termasuk Primer + Lash Bound + Free Spoolie."
+                                        maxLength={500}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Muncul di bawah daftar harga. Untuk
+                                        keterangan yang berlaku ke semua item —
+                                        apa yang sudah termasuk, syarat, atau
+                                        catatan lain.
+                                    </p>
+                                    <InputError message={errors.catalog_note} />
+                                </div>
                             </section>
 
-                            <div>
+                            <div
+                                className={
+                                    isDirty || processing
+                                        ? 'panel-save-bar xl:col-span-2'
+                                        : 'hidden'
+                                }
+                            >
+                                <p className="text-sm text-muted-foreground">
+                                    Perubahan belum disimpan.
+                                </p>
                                 <Button disabled={processing}>
                                     {processing ? 'Menyimpan…' : 'Simpan'}
                                 </Button>
@@ -204,7 +281,7 @@ export default function PanelBusinessProfile({ business }: Props) {
                         </>
                     )}
                 </Form>
-            </div>
+            </main>
         </>
     );
 }

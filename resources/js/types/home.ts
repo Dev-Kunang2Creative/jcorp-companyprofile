@@ -12,6 +12,14 @@ export type ParentBusiness = {
     tagline: string | null;
     description: string | null;
     logo_url: string | null;
+    /** Sudah dipastikan #RRGGBB di server — lihat types/public.ts. */
+    accent_color: string;
+    /** Ikon tab browser. */
+    favicon_url: string | null;
+    /** Satu kalimat, ditampilkan sebagai kutipan. */
+    vision: string | null;
+    /** Daftar kalimat, ditampilkan bernomor. */
+    mission: string[] | null;
 };
 
 export type SubsidiaryCard = {
@@ -19,8 +27,12 @@ export type SubsidiaryCard = {
     name: string;
     tagline: string | null;
     logo_url: string | null;
+    /** Aksen unit ini — mewarnai pita dan tautan di kartunya. */
+    accent_color: string;
     /** Lencana untuk anak usaha yang belum punya logo. */
     initials: string;
+    /** Label bidang yang ditampilkan pada orbit homepage induk. */
+    sector_label: string | null;
 };
 
 export type HomeProps = {

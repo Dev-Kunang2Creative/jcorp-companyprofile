@@ -92,7 +92,7 @@ export default function Login({ status, canResetPassword }: Props) {
             </Form>
 
             {status && (
-                <div className="mb-4 text-center text-sm font-medium text-gold-deep">
+                <div className="mb-4 text-center text-sm font-medium text-brass">
                     {status}
                 </div>
             )}

@@ -27,14 +27,27 @@ export default defineConfig(({ mode }) => {
                 /**
                  * Pasangan huruf dari DESIGN_SYSTEM.md §3.
                  *
-                 * Fraunces (display) — serif berkarakter untuk judul.
-                 * Jost (antarmuka)   — geometris bersih; logo sudah sangat
-                 *                      ornamen, jadi huruf antarmuka menahan diri.
+                 * HALAMAN PUBLIK (arah A+B):
+                 * Instrument Serif — serif editorial bertekanan tinggi.
+                 *                    Menggantikan Fraunces yang terlalu
+                 *                    hangat untuk induk yang menaungi
+                 *                    logistik dan properti.
+                 * Inter Tight      — grotesk padat. Bukan Inter biasa;
+                 *                    versi rapatnya punya karakter lebih.
                  *
-                 * Diunduh ke server sendiri saat build — tidak ada permintaan
-                 * ke pihak ketiga saat pengunjung membuka halaman.
+                 * PANEL ADMIN: Fraunces + Jost, belum diubah.
+                 *
+                 * Semuanya diunduh ke server sendiri saat build — tidak ada
+                 * permintaan ke pihak ketiga saat pengunjung membuka halaman.
                  */
                 fonts: [
+                    // Halaman publik (arah A+B, 23 Agustus 2026)
+                    bunny('Instrument Serif', { weights: [400] }),
+                    bunny('Inter Tight', { weights: [400, 500, 600] }),
+
+                    // Panel admin & halaman auth — masih memakai pasangan
+                    // lama. Dipertahankan sampai panel ikut dikerjakan;
+                    // menghapusnya sekarang merusak 25 berkas.
                     bunny('Fraunces', { weights: [400, 600, 700] }),
                     bunny('Jost', { weights: [400, 500, 600] }),
                 ],

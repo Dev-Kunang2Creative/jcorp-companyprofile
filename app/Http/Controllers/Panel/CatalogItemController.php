@@ -78,16 +78,33 @@ class CatalogItemController extends Controller
         // milik anak usaha lain berakhir 403, bukan berhasil.
         $this->authorize('update', $catalogItem);
 
-        $attributes = $request->safe()->except('image');
+        $attributes = $request->safe()->except(['image', 'remove_image']);
 
-        // Foto hanya diganti kalau memang ada yang diunggah. Form tanpa
-        // berkas berarti admin cuma mengubah teksnya — fotonya dipertahankan.
+        // Tiga kemungkinan, dan ketiganya harus dibedakan:
+        //
+        //   ada berkas          -> ganti foto, yang lama dihapus
+        //   remove_image = 1    -> kosongkan foto
+        //   tidak keduanya      -> pertahankan foto yang ada
+        //
+        // Yang ketiga itu yang paling sering: admin cuma mengubah harga
+        // atau keterangan, dan fotonya tidak boleh ikut hilang.
         if ($request->hasFile('image')) {
             $attributes['image_path'] = $this->images->replace(
                 $request->file('image'),
                 $catalogItem->business->slug,
                 $catalogItem->image_path,
             );
+        } elseif ($request->boolean('remove_image')) {
+            // Berkasnya benar-benar dihapus dari disk, bukan sekadar
+            // dilepas dari database. Item katalog memang bisa hidup tanpa
+            // foto — kartunya menampilkan kotak inisial (spec §10) — jadi
+            // menyimpan berkas yatim hanya memenuhi disk.
+            //
+            // Berbeda dari destroy(), yang MENYIMPAN berkasnya karena
+            // itemnya cuma di-soft-delete dan masih bisa dipulihkan.
+            $this->images->delete($catalogItem->image_path);
+
+            $attributes['image_path'] = null;
         }
 
         $catalogItem->update($attributes);

@@ -3,10 +3,14 @@ import WhatsappButton from '@/components/public/whatsapp-button';
 /**
  * Hero — selalu dirender, minimal memuat nama usaha (spec §3).
  *
- * Gradasi menempel di sudut lewat --hero-gradient, bukan latar penuh; itu
- * yang membedakannya dari gradasi template. Motif bintang di lapisan atasnya
- * adalah benang merah dari taburan bintang di logo — opasitasnya sengaja
- * sangat rendah dan tidak boleh dinaikkan (DESIGN_SYSTEM §6).
+ * Sejak arah A+B (23 Agustus 2026) hero tidak lagi berupa panel kaca di
+ * atas gradasi. Judulnya berdiri langsung di atas putih, rata kiri,
+ * dengan ruang kosong lebar di sekelilingnya.
+ *
+ * Yang menggantikan gradasi sebagai penarik perhatian: UKURAN. Judul
+ * hero desktop 78px — hampir dua kali judul section. Halaman perusahaan
+ * tidak perlu ornamen untuk terasa berwibawa; cukup satu hal yang jelas
+ * paling penting di layar.
  */
 
 type Props = {
@@ -28,53 +32,54 @@ export default function HeroSection({
     return (
         <section
             id="top"
-            className="relative px-4 py-14 md:px-8 md:py-20"
-            style={{ background: 'var(--hero-gradient)' }}
+            className="px-4 pt-14 pb-12 md:px-8 md:pt-24 md:pb-16"
         >
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 opacity-50"
-                style={{ backgroundImage: 'var(--star-motif)' }}
-            />
+            <div className="mx-auto max-w-6xl">
+                {logoUrl && (
+                    <img
+                        src={logoUrl}
+                        alt={`Logo ${name}`}
+                        className="reveal mb-8 h-12 w-auto md:h-16"
+                    />
+                )}
 
-            <div className="relative mx-auto max-w-6xl">
-                <div className="glass-panel max-w-[660px] rounded-brand-lg p-6 md:p-8">
-                    {logoUrl && (
-                        <img
-                            src={logoUrl}
-                            alt={`Logo ${name}`}
-                            className="mb-5 h-14 w-auto md:h-[74px]"
-                        />
-                    )}
+                <p
+                    className="reveal mb-5 text-[10.5px] font-medium tracking-[0.2em] text-brass uppercase"
+                    style={{ transitionDelay: '60ms' }}
+                >
+                    {eyebrow ?? 'Profil Usaha'}
+                </p>
 
-                    {eyebrow && (
-                        <p className="mb-3 text-[11px] font-medium tracking-[0.22em] text-gold-deep uppercase">
-                            {eyebrow}
-                        </p>
-                    )}
+                <h1
+                    className="reveal max-w-[13ch] font-display text-[40px] leading-[0.99] font-normal tracking-[-0.028em] text-ink md:text-[78px]"
+                    style={{ transitionDelay: '120ms' }}
+                >
+                    {name}
+                </h1>
 
-                    <h1 className="font-display text-[31px] leading-[1.06] font-semibold tracking-[-0.015em] text-ink md:text-[46px]">
-                        {name}
-                    </h1>
+                {tagline && (
+                    <p
+                        className="reveal mt-7 max-w-[45ch] text-[16px] leading-[1.7] text-ink-soft md:text-[17px]"
+                        style={{ transitionDelay: '180ms' }}
+                    >
+                        {tagline}
+                    </p>
+                )}
 
-                    <hr className="my-4 h-0.5 w-[52px] border-0 bg-gold" />
-
-                    {tagline && (
-                        <p className="mb-6 max-w-[42ch] text-[15px] leading-relaxed text-ink-soft md:text-[16.5px]">
-                            {tagline}
-                        </p>
-                    )}
-
-                    {whatsapp && (
+                {whatsapp && (
+                    <div
+                        className="reveal mt-9"
+                        style={{ transitionDelay: '240ms' }}
+                    >
                         <WhatsappButton
                             number={whatsapp}
                             businessName={name}
                             className="w-full md:w-auto"
                         >
-                            Pesan lewat WhatsApp
+                            Hubungi lewat WhatsApp
                         </WhatsappButton>
-                    )}
-                </div>
+                    </div>
+                )}
             </div>
         </section>
     );

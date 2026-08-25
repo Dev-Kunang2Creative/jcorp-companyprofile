@@ -20,30 +20,21 @@ export default function AuthCardLayout({
     description?: string;
 }>) {
     return (
-        <div
-            className="relative flex min-h-svh flex-col items-center justify-center gap-6 p-6 font-sans md:p-10"
-            style={{ background: 'var(--hero-gradient)' }}
-        >
-            <div
-                aria-hidden="true"
-                className="pointer-events-none fixed inset-0 opacity-50"
-                style={{ backgroundImage: 'var(--star-motif)' }}
-            />
-
+        <div className="relative flex min-h-svh flex-col items-center justify-center gap-6 p-6 font-sans md:p-10">
             <div className="relative flex w-full max-w-md flex-col gap-6">
                 <Link
                     href={home()}
                     className="flex items-center gap-2 self-center font-medium"
                 >
                     <div className="flex h-9 w-9 items-center justify-center">
-                        <AppLogoIcon className="size-9 fill-current text-gold-deep" />
+                        <AppLogoIcon className="size-9 fill-current text-brass" />
                     </div>
                 </Link>
 
                 <div className="flex flex-col gap-6">
                     <Card className="rounded-brand-lg">
                         <CardHeader className="px-10 pt-8 pb-0 text-center">
-                            <CardTitle className="font-display text-xl text-ink">
+                            <CardTitle className="font-legacy-display text-xl text-ink">
                                 {title}
                             </CardTitle>
                             <CardDescription>{description}</CardDescription>

@@ -62,10 +62,12 @@ export default function FormModal({
                 // p-0 dan flex: padding dipindah ke tiap bagian, supaya
                 // hanya bagian tengah yang bergulir sementara judul dan
                 // tombol tetap terlihat.
-                className="flex max-h-[calc(100svh-2rem)] flex-col gap-0 p-0 sm:max-w-xl"
+                className="inset-y-0 top-0 right-0 left-auto flex h-svh max-h-svh w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-y-0 border-r-0 p-0 duration-200 data-[state=closed]:zoom-out-100 data-[state=closed]:slide-out-to-right data-[state=open]:zoom-in-100 data-[state=open]:slide-in-from-right sm:w-[min(42rem,calc(100vw-4rem))] sm:max-w-none"
             >
-                <DialogHeader className="border-b px-6 py-4 text-left">
-                    <DialogTitle>{title}</DialogTitle>
+                <DialogHeader className="border-b px-5 py-5 text-left sm:px-7">
+                    <DialogTitle className="pr-8 font-legacy-display text-2xl leading-tight">
+                        {title}
+                    </DialogTitle>
                     {description && (
                         <DialogDescription>{description}</DialogDescription>
                     )}
@@ -83,7 +85,7 @@ export default function FormModal({
                         <>
                             {/* min-h-0 wajib: tanpa itu, flex child menolak
                                 menyusut dan area gulirnya tidak pernah aktif. */}
-                            <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto px-6 py-5">
+                            <div className="grid min-h-0 flex-1 gap-5 overflow-y-auto px-5 py-6 sm:px-7">
                                 {isUpdate && (
                                     <input
                                         type="hidden"
@@ -95,7 +97,7 @@ export default function FormModal({
                                 {children(errors)}
                             </div>
 
-                            <div className="flex justify-end gap-2 border-t px-6 py-4">
+                            <div className="flex justify-end gap-2 border-t bg-white px-5 py-4 sm:px-7">
                                 <DialogClose asChild>
                                     <Button
                                         type="button"

@@ -18,6 +18,14 @@ type Props = {
     error?: string;
     required?: boolean;
     hint?: string;
+    /**
+     * Menyalakan tombol hapus foto tersimpan.
+     *
+     * Hanya untuk gambar yang boleh kosong. Foto portfolio TIDAK memakai
+     * ini — foto portfolio tanpa gambar tidak ada isinya sama sekali,
+     * jadi menghapusnya berarti menghapus itemnya.
+     */
+    removable?: boolean;
 };
 
 export default function ImageInput({
@@ -27,10 +35,16 @@ export default function ImageInput({
     error,
     required = false,
     hint,
+    removable = false,
 }: Props) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [fileName, setFileName] = useState<string | null>(null);
+
+    // Menandai foto tersimpan untuk dihapus. Baru benar-benar terhapus
+    // setelah form disimpan — jadi admin masih bisa membatalkannya dengan
+    // menutup dialog.
+    const [markedForRemoval, setMarkedForRemoval] = useState(false);
 
     // URL objek harus dilepas saat tidak dipakai lagi, kalau tidak memori
     // browser terus bertambah setiap kali admin mengganti pilihan foto.
@@ -48,6 +62,10 @@ export default function ImageInput({
         if (preview) {
             URL.revokeObjectURL(preview);
         }
+
+        // Memilih foto baru membatalkan niat menghapus — yang dimaksud
+        // admin jelas mengganti, bukan mengosongkan.
+        setMarkedForRemoval(false);
 
         if (!file) {
             setPreview(null);
@@ -73,7 +91,10 @@ export default function ImageInput({
         }
     }
 
-    const shownImage = preview ?? currentUrl ?? null;
+    // Foto tersimpan disembunyikan begitu ditandai hapus, supaya admin
+    // melihat akibat pilihannya sebelum menyimpan — bukan setelahnya.
+    const savedImage = markedForRemoval ? null : currentUrl;
+    const shownImage = preview ?? savedImage ?? null;
 
     return (
         <div className="grid gap-2">
@@ -112,8 +133,48 @@ export default function ImageInput({
                                 Batalkan pilihan
                             </Button>
                         )}
+
+                        {/* Hanya untuk foto TERSIMPAN, bukan pratinjau —
+                            yang belum disimpan cukup dibatalkan. */}
+                        {!preview && removable && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setMarkedForRemoval(true)}
+                                className="mt-2"
+                            >
+                                Hapus foto
+                            </Button>
+                        )}
                     </div>
                 </div>
+            )}
+
+            {/* Keadaan setelah foto ditandai hapus. Tanpa umpan balik ini,
+                admin tidak punya cara tahu apakah tombolnya bekerja —
+                fotonya cuma hilang begitu saja. */}
+            {markedForRemoval && (
+                <div className="flex items-start justify-between gap-3 rounded-sm border border-dashed border-hair bg-wash p-3">
+                    <p className="text-sm text-muted-foreground">
+                        Foto akan dihapus saat disimpan.
+                    </p>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setMarkedForRemoval(false)}
+                    >
+                        Batalkan
+                    </Button>
+                </div>
+            )}
+
+            {/* Dikirim ke server hanya saat foto ditandai hapus. Server
+                membedakannya dari "tidak mengunggah apa pun": yang pertama
+                mengosongkan, yang kedua mempertahankan. */}
+            {markedForRemoval && (
+                <input type="hidden" name="remove_image" value="1" />
             )}
 
             <input
@@ -124,7 +185,7 @@ export default function ImageInput({
                 accept="image/jpeg,image/png,image/webp"
                 required={required}
                 onChange={handleChange}
-                className="block w-full text-sm file:mr-3 file:rounded-full file:border file:border-line-strong file:bg-glass-soft file:px-4 file:py-2 file:text-sm file:font-medium file:text-ink"
+                className="block w-full text-sm file:mr-3 file:rounded-full file:border file:border-hair file:bg-wash file:px-4 file:py-2 file:text-sm file:font-medium file:text-ink"
             />
 
             <p className="text-xs text-muted-foreground">

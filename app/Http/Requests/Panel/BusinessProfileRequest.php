@@ -26,11 +26,16 @@ class BusinessProfileRequest extends FormRequest
             // Divalidasi ketat karena dipakai membentuk link, bukan sekadar
             // ditampilkan — nomor berformat salah menghasilkan link mati.
             'whatsapp' => ['nullable', 'string', 'regex:/^62[0-9]{8,13}$/'],
+            // Divalidasi seketat nomor utama — sama-sama dipakai membentuk
+            // link wa.me, bukan sekadar ditampilkan.
+            'whatsapp_alt' => ['nullable', 'string', 'regex:/^62[0-9]{8,13}$/'],
             'instagram' => ['nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9._]+$/'],
             'tiktok' => ['nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9._]+$/'],
             'address' => ['nullable', 'string', 'max:255'],
             'business_hours' => ['nullable', 'string', 'max:255'],
+            'contact_note' => ['nullable', 'string', 'max:255'],
             'catalog_label' => ['required', 'string', 'max:50'],
+            'catalog_note' => ['nullable', 'string', 'max:500'],
             'portfolio_label' => ['required', 'string', 'max:50'],
         ];
     }
@@ -42,6 +47,7 @@ class BusinessProfileRequest extends FormRequest
     {
         return [
             'whatsapp.regex' => 'Nomor WhatsApp harus diawali 62 tanpa spasi atau tanda plus, contoh: 6281234567890.',
+            'whatsapp_alt.regex' => 'Nomor WhatsApp kedua harus diawali 62 tanpa spasi atau tanda plus, contoh: 6281234567890.',
             'instagram.regex' => 'Isi username Instagram saja, tanpa @ atau alamat lengkap.',
             'tiktok.regex' => 'Isi username TikTok saja, tanpa @ atau alamat lengkap.',
         ];
@@ -54,9 +60,12 @@ class BusinessProfileRequest extends FormRequest
     {
         return [
             'whatsapp' => 'nomor WhatsApp',
+            'whatsapp_alt' => 'nomor WhatsApp kedua',
             'address' => 'alamat',
             'business_hours' => 'jam buka',
+            'contact_note' => 'catatan pemesanan',
             'catalog_label' => 'label katalog',
+            'catalog_note' => 'catatan harga',
             'portfolio_label' => 'label portfolio',
         ];
     }

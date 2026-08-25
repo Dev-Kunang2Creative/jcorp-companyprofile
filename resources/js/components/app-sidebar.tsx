@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import {
     Building2,
     Images,
-    LayoutGrid,
+    LayoutDashboard,
     Phone,
     ShoppingBag,
     Users,
@@ -30,39 +30,40 @@ import type { Auth, NavItem } from '@/types';
 export function AppSidebar() {
     const { auth } = usePage<{ auth: Auth }>().props;
 
-    const mainNavItems: NavItem[] = [
-        { title: 'Dashboard', href: dashboard(), icon: LayoutGrid },
-        { title: 'Katalog', href: catalogIndex(), icon: ShoppingBag },
+    const summaryNavItems: NavItem[] = [
+        { title: 'Dashboard', href: dashboard(), icon: LayoutDashboard },
+    ];
+
+    const contentNavItems: NavItem[] = [
+        { title: 'Katalog / Layanan', href: catalogIndex(), icon: ShoppingBag },
     ];
 
     // Tidak semua anak usaha memamerkan hasil kerja — dessert, logistik, dan
     // properti menampilkan katalog saja (spec §3). Sakelarnya diatur
     // super-admin lewat panel Kelola Anak Usaha.
     if (auth.hasPortfolio) {
-        mainNavItems.push({
-            title: 'Portfolio',
+        contentNavItems.push({
+            title: 'Galeri',
             href: portfolioIndex(),
             icon: Images,
         });
     }
 
-    mainNavItems.push({
-        title: 'Info Kontak',
+    contentNavItems.push({
+        title: 'Kontak & Label',
         href: profileEdit(),
         icon: Phone,
     });
+
+    const managementNavItems: NavItem[] = [];
 
     // Menu ini hanya ditampilkan ke super-admin. Yang menahan sebenarnya
     // adalah middleware dan Policy di server — menyembunyikan menu di sini
     // semata soal kerapian tampilan, bukan pengamanan (spec §6).
     if (auth.isSuperAdmin) {
-        mainNavItems.push(
-            { title: 'Kelola Akun', href: usersIndex(), icon: Users },
-            {
-                title: 'Kelola Anak Usaha',
-                href: businessesIndex(),
-                icon: Building2,
-            },
+        managementNavItems.push(
+            { title: 'Anak Usaha', href: businessesIndex(), icon: Building2 },
+            { title: 'Akun & Akses', href: usersIndex(), icon: Users },
         );
     }
 
@@ -80,8 +81,12 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
-                <NavMain items={mainNavItems} />
+            <SidebarContent className="py-2">
+                <NavMain label="Ringkasan" items={summaryNavItems} />
+                <NavMain label="Konten" items={contentNavItems} />
+                {managementNavItems.length > 0 && (
+                    <NavMain label="Manajemen" items={managementNavItems} />
+                )}
             </SidebarContent>
 
             <SidebarFooter>

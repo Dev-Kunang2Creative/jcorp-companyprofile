@@ -159,7 +159,7 @@ resources/js/
 ├── layouts/       app (sidebar) + auth
 ├── pages/
 │   ├── auth/      login, lupa password, reset
-│   ├── panel/     halaman admin — POLOS, ditulis ulang di Fase 3
+│   ├── panel/     halaman admin — responsive operations UI
 │   └── settings/  profil akun, ganti password
 └── types/
 
@@ -175,7 +175,7 @@ tests/Feature/
 └── Settings/
 ```
 
-**Halaman di `resources/js/pages/panel/` sengaja polos**, tanpa gaya. Fungsinya membuktikan alur controller dan pengecekan kepemilikan bekerja lewat HTTP sungguhan. Tampilan sebenarnya ditulis di Fase 3 di atas design system.
+**Halaman di `resources/js/pages/panel/` memakai Calm Operations Studio**, yaitu antarmuka operasional responsif dengan tabel desktop, kartu mobile, drawer form, dan konteks anak usaha global. Alur controller serta pengecekan kepemilikan tetap menjadi sumber kebenaran dan tidak dipindahkan ke sisi browser.
 
 ---
 

@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Business;
 use App\Models\CatalogItem;
 use App\Models\PortfolioItem;
+use Database\Seeders\ClientContent;
 use Database\Seeders\SampleContent;
 use Illuminate\Console\Command;
 
@@ -131,7 +132,22 @@ class ClearSamplesCommand extends Command
     {
         $samples = SampleContent::businesses();
 
-        return Business::whereIn('slug', array_keys($samples))
+        // Anak usaha yang materi aslinya sudah masuk dikeluarkan seluruhnya.
+        //
+        // Sebabnya halus: sebagian nilai kebetulan sama persis di kedua
+        // berkas — label katalog Sweetness "Menu Kami" ada di SampleContent
+        // maupun ClientContent. Tanpa pengecualian ini, perbandingan isi
+        // menganggapnya teks contoh dan mengembalikannya ke "Katalog",
+        // padahal itu sebutan yang dipilih client sendiri.
+        //
+        // Lagi pula tidak ada yang perlu dibersihkan di sana:
+        // ClientContentSeeder sudah menimpa seluruh teks contohnya.
+        $slugs = array_diff(
+            array_keys($samples),
+            array_keys(ClientContent::businesses()),
+        );
+
+        return Business::whereIn('slug', $slugs)
             ->get()
             ->filter(function (Business $business) use ($samples) {
                 foreach ($samples[$business->slug] as $column => $sampleValue) {

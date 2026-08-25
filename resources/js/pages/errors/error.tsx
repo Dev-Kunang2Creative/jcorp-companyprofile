@@ -36,18 +36,9 @@ export default function ErrorPage({ status }: Props) {
         <>
             <Head title={message.title} />
 
-            <div
-                className="flex min-h-svh items-center justify-center px-4 font-sans"
-                style={{ background: 'var(--hero-gradient)' }}
-            >
-                <div
-                    aria-hidden="true"
-                    className="pointer-events-none fixed inset-0 opacity-50"
-                    style={{ backgroundImage: 'var(--star-motif)' }}
-                />
-
+            <div className="flex min-h-svh items-center justify-center px-4 font-sans">
                 <div className="glass-panel relative w-full max-w-[460px] rounded-brand-lg p-8 text-center">
-                    <p className="mb-3 text-[11px] font-medium tracking-[0.22em] text-gold-deep uppercase">
+                    <p className="mb-3 text-[11px] font-medium tracking-[0.22em] text-brass uppercase">
                         Error {status}
                     </p>
 
@@ -55,7 +46,7 @@ export default function ErrorPage({ status }: Props) {
                         {message.title}
                     </h1>
 
-                    <hr className="mx-auto my-4 h-0.5 w-[52px] border-0 bg-gold" />
+                    <hr className="mx-auto my-4 h-px w-[52px] border-0 bg-brass-line" />
 
                     <p className="mb-6 text-[15px] leading-relaxed text-ink-soft">
                         {message.body}
@@ -63,7 +54,7 @@ export default function ErrorPage({ status }: Props) {
 
                     <a
                         href="/"
-                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-gold-deep px-7 py-3 text-[15px] font-medium text-white transition-colors hover:bg-gold-hover"
+                        className="inline-flex min-h-11 items-center justify-center rounded-[2px] bg-brass px-7 py-3 text-[14px] font-medium text-white transition-opacity hover:opacity-90"
                     >
                         Kembali ke halaman utama
                     </a>

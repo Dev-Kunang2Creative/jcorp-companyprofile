@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tiga Arah Visual — J-Corporate Group</title>
+
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=fraunces:400,600,700|jost:400,500,600|instrument-serif:400|inter-tight:400,500,600" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   MOCKUP TIGA ARAH VISUAL — J-Corporate Group
+   22 Agustus 2026
+
+   Berkas ini BUKAN kode produksi. Tujuannya supaya arah visual bisa
+   dinilai dengan mata sebelum satu baris pun ditulis ke website
+   sungguhan.
+
+   Semua angka di sini (warna, ukuran, easing) adalah usulan token
+   yang nanti dipindah ke DESIGN_SYSTEM.md kalau arahnya dipilih.
+   ══════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+
+/* ── KERANGKA PEMBANDING ───────────────────────────────────────── */
+
+body {
+  background: #16151a;
+  color: #e8e6e1;
+  font-family: 'Jost', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shell { max-width: 1400px; margin: 0 auto; padding: 32px 20px 96px; }
+
+.shell-head { margin-bottom: 28px; }
+.shell-head h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 600;
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+.shell-head p { margin: 0; color: #98948c; font-size: 14px; line-height: 1.6; max-width: 62ch; }
+
+.controls {
+  position: sticky; top: 0; z-index: 90;
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 12px 0 14px;
+  background: linear-gradient(#16151a 72%, transparent);
+  margin-bottom: 8px;
+}
+.ctrl {
+  appearance: none; border: 1px solid #35323c; background: #1f1e25;
+  color: #cfcbc4; font: inherit; font-size: 13px;
+  padding: 8px 15px; border-radius: 999px; cursor: pointer;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.ctrl:hover { border-color: #56505f; color: #fff; }
+.ctrl[aria-pressed="true"] { background: #efece6; color: #16151a; border-color: #efece6; font-weight: 500; }
+.ctrl-sep { width: 1px; height: 22px; background: #35323c; margin: 0 6px; }
+
+.note {
+  font-size: 12.5px; color: #85818b; margin-left: auto;
+}
+
+/* Panggung: bingkai tiap arah */
+.stage { display: grid; gap: 28px; }
+.stage[data-view="mobile"] { justify-items: center; }
+
+.frame-wrap { }
+.frame-label {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.frame-label b {
+  font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600;
+}
+.frame-label span { font-size: 12.5px; color: #8f8b84; }
+
+.frame {
+  border: 1px solid #302d38; border-radius: 14px; overflow: hidden;
+  background: #fff; box-shadow: 0 18px 50px rgb(0 0 0 / .38);
+  height: 640px; position: relative;
+}
+.stage[data-view="mobile"] .frame { width: 390px; max-width: 100%; height: 700px; }
+
+.frame iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+.hidden { display: none !important; }
+
+@media (max-width: 760px) {
+  .shell { padding: 20px 12px 60px; }
+  .frame { height: 560px; }
+  .note { width: 100%; margin: 4px 0 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <div class="shell-head">
+    <h1>Arah visual — J-Corporate Group</h1>
+    <p>
+      Empat pilihan: <b style="color:#e8e6e1">A+B</b> adalah gabungan yang Anda minta —
+      struktur kartu dari A, tipografi jurnal dari B. Ganti antara tampilan desktop
+      dan HP dengan tombol di bawah, lalu gulir di dalam tiap bingkai untuk melihat
+      animasinya bekerja.
+    </p>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl" data-view-btn="desktop" aria-pressed="true">Desktop</button>
+    <button class="ctrl" data-view-btn="mobile" aria-pressed="false">HP</button>
+    <span class="ctrl-sep"></span>
+    <button class="ctrl" data-dir-btn="all" aria-pressed="true">Semua</button>
+    <button class="ctrl" data-dir-btn="ab" aria-pressed="false">A+B ⭐</button>
+    <button class="ctrl" data-dir-btn="a" aria-pressed="false">Arah A</button>
+    <button class="ctrl" data-dir-btn="b" aria-pressed="false">Arah B</button>
+    <button class="ctrl" data-dir-btn="c" aria-pressed="false">Arah C</button>
+    <span class="note">Animasi berjalan saat digulir — coba gulir naik-turun.</span>
+  </div>
+
+  <div class="stage" data-view="desktop">
+
+    <div class="frame-wrap" data-dir="ab">
+      <div class="frame-label">
+        <b>A + B — Struktur A dengan tipografi B</b>
+        <span>kartu berwarna per unit · Instrument Serif &amp; penomoran bab</span>
+      </div>
+      <div class="frame"><iframe data-src="arah-ab" title="Arah A+B"></iframe></div>
+    </div>
+
+    <div class="frame-wrap" data-dir="a">
+      <div class="frame-label">
+        <b>Arah A — Induk Berwibawa, Anak Berkarakter</b>
+        <span>bone + charcoal + kuningan · anak usaha berwarna sendiri</span>
+      </div>
+      <div class="frame"><iframe data-src="arah-a" title="Arah A"></iframe></div>
+    </div>
+
+    <div class="frame-wrap" data-dir="b">
+      <div class="frame-label">
+        <b>Arah B — Editorial Journal</b>
+        <span>garis rambut, ruang kosong lebar, tipografi jadi bintangnya</span>
+      </div>
+      <div class="frame"><iframe data-src="arah-b" title="Arah B"></iframe></div>
+    </div>
+
+    <div class="frame-wrap" data-dir="c">
+      <div class="frame-label">
+        <b>Arah C — Kaca Bergerak</b>
+        <span>palet sekarang dipertahankan, yang ditambah hanya gerak</span>
+      </div>
+      <div class="frame"><iframe data-src="arah-c" title="Arah C"></iframe></div>
+    </div>
+
+  </div>
+</div>
+
+<script type="text/plain" id="tpl-shared">
+/* ═══ TOKEN & DASAR BERSAMA ═══ */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; }
+
+/* MOTION — kadar "sedang".
+   Easing expo-out: melambat keras di ujung. Itu yang membuat gerakan
+   terasa mahal, bukan durasinya yang panjang. */
+:root {
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --dur: 620ms;
+}
+
+[data-anim] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease),
+    filter var(--dur) var(--ease);
+  filter: blur(3px);
+  will-change: opacity, transform;
+}
+[data-anim].in { opacity: 1; transform: none; filter: none; }
+
+/* Jarak antar elemen dalam satu kelompok — 60ms, cukup terasa
+   berurutan tanpa membuat orang menunggu. */
+[data-anim][data-d="1"] { transition-delay: 60ms; }
+[data-anim][data-d="2"] { transition-delay: 120ms; }
+[data-anim][data-d="3"] { transition-delay: 180ms; }
+[data-anim][data-d="4"] { transition-delay: 240ms; }
+[data-anim][data-d="5"] { transition-delay: 300ms; }
+[data-anim][data-d="6"] { transition-delay: 360ms; }
+
+/* WAJIB: sebagian orang mematikan animasi di tingkat sistem karena
+   membuat mereka pusing atau mual. Ini bukan pilihan. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-anim] { opacity: 1 !important; transform: none !important; filter: none !important; }
+}
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     A + B — STRUKTUR A DENGAN TIPOGRAFI B
+
+     Yang diambil dari A : kartu anak usaha berwarna, statistik,
+                           nav dengan lambang, hierarki tiga tingkat
+     Yang diambil dari B : Instrument Serif, penomoran bab, garis
+                           rambut, ruang kosong lebar
+
+     Yang perlu diselesaikan saat menggabungkan: B nyaris tak punya
+     kotak, A justru berbasis kartu. Kalau kartunya dibawa apa adanya,
+     ketenangan B hilang. Jadi kartunya dibuat SETIPIS mungkin —
+     garis rambut, tanpa bayangan, tanpa sudut membulat besar — dan
+     warnanya baru muncul saat disentuh.
+     ══════════════════════════════════════════════════════════════ -->
+<script type="text/plain" id="src-arah-ab">
+<style>
+:root {
+  /* Latar PUTIH BERSIH — keputusan 22 Agu: kuningan terasa kurang
+     berwibawa untuk induk usaha yang menaungi logistik dan properti.
+     Semua kontras justru naik: teks utama 17,40 (dari 15,43),
+     kuningan 5,93 (dari 5,26). */
+  --paper:     #FFFFFF;   /* latar halaman */
+  --wash:      #FAF9F7;   /* permukaan kartu — nyaris putih, sedikit hangat */
+  --ink:       #1A1A1A;
+  --ink-soft:  #57534B;
+  --brass:     #7C5F33;   /* lolos AA di putih: 5,93 */
+  --hair:      rgba(26,26,26,.12);
+  --hair-soft: rgba(26,26,26,.07);
+}
+body { background: var(--paper); color: var(--ink); font-family: 'Inter Tight', sans-serif; }
+
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 40px; }
+
+/* NAV — lambang dari A, tapi tipografi huruf kecil berspasi dari B */
+nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 13px;
+  padding: 15px 40px;
+  background: rgb(255 255 255 / .88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--hair);
+}
+.mark {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 1px solid var(--brass);
+  display: grid; place-items: center;
+  font-family: 'Instrument Serif', serif; font-size: 12px; color: var(--brass);
+}
+nav b {
+  font-size: 11.5px; font-weight: 600; letter-spacing: .13em; text-transform: uppercase;
+}
+nav .sp {
+  margin-left: auto; display: flex; gap: 26px;
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft);
+}
+nav .sp span { cursor: pointer; transition: color .25s var(--ease); }
+nav .sp span:hover { color: var(--brass); }
+
+/* HERO — proporsi A (asimetris, ada statistik), huruf B */
+header { padding: 92px 0 68px; }
+.eyebrow {
+  font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--brass); font-weight: 500; margin: 0 0 22px;
+}
+h1 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(40px, 7.2vw, 78px);
+  line-height: .99; font-weight: 400; letter-spacing: -.028em;
+  margin: 0; max-width: 13ch;
+}
+.lede {
+  font-size: 17px; line-height: 1.7; color: var(--ink-soft);
+  max-width: 45ch; margin: 30px 0 0;
+}
+
+/* Statistik dari A, tapi angkanya pakai serif B */
+.stat-row {
+  display: flex; gap: 56px; flex-wrap: wrap;
+  margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--ink);
+}
+.stat b {
+  display: block; font-family: 'Instrument Serif', serif;
+  font-size: 40px; font-weight: 400; line-height: 1;
+  font-variant-numeric: tabular-nums; letter-spacing: -.02em;
+}
+.stat span {
+  font-size: 10.5px; color: var(--ink-soft);
+  letter-spacing: .12em; text-transform: uppercase; margin-top: 6px; display: block;
+}
+
+/* PENOMORAN BAB — dibawa utuh dari B */
+section { padding: 60px 0; }
+.chapter {
+  display: flex; align-items: baseline; gap: 18px;
+  padding-top: 20px; border-top: 1px solid var(--ink);
+  margin-bottom: 28px;
+}
+.chapter i {
+  font-style: normal; font-family: 'Instrument Serif', serif;
+  font-size: 13px; letter-spacing: .1em; color: var(--brass);
+}
+.chapter h2 {
+  font-family: 'Instrument Serif', serif; font-weight: 400;
+  font-size: clamp(24px, 3.6vw, 34px); letter-spacing: -.02em; margin: 0;
+}
+.sub {
+  color: var(--ink-soft); font-size: 15px; margin: 0 0 34px;
+  max-width: 52ch; line-height: 1.72;
+}
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+.cols p { font-size: 15px; line-height: 1.78; color: var(--ink-soft); margin: 0; }
+
+/* KARTU — inti penggabungan.
+   Struktur A (kartu per unit, warna sendiri) tapi dibuat setipis
+   mungkin supaya tidak merusak ketenangan B: garis rambut, TANPA
+   bayangan, sudut siku.
+
+   LOGIKA HOVER DIBALIK sejak latar jadi putih. Sebelumnya kartu
+   "menyala jadi putih" saat disentuh — mustahil kalau latarnya
+   sudah putih. Sekarang kartu diam berlatar --wash (nyaris putih,
+   sedikit hangat), lalu NAIK ke putih murni saat disentuh: seperti
+   selembar kertas yang terangkat dari tumpukan. */
+.units { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+.unit {
+  position: relative; padding: 30px 26px 26px;
+  border: 1px solid var(--hair-soft); margin: -0.5px;
+  background: var(--wash); cursor: pointer;
+  transition:
+    background .5s var(--ease),
+    border-color .5s var(--ease),
+    transform .5s var(--ease);
+}
+/* Pita warna tumbuh dari kiri — dibawa dari A, tapi jadi 2px saja */
+.unit::before {
+  content: ''; position: absolute; inset: -1px auto auto -1px; height: 2px; right: -1px;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .6s var(--ease);
+}
+.unit:hover {
+  background: #FFFFFF;
+  border-color: var(--hair);
+  transform: translateY(-3px);
+  z-index: 1;
+}
+.unit:hover::before { transform: scaleX(1); }
+
+.unit .no {
+  font-family: 'Instrument Serif', serif; font-size: 12px;
+  color: var(--brass); letter-spacing: .08em; display: block; margin-bottom: 14px;
+  transition: color .4s var(--ease);
+}
+.unit:hover .no { color: var(--accent); }
+
+.unit h3 {
+  font-family: 'Instrument Serif', serif; font-size: 21px; font-weight: 400;
+  letter-spacing: -.015em; margin: 0 0 7px;
+  transition: transform .5s var(--ease);
+}
+.unit:hover h3 { transform: translateX(5px); }
+.unit p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 18px; }
+.unit .fld {
+  font-size: 10.5px; letter-spacing: .11em; text-transform: uppercase;
+  color: var(--ink-soft); transition: color .4s var(--ease);
+}
+.unit:hover .fld { color: var(--accent); }
+
+/* Warna per unit — dari logo masing-masing, semuanya lolos AA
+   di atas kartu putih (terendah ngelash 6,24). */
+.u1 { --accent: #6B4F0F; }   /* Sweetness — emas       */
+.u2 { --accent: #7A5C12; }   /* ngelash   — emas tua   */
+.u3 { --accent: #2A4104; }   /* Nail's    — hijau tua  */
+.u4 { --accent: #9E1B21; }   /* Ayodya    — merah      */
+.u5 { --accent: #14488C; }   /* J-Land    — biru       */
+
+/* Kutipan visi dari B */
+blockquote {
+  margin: 0; padding: 6px 0 6px 26px;
+  border-left: 2px solid var(--brass);
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(21px, 3vw, 28px); line-height: 1.44;
+  letter-spacing: -.015em; max-width: 27ch;
+}
+
+.tail { padding: 46px 0 80px; border-top: 1px solid var(--ink); }
+.tail p {
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-soft); margin: 0;
+}
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 22px; }
+  nav { padding: 13px 22px; }
+  nav .sp { display: none; }
+  header { padding: 56px 0 42px; }
+  .lede { margin-top: 22px; }
+  .stat-row { gap: 34px; margin-top: 40px; }
+  .stat b { font-size: 31px; }
+  .cols { grid-template-columns: 1fr; gap: 20px; }
+  section { padding: 42px 0; }
+  /* Kartu jadi satu kolom — dan di HP warnanya SELALU tampil,
+     karena tidak ada hover untuk memunculkannya.
+     Latarnya juga dibiarkan putih: di layar sempit, deretan blok
+     abu-abu bertumpuk terlihat kotor, sedangkan di desktop blok itu
+     justru yang membentuk kisi. */
+  .units { grid-template-columns: 1fr; }
+  .unit { padding: 24px 20px 22px; background: #FFFFFF; }
+  .unit::before { transform: scaleX(1); }
+  .unit .no, .unit .fld { color: var(--accent); }
+}
+</style>
+
+<nav>
+  <div class="mark">JC</div>
+  <b>J-Corporate Group</b>
+  <div class="sp"><span>Tentang</span><span>Bidang Usaha</span><span>Kontak</span></div>
+</nav>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow" data-anim>Induk Usaha · Semarang</p>
+    <h1 data-anim data-d="1">Growing Together, Serving All</h1>
+    <p class="lede" data-anim data-d="3">
+      Lima unit bisnis dengan bidang berbeda — kuliner, kecantikan, logistik,
+      properti — di bawah satu payung manajemen dan satu standar pelayanan.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat" data-anim data-d="4"><b data-count="5">0</b><span>Unit bisnis</span></div>
+      <div class="stat" data-anim data-d="5"><b data-count="4">0</b><span>Bidang industri</span></div>
+      <div class="stat" data-anim data-d="6"><b data-count="1">0</b><span>Standar pelayanan</span></div>
+    </div>
+  </header>
+
+  <section>
+    <div class="chapter" data-anim>
+      <i>01</i>
+      <h2>Tentang Kami</h2>
+    </div>
+    <div class="cols">
+      <p data-anim data-d="1">
+        J-Corporate Group adalah induk usaha yang menaungi lima unit bisnis dengan
+        bidang yang berbeda-beda, mulai dari kuliner, kecantikan, hingga jasa
+        logistik.
+      </p>
+      <p data-anim data-d="2">
+        Setiap unit dikelola secara mandiri oleh tim yang fokus pada bidangnya
+        masing-masing, namun tetap berpegang pada nilai dan standar yang sama
+        sebagai satu keluarga besar J-Corporate.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="chapter" data-anim>
+      <i>02</i>
+      <h2>Visi</h2>
+    </div>
+    <blockquote data-anim data-d="1">
+      Menjadi grup usaha keluarga yang tumbuh berkelanjutan dan terpercaya di
+      berbagai bidang.
+    </blockquote>
+  </section>
+
+  <section>
+    <div class="chapter" data-anim>
+      <i>03</i>
+      <h2>Bidang Usaha</h2>
+    </div>
+    <p class="sub" data-anim data-d="1">
+      Setiap unit berjalan sendiri dengan kekhasannya masing-masing.
+    </p>
+
+    <div class="units">
+      <div class="unit u1" data-anim data-d="1">
+        <span class="no">01</span>
+        <h3>Sweetness Things</h3>
+        <p>Dessert homemade, tanpa pengawet buatan.</p>
+        <span class="fld">Kuliner</span>
+      </div>
+      <div class="unit u2" data-anim data-d="2">
+        <span class="no">02</span>
+        <h3>ngelash.id</h3>
+        <p>Eyelash extension, by appointment.</p>
+        <span class="fld">Kecantikan</span>
+      </div>
+      <div class="unit u3" data-anim data-d="3">
+        <span class="no">03</span>
+        <h3>Nail's by Me</h3>
+        <p>Nail art dengan garansi klaim 7 hari.</p>
+        <span class="fld">Kecantikan</span>
+      </div>
+      <div class="unit u4" data-anim data-d="4">
+        <span class="no">04</span>
+        <h3>Ayodya Utama Logistic</h3>
+        <p>Darat, laut, udara — domestik &amp; ekspor-impor.</p>
+        <span class="fld">Logistik</span>
+      </div>
+      <div class="unit u5" data-anim data-d="5">
+        <span class="no">05</span>
+        <h3>J-Land Property</h3>
+        <p>Sewa kost, sewa rumah, jual beli rumah.</p>
+        <span class="fld">Properti</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="tail">
+    <p data-anim>J-Corporate Group · Growing Together, Serving All · MMXXVI</p>
+  </div>
+</div>
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARAH A — INDUK BERWIBAWA, ANAK BERKARAKTER
+     ══════════════════════════════════════════════════════════════ -->
+<script type="text/plain" id="src-arah-a">
+<style>
+:root {
+  /* Palet induk — netral, berwibawa. Sengaja TIDAK memakai emas
+     Sweetness: induk menaungi logistik dan properti juga.
+     Latar putih bersih (keputusan 22 Agu). */
+  --paper:     #FFFFFF;
+  --wash:      #FAF9F7;
+  --ink:       #232323;
+  --ink-soft:  #5A554D;
+  --brass:     #7C5F33;   /* aksen induk — kuningan, bukan emas manis */
+  --brass-lo:  #8A6A3B;   /* garis & ikon besar saja, BUKAN teks */
+  --line:      rgba(35,35,35,.10);
+}
+body { background: var(--paper); color: var(--ink); font-family: 'Jost', sans-serif; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 34px; }
+
+/* NAV — garis bawah tipis, bukan panel kaca. Induk tidak berjualan. */
+nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 34px;
+  background: rgb(255 255 255 / .88);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.mark {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid var(--brass);
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-size: 12px; font-weight: 700; color: var(--brass);
+}
+nav b { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+nav .sp { margin-left: auto; display: flex; gap: 26px; font-size: 13.5px; color: var(--ink-soft); }
+nav .sp span { cursor: pointer; transition: color .2s; }
+nav .sp span:hover { color: var(--brass); }
+
+/* HERO — asimetris. Judul besar di kiri, tidak rata tengah. */
+header { padding: 88px 0 72px; }
+.eyebrow {
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--brass); font-weight: 500; margin: 0 0 20px;
+}
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(38px, 6.4vw, 68px);
+  line-height: 1.02; font-weight: 600; letter-spacing: -.025em;
+  margin: 0; max-width: 15ch;
+}
+.rule { width: 54px; height: 2px; background: var(--brass); margin: 26px 0 22px; }
+.lede { font-size: 17px; line-height: 1.65; color: var(--ink-soft); max-width: 46ch; margin: 0; }
+
+.stat-row {
+  display: flex; gap: 52px; flex-wrap: wrap;
+  margin-top: 54px; padding-top: 30px; border-top: 1px solid var(--line);
+}
+.stat b {
+  display: block; font-family: 'Fraunces', serif;
+  font-size: 34px; font-weight: 600; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat span { font-size: 12.5px; color: var(--ink-soft); letter-spacing: .04em; }
+
+/* SECTION */
+section { padding: 68px 0; }
+h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(24px, 3.4vw, 33px);
+  font-weight: 600; letter-spacing: -.02em; margin: 0 0 10px;
+}
+.sub { color: var(--ink-soft); font-size: 15px; margin: 0 0 34px; max-width: 52ch; line-height: 1.6; }
+
+/* KARTU ANAK USAHA — tiap kartu punya warnanya sendiri.
+   Inilah inti arah A: induk tenang, anak usaha yang berwarna. */
+.units { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.unit {
+  position: relative; overflow: hidden;
+  background: var(--wash); border: 1px solid var(--line);
+  border-radius: 3px; padding: 26px 22px 22px;
+  cursor: pointer;
+  transition: transform .45s var(--ease), box-shadow .45s var(--ease), border-color .45s var(--ease);
+}
+/* Pita warna di tepi atas — penanda identitas tiap unit */
+.unit::before {
+  content: ''; position: absolute; inset: 0 0 auto; height: 3px;
+  background: var(--accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .55s var(--ease);
+}
+.unit:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgb(35 35 35 / .09); background: #FFFFFF; border-color: transparent; }
+.unit:hover::before { transform: scaleX(1); }
+
+.unit .badge {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center; margin-bottom: 16px;
+  font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700;
+  color: var(--accent); background: var(--accent-wash);
+  transition: transform .45s var(--ease);
+}
+.unit:hover .badge { transform: scale(1.08) rotate(-4deg); }
+.unit h3 { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 600; margin: 0 0 5px; }
+.unit p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; margin: 0 0 16px; }
+.unit .go {
+  font-size: 12px; color: var(--accent); font-weight: 500;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.unit .go i { transition: transform .35s var(--ease); font-style: normal; }
+.unit:hover .go i { transform: translateX(5px); }
+
+/* Warna per unit — diambil dari logo masing-masing, versi yang
+   sudah lolos kontras AA sebagai teks. */
+.u1 { --accent: #6B4F0F; --accent-wash: #F6EFDC; }  /* Sweetness  */
+.u2 { --accent: #7A5C12; --accent-wash: #F4EEDD; }  /* ngelash    */
+.u3 { --accent: #2A4104; --accent-wash: #E9EFE0; }  /* Nail's     */
+.u4 { --accent: #9E1B21; --accent-wash: #FAE9E9; }  /* Ayodya     */
+.u5 { --accent: #14488C; --accent-wash: #E6EEF8; }  /* J-Land     */
+
+.tail { padding: 56px 0 76px; border-top: 1px solid var(--line); }
+.tail p { font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 20px; }
+  nav { padding: 13px 20px; }
+  nav .sp { display: none; }
+  header { padding: 52px 0 44px; }
+  .stat-row { gap: 30px; margin-top: 38px; }
+  .stat b { font-size: 27px; }
+  .units { grid-template-columns: 1fr; }
+  section { padding: 46px 0; }
+}
+</style>
+
+<nav>
+  <div class="mark">JC</div>
+  <b>J-Corporate Group</b>
+  <div class="sp"><span>Tentang</span><span>Bidang Usaha</span><span>Kontak</span></div>
+</nav>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow" data-anim>Induk Usaha</p>
+    <h1 data-anim data-d="1">Growing Together, Serving All</h1>
+    <div class="rule" data-anim data-d="2"></div>
+    <p class="lede" data-anim data-d="3">
+      Lima unit bisnis dengan bidang berbeda — kuliner, kecantikan, logistik,
+      properti — di bawah satu payung manajemen.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat" data-anim data-d="4"><b data-count="5">0</b><span>Unit bisnis</span></div>
+      <div class="stat" data-anim data-d="5"><b data-count="4">0</b><span>Bidang industri</span></div>
+      <div class="stat" data-anim data-d="6"><b data-count="1">0</b><span>Standar pelayanan</span></div>
+    </div>
+  </header>
+
+  <section>
+    <h2 data-anim>Tentang J-Corporate Group</h2>
+    <p class="sub" data-anim data-d="1">
+      Berangkat dari semangat membangun usaha yang saling melengkapi dalam satu
+      payung manajemen, kami hadir untuk memberikan produk dan layanan yang
+      berkualitas, konsisten, dan dekat dengan kebutuhan pelanggan sehari-hari.
+    </p>
+  </section>
+
+  <section>
+    <h2 data-anim>Bidang Usaha</h2>
+    <p class="sub" data-anim data-d="1">Setiap unit berjalan sendiri dengan kekhasannya masing-masing.</p>
+
+    <div class="units">
+      <div class="unit u1" data-anim data-d="1">
+        <div class="badge">ST</div>
+        <h3>Sweetness Things</h3>
+        <p>Dessert homemade, tanpa pengawet buatan.</p>
+        <span class="go">Lihat profil <i>→</i></span>
+      </div>
+      <div class="unit u2" data-anim data-d="2">
+        <div class="badge">NG</div>
+        <h3>ngelash.id</h3>
+        <p>Eyelash extension, by appointment.</p>
+        <span class="go">Lihat profil <i>→</i></span>
+      </div>
+      <div class="unit u3" data-anim data-d="3">
+        <div class="badge">NB</div>
+        <h3>Nail's by Me</h3>
+        <p>Nail art dengan garansi klaim 7 hari.</p>
+        <span class="go">Lihat profil <i>→</i></span>
+      </div>
+      <div class="unit u4" data-anim data-d="4">
+        <div class="badge">AU</div>
+        <h3>PT. Ayodya Utama Logistic</h3>
+        <p>Darat, laut, udara — domestik &amp; ekspor-impor.</p>
+        <span class="go">Lihat profil <i>→</i></span>
+      </div>
+      <div class="unit u5" data-anim data-d="5">
+        <div class="badge">JL</div>
+        <h3>J-Land Property</h3>
+        <p>Sewa kost, sewa rumah, jual beli rumah.</p>
+        <span class="go">Lihat profil <i>→</i></span>
+      </div>
+    </div>
+  </section>
+
+  <div class="tail">
+    <p data-anim>© 2026 J-Corporate Group · Growing Together, Serving All</p>
+  </div>
+</div>
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARAH B — EDITORIAL JOURNAL
+     ══════════════════════════════════════════════════════════════ -->
+<script type="text/plain" id="src-arah-b">
+<style>
+:root {
+  --paper:     #FFFFFF;
+  --ink:      #1A1A1A;
+  --ink-soft: #57534B;
+  --brass:    #7C5F33;
+  --hair:     rgba(26,26,26,.14);
+}
+body { background: var(--paper); color: var(--ink); font-family: 'Inter Tight', sans-serif; }
+
+.wrap { max-width: 940px; margin: 0 auto; padding: 0 40px; }
+
+/* NAV — nyaris tak ada. Hanya nama dan garis. */
+nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: baseline; gap: 16px;
+  padding: 20px 40px 14px;
+  background: #FFFFFF;
+  border-bottom: 1px solid var(--hair);
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+}
+nav b { font-weight: 600; letter-spacing: .14em; }
+nav em { font-style: normal; color: var(--ink-soft); margin-left: auto; }
+
+/* HERO — tipografi jadi satu-satunya bintang. Tidak ada kotak,
+   tidak ada bayangan, tidak ada gradasi. */
+header { padding: 108px 0 74px; }
+h1 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: clamp(44px, 8vw, 92px);
+  line-height: .98; font-weight: 400; letter-spacing: -.03em;
+  margin: 0 0 34px; max-width: 13ch;
+}
+.lede {
+  font-size: 18px; line-height: 1.7; color: var(--ink-soft);
+  max-width: 44ch; margin: 0;
+}
+
+/* PENOMORAN BAB — penanda khas jurnal cetak */
+.chapter {
+  display: flex; align-items: baseline; gap: 18px;
+  padding-top: 22px; border-top: 1px solid var(--ink);
+  margin-bottom: 30px;
+}
+.chapter i {
+  font-style: normal; font-family: 'Instrument Serif', serif;
+  font-size: 13px; letter-spacing: .1em; color: var(--brass);
+}
+.chapter h2 {
+  font-family: 'Instrument Serif', serif; font-weight: 400;
+  font-size: clamp(23px, 3.4vw, 31px); letter-spacing: -.015em; margin: 0;
+}
+
+section { padding: 54px 0; }
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; }
+.cols p { font-size: 15.5px; line-height: 1.78; color: var(--ink-soft); margin: 0; }
+
+/* DAFTAR UNIT — baris bergaris, bukan kartu. Persis daftar isi
+   sebuah jurnal. Garis emas tumbuh dari kiri saat disentuh. */
+.list { border-top: 1px solid var(--hair); }
+.row {
+  position: relative; display: flex; align-items: baseline; gap: 20px;
+  padding: 22px 4px; border-bottom: 1px solid var(--hair);
+  cursor: pointer;
+}
+.row::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: var(--brass); transform: scaleX(0); transform-origin: left;
+  transition: transform .6s var(--ease);
+}
+.row:hover::after { transform: scaleX(1); }
+.row .no {
+  font-family: 'Instrument Serif', serif; font-size: 12px;
+  color: var(--brass); min-width: 26px; letter-spacing: .06em;
+}
+.row .nm {
+  font-family: 'Instrument Serif', serif; font-size: clamp(19px, 2.6vw, 25px);
+  letter-spacing: -.015em; transition: transform .5s var(--ease);
+}
+.row:hover .nm { transform: translateX(7px); }
+.row .fld { margin-left: auto; font-size: 12px; color: var(--ink-soft); letter-spacing: .05em; }
+
+/* Kutipan visi — blok besar, satu-satunya "hiasan" di halaman */
+blockquote {
+  margin: 0; padding: 40px 0;
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(21px, 3.2vw, 29px); line-height: 1.42;
+  letter-spacing: -.015em; max-width: 26ch;
+  border-left: 2px solid var(--brass); padding-left: 26px;
+}
+
+.tail { padding: 46px 0 80px; border-top: 1px solid var(--ink); }
+.tail p { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin: 0; }
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 22px; }
+  nav { padding: 15px 22px 11px; font-size: 10.5px; }
+  nav em { display: none; }
+  header { padding: 62px 0 44px; }
+  .cols { grid-template-columns: 1fr; gap: 20px; }
+  section { padding: 38px 0; }
+  .row { flex-wrap: wrap; gap: 10px; padding: 17px 2px; }
+  .row .fld { margin-left: 0; width: 100%; }
+  blockquote { padding: 26px 0 26px 18px; }
+}
+</style>
+
+<nav>
+  <b>J-Corporate</b>
+  <em>Induk Usaha · Semarang</em>
+</nav>
+
+<div class="wrap">
+  <header>
+    <h1 data-anim>Growing Together, Serving All</h1>
+    <p class="lede" data-anim data-d="2">
+      Lima unit bisnis dengan bidang berbeda, di bawah satu payung manajemen
+      dan satu standar pelayanan.
+    </p>
+  </header>
+
+  <section>
+    <div class="chapter" data-anim>
+      <i>01</i>
+      <h2>Tentang Kami</h2>
+    </div>
+    <div class="cols">
+      <p data-anim data-d="1">
+        J-Corporate Group adalah induk usaha yang menaungi lima unit bisnis dengan
+        bidang yang berbeda-beda, mulai dari kuliner, kecantikan, hingga jasa
+        logistik.
+      </p>
+      <p data-anim data-d="2">
+        Setiap unit dikelola secara mandiri oleh tim yang fokus pada bidangnya
+        masing-masing, namun tetap berpegang pada nilai dan standar yang sama
+        sebagai satu keluarga besar.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="chapter" data-anim>
+      <i>02</i>
+      <h2>Visi</h2>
+    </div>
+    <blockquote data-anim data-d="1">
+      Menjadi grup usaha keluarga yang tumbuh berkelanjutan dan terpercaya di
+      berbagai bidang.
+    </blockquote>
+  </section>
+
+  <section>
+    <div class="chapter" data-anim>
+      <i>03</i>
+      <h2>Bidang Usaha</h2>
+    </div>
+    <div class="list">
+      <div class="row" data-anim data-d="1"><span class="no">01</span><span class="nm">Sweetness Things</span><span class="fld">Kuliner</span></div>
+      <div class="row" data-anim data-d="2"><span class="no">02</span><span class="nm">ngelash.id</span><span class="fld">Kecantikan</span></div>
+      <div class="row" data-anim data-d="3"><span class="no">03</span><span class="nm">Nail's by Me</span><span class="fld">Kecantikan</span></div>
+      <div class="row" data-anim data-d="4"><span class="no">04</span><span class="nm">PT. Ayodya Utama Logistic</span><span class="fld">Logistik</span></div>
+      <div class="row" data-anim data-d="5"><span class="no">05</span><span class="nm">J-Land Property</span><span class="fld">Properti</span></div>
+    </div>
+  </section>
+
+  <div class="tail">
+    <p data-anim>J-Corporate Group · MMXXVI</p>
+  </div>
+</div>
+</script>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARAH C — KACA BERGERAK
+     ══════════════════════════════════════════════════════════════ -->
+<script type="text/plain" id="src-arah-c">
+<style>
+:root {
+  /* Palet SEKARANG, tidak diubah sama sekali. */
+  --cream:      #FDFBF6;
+  --grad-gold:  #F7E7C4;
+  --grad-blush: #F3E8DC;
+  --grad-rose:  #F6E4E0;
+  --gold:       #B28C27;
+  --gold-deep:  #6B4F0F;
+  --ink:        #2E2A24;
+  --ink-soft:   #5B5348;
+  --line-glass: rgba(255,255,255,.70);
+}
+body {
+  background: var(--cream); color: var(--ink); font-family: 'Jost', sans-serif;
+  position: relative;
+}
+
+/* AURORA BERGERAK — inti arah C.
+   Bergeser sangat pelan (satu siklus 64 detik) sehingga tidak pernah
+   tertangkap sebagai "animasi", hanya membuat halaman terasa hidup.
+   Memakai transform pada lapisan terpisah, bukan menganimasikan
+   background-position — yang terakhir memaksa repaint terus-menerus. */
+body::before {
+  content: ''; position: fixed; inset: -22%;
+  z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(58% 44% at 86% 4%, var(--grad-gold) 0%, transparent 62%),
+    radial-gradient(50% 38% at 6% 14%, var(--grad-blush) 0%, transparent 60%),
+    radial-gradient(44% 36% at 94% 70%, var(--grad-rose) 0%, transparent 62%),
+    radial-gradient(56% 42% at 14% 100%, var(--grad-gold) 0%, transparent 64%);
+  animation: drift 64s ease-in-out infinite alternate;
+}
+@keyframes drift {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(2.2%, -1.6%, 0) scale(1.045); }
+  100% { transform: translate3d(-1.8%, 1.9%, 0) scale(1.02); }
+}
+
+.wrap { max-width: 1060px; margin: 0 auto; padding: 0 30px; }
+
+/* KACA — nilai persis dari DESIGN_SYSTEM §5.1 */
+.glass {
+  background: rgb(255 255 255 / .62);
+  backdrop-filter: blur(22px) saturate(1.5);
+  border: 1px solid var(--line-glass);
+  box-shadow: 0 10px 34px rgb(90 72 40 / .10), inset 0 1px 0 rgb(255 255 255 / .75);
+  border-radius: 18px;
+}
+.glass-card {
+  background: rgb(255 255 255 / .52);
+  backdrop-filter: blur(12px) saturate(1.5);
+  border: 1px solid var(--line-glass);
+  box-shadow: 0 10px 34px rgb(90 72 40 / .10), inset 0 1px 0 rgb(255 255 255 / .75);
+  border-radius: 14px;
+}
+
+nav {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 13px; padding: 13px 30px;
+  background: rgb(255 255 255 / .55);
+  backdrop-filter: blur(18px) saturate(1.5);
+  border-bottom: 1px solid var(--line-glass);
+}
+.mark {
+  width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--gold);
+  display: grid; place-items: center;
+  font-family: 'Fraunces', serif; font-size: 12px; font-weight: 700; color: var(--gold-deep);
+}
+nav b { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 600; }
+
+header { padding: 54px 0 40px; }
+.hero { padding: 34px 32px 32px; max-width: 640px; }
+.eyebrow {
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold-deep); font-weight: 500; margin: 0 0 12px;
+}
+h1 {
+  font-family: 'Fraunces', serif; font-size: clamp(31px, 5.4vw, 50px);
+  line-height: 1.04; font-weight: 600; letter-spacing: -.02em; margin: 0;
+}
+.rule { width: 52px; height: 2px; background: var(--gold); margin: 18px 0 16px; }
+.lede { font-size: 16px; line-height: 1.62; color: var(--ink-soft); margin: 0; max-width: 42ch; }
+
+section { padding: 30px 0 46px; }
+h2 {
+  font-family: 'Fraunces', serif; font-size: clamp(22px, 3.2vw, 29px);
+  font-weight: 600; margin: 0 0 8px;
+}
+.sub { color: var(--ink-soft); font-size: 15px; margin: 0 0 26px; max-width: 50ch; line-height: 1.6; }
+
+.panel { padding: 28px 30px; }
+.panel p { font-size: 15px; line-height: 1.75; color: var(--ink-soft); margin: 0 0 12px; }
+.panel p:last-child { margin: 0; }
+
+/* KARTU — miring halus mengikuti kursor. Sudutnya kecil (maks 5°)
+   supaya terasa seperti kaca yang tersenggol, bukan mainan. */
+.units { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.unit {
+  padding: 22px 20px; cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform .5s var(--ease), box-shadow .5s var(--ease);
+}
+.unit:hover { box-shadow: 0 22px 44px rgb(90 72 40 / .16), inset 0 1px 0 rgb(255 255 255 / .8); }
+.unit .badge {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgb(178 140 39 / .12); color: var(--gold-deep);
+  display: grid; place-items: center; margin-bottom: 14px;
+  font-family: 'Fraunces', serif; font-size: 13px; font-weight: 700;
+}
+.unit h3 { font-family: 'Fraunces', serif; font-size: 16.5px; font-weight: 600; margin: 0 0 5px; }
+.unit p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+
+.tail { padding: 34px 0 64px; text-align: center; }
+.tail p { font-size: 13px; color: var(--ink-soft); margin: 0; }
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 18px; }
+  nav { padding: 11px 18px; }
+  header { padding: 34px 0 26px; }
+  .hero { padding: 24px 20px 22px; }
+  .units { grid-template-columns: 1fr; }
+  .panel { padding: 20px 20px; }
+}
+</style>
+
+<nav>
+  <div class="mark">JC</div>
+  <b>J-Corporate Group</b>
+</nav>
+
+<div class="wrap">
+  <header>
+    <div class="hero glass" data-anim>
+      <p class="eyebrow">Induk Usaha</p>
+      <h1>J-Corporate Group</h1>
+      <div class="rule"></div>
+      <p class="lede">Growing Together, Serving All — lima unit bisnis di bawah satu payung manajemen.</p>
+    </div>
+  </header>
+
+  <section>
+    <h2 data-anim>Tentang J-Corporate Group</h2>
+    <p class="sub" data-anim data-d="1">Berangkat dari semangat membangun usaha yang saling melengkapi.</p>
+    <div class="panel glass" data-anim data-d="2">
+      <p>
+        J-Corporate Group adalah induk usaha yang menaungi lima unit bisnis dengan
+        bidang yang berbeda-beda, mulai dari kuliner, kecantikan, hingga jasa logistik.
+      </p>
+      <p>
+        Setiap unit dikelola secara mandiri oleh tim yang fokus pada bidangnya
+        masing-masing, namun tetap berpegang pada nilai dan standar yang sama.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <h2 data-anim>Bidang Usaha</h2>
+    <p class="sub" data-anim data-d="1">Setiap unit berjalan sendiri dengan kekhasannya masing-masing.</p>
+    <div class="units">
+      <div class="unit glass-card" data-tilt data-anim data-d="1"><div class="badge">ST</div><h3>Sweetness Things</h3><p>Dessert homemade.</p></div>
+      <div class="unit glass-card" data-tilt data-anim data-d="2"><div class="badge">NG</div><h3>ngelash.id</h3><p>Eyelash extension.</p></div>
+      <div class="unit glass-card" data-tilt data-anim data-d="3"><div class="badge">NB</div><h3>Nail's by Me</h3><p>Nail art bergaransi.</p></div>
+      <div class="unit glass-card" data-tilt data-anim data-d="4"><div class="badge">AU</div><h3>Ayodya Logistic</h3><p>Darat, laut, udara.</p></div>
+      <div class="unit glass-card" data-tilt data-anim data-d="5"><div class="badge">JL</div><h3>J-Land Property</h3><p>Kost, rumah, jual beli.</p></div>
+    </div>
+  </section>
+
+  <div class="tail">
+    <p data-anim>© 2026 J-Corporate Group</p>
+  </div>
+</div>
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   MESIN MOCKUP
+   ═══════════════════════════════════════════════════════════════ */
+
+const shared = document.getElementById('tpl-shared').textContent;
+
+/* Skrip yang disuntikkan ke tiap bingkai: pengamat scroll untuk
+   animasi masuk, penghitung angka, dan kemiringan kartu. */
+const runtime = `
+<script>
+(function () {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduce) {
+    document.querySelectorAll('[data-anim]').forEach(el => el.classList.add('in'));
+    document.querySelectorAll('[data-count]').forEach(el => el.textContent = el.dataset.count);
+    return;
+  }
+
+  /* Masuk saat 12% elemen terlihat — cukup awal supaya sudah selesai
+     bergerak ketika mata sampai ke situ, tidak tertinggal di belakang. */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+
+  document.querySelectorAll('[data-anim]').forEach(el => io.observe(el));
+
+  /* Angka menghitung naik — hanya sekali, dan pelan di ujung. */
+  const co = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target, to = +el.dataset.count, t0 = performance.now(), dur = 1100;
+      const step = (t) => {
+        const p = Math.min((t - t0) / dur, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(to * eased);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+      co.unobserve(el);
+    });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
+
+  /* Kemiringan kartu mengikuti kursor — maksimal 5 derajat.
+     Dimatikan di perangkat sentuh: tidak ada kursor untuk diikuti,
+     dan efeknya malah tersangkut saat disentuh. */
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      card.addEventListener('pointermove', (ev) => {
+        const r = card.getBoundingClientRect();
+        const px = (ev.clientX - r.left) / r.width - .5;
+        const py = (ev.clientY - r.top) / r.height - .5;
+        card.style.transform =
+          'perspective(680px) rotateX(' + (-py * 5).toFixed(2) + 'deg) rotateY(' +
+          (px * 5).toFixed(2) + 'deg) translateY(-3px)';
+      });
+      card.addEventListener('pointerleave', () => { card.style.transform = ''; });
+    });
+  }
+})();
+<\/script>`;
+
+function build(id) {
+  const body = document.getElementById('src-' + id).textContent;
+  return `<!doctype html><html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.bunny.net">
+<link href="https://fonts.bunny.net/css?family=fraunces:400,600,700|jost:400,500,600|instrument-serif:400|inter-tight:400,500,600" rel="stylesheet">
+<style>${shared}</style></head><body>${body}${runtime}</body></html>`;
+}
+
+document.querySelectorAll('iframe[data-src]').forEach(f => {
+  f.srcdoc = build(f.dataset.src);
+});
+
+/* Tombol desktop / HP */
+const stage = document.querySelector('.stage');
+document.querySelectorAll('[data-view-btn]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-view-btn]').forEach(b =>
+      b.setAttribute('aria-pressed', String(b === btn)));
+    stage.dataset.view = btn.dataset.viewBtn;
+  });
+});
+
+/* Tombol pilih arah */
+document.querySelectorAll('[data-dir-btn]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-dir-btn]').forEach(b =>
+      b.setAttribute('aria-pressed', String(b === btn)));
+    const pick = btn.dataset.dirBtn;
+    document.querySelectorAll('[data-dir]').forEach(w => {
+      w.classList.toggle('hidden', pick !== 'all' && w.dataset.dir !== pick);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

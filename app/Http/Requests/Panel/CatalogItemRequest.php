@@ -43,6 +43,14 @@ class CatalogItemRequest extends FormRequest
                     ->extensions(['jpeg', 'jpg', 'png', 'webp'])
                     ->max(ImageService::MAX_UPLOAD_KB),
             ],
+
+            // Penanda hapus foto. Terpisah dari `image` karena keduanya
+            // menyatakan hal berbeda: `image` kosong berarti "biarkan
+            // fotonya", sedangkan ini berarti "buang fotonya".
+            //
+            // Tanpa pembeda itu, satu-satunya cara menghapus foto adalah
+            // menghapus itemnya lalu membuatnya lagi dari nol.
+            'remove_image' => ['nullable', 'boolean'],
         ];
     }
 

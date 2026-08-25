@@ -19,7 +19,9 @@ Satu website berisi enam company profile: J Corp sebagai induk, dan lima anak us
 | `nails-by-me` | Nail's by Me | Nail art |
 | `ngelash` | ngelash.id | Eyelash extension |
 | `ayodya-logistic` | PT. Ayodya Utama Logistic | Logistik |
-| `lumintu-property` | Lumintu Property | Property & kos |
+| `j-land-property` | J-Land Property | Property & kos |
+
+> **Perubahan 22 Agustus 2026.** Unit properti semula bernama **Lumintu Property** dengan slug `lumintu-property`. Berganti jadi J-Land Property beserta alamat halamannya; alamat lama dialihkan permanen (301) di `routes/web.php`. Nama induk juga berganti dari "J Corp" jadi **J-Corporate Group** pada 21 Agustus.
 
 ### Kondisi konten saat spec ditulis
 

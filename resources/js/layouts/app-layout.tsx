@@ -9,8 +9,13 @@ export default function AppLayout({
     children: React.ReactNode;
 }) {
     return (
-        <AppLayoutTemplate breadcrumbs={breadcrumbs}>
-            {children}
-        </AppLayoutTemplate>
+        // `font-panel` menjaga panel tetap ber-Jost. Halaman publik sudah
+        // pindah ke Inter Tight, dan tanpa pembungkus ini panel ikut
+        // berganti huruf tanpa satu pun error — lihat catatan di app.css.
+        <div className="font-panel panel-shell">
+            <AppLayoutTemplate breadcrumbs={breadcrumbs}>
+                {children}
+            </AppLayoutTemplate>
+        </div>
     );
 }

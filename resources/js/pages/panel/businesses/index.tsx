@@ -80,48 +80,143 @@ export default function BusinessesIndex({ businesses }: Props) {
         <>
             <Head title="Kelola Anak Usaha" />
 
-            <div className="space-y-6 px-4 py-6">
+            <main className="panel-page space-y-6">
                 <Heading
-                    title="Kelola Anak Usaha"
+                    title="Anak Usaha"
                     description="Sakelar terbit menentukan apakah profil bisa diakses publik"
                 />
 
-                <ul className="grid gap-2">
-                    {businesses.map((business) => (
-                        <li
-                            key={business.id}
-                            className="glass-card flex flex-col gap-3 rounded-brand-md p-3 sm:flex-row sm:items-center sm:justify-between"
-                        >
-                            <div className="min-w-0">
-                                <p className="font-medium">
-                                    {business.name}
-                                    {business.is_parent && (
-                                        <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs font-normal">
-                                            induk
+                <div className="panel-table-shell">
+                    <table className="panel-table">
+                        <thead>
+                            <tr>
+                                <th>Usaha</th>
+                                <th>Alamat publik</th>
+                                <th>Konten</th>
+                                <th>Status</th>
+                                <th>Galeri</th>
+                                <th className="text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {businesses.map((business) => (
+                                <tr key={business.id}>
+                                    <td>
+                                        <p className="font-medium text-ink">
+                                            {business.name}
+                                            {business.is_parent && (
+                                                <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-[0.65rem] font-normal text-muted-foreground">
+                                                    Induk
+                                                </span>
+                                            )}
+                                        </p>
+                                    </td>
+                                    <td className="text-muted-foreground">
+                                        {business.is_parent
+                                            ? '/'
+                                            : `/${business.slug}`}
+                                    </td>
+                                    <td>
+                                        {business.catalog_count} item
+                                        {business.has_portfolio &&
+                                            ` · ${business.portfolio_count} foto`}
+                                    </td>
+                                    <td>
+                                        <span
+                                            className={
+                                                business.is_published
+                                                    ? 'panel-status panel-status--published'
+                                                    : 'panel-status panel-status--draft'
+                                            }
+                                        >
+                                            {business.is_published
+                                                ? 'Tayang'
+                                                : 'Belum terbit'}
                                         </span>
-                                    )}
-                                </p>
-                                <p className="text-sm text-muted-foreground">
-                                    /{business.slug} · {business.catalog_count}{' '}
-                                    item
-                                    {business.has_portfolio &&
-                                        ` · ${business.portfolio_count} foto`}
-                                </p>
-                            </div>
+                                    </td>
+                                    <td>
+                                        {business.is_parent
+                                            ? '—'
+                                            : business.has_portfolio
+                                              ? 'Aktif'
+                                              : 'Tidak aktif'}
+                                    </td>
+                                    <td>
+                                        <div className="flex justify-end gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() =>
+                                                    setPending({
+                                                        business,
+                                                        kind: 'published',
+                                                    })
+                                                }
+                                            >
+                                                {business.is_published
+                                                    ? 'Sembunyikan'
+                                                    : 'Terbitkan'}
+                                            </Button>
+                                            {!business.is_parent && (
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        setPending({
+                                                            business,
+                                                            kind: 'portfolio',
+                                                        })
+                                                    }
+                                                >
+                                                    {business.has_portfolio
+                                                        ? 'Matikan galeri'
+                                                        : 'Aktifkan galeri'}
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 
-                            <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <ul className="panel-mobile-list">
+                    {businesses.map((business) => (
+                        <li key={business.id} className="panel-mobile-card">
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                    <p className="font-medium text-ink">
+                                        {business.name}
+                                        {business.is_parent && (
+                                            <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-[0.65rem] font-normal text-muted-foreground">
+                                                Induk
+                                            </span>
+                                        )}
+                                    </p>
+                                    <p className="mt-1 text-sm text-muted-foreground">
+                                        {business.is_parent
+                                            ? '/'
+                                            : `/${business.slug}`}{' '}
+                                        · {business.catalog_count} item
+                                        {business.has_portfolio &&
+                                            ` · ${business.portfolio_count} foto`}
+                                    </p>
+                                </div>
                                 <span
                                     className={
                                         business.is_published
-                                            ? 'text-sm font-medium text-gold-deep'
-                                            : 'text-sm text-muted-foreground'
+                                            ? 'panel-status panel-status--published'
+                                            : 'panel-status panel-status--draft'
                                     }
                                 >
                                     {business.is_published
                                         ? 'Tayang'
                                         : 'Belum terbit'}
                                 </span>
+                            </div>
 
+                            <div className="mt-4 grid gap-2 sm:grid-cols-2">
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -137,9 +232,6 @@ export default function BusinessesIndex({ businesses }: Props) {
                                         : 'Terbitkan'}
                                 </Button>
 
-                                {/* Induk tidak punya katalog maupun portfolio
-                                    sendiri (spec §3), jadi sakelarnya tidak
-                                    ditampilkan. */}
                                 {!business.is_parent && (
                                     <Button
                                         variant="outline"
@@ -152,15 +244,15 @@ export default function BusinessesIndex({ businesses }: Props) {
                                         }
                                     >
                                         {business.has_portfolio
-                                            ? 'Matikan portfolio'
-                                            : 'Nyalakan portfolio'}
+                                            ? 'Matikan galeri'
+                                            : 'Aktifkan galeri'}
                                     </Button>
                                 )}
                             </div>
                         </li>
                     ))}
                 </ul>
-            </div>
+            </main>
 
             <Dialog
                 open={pending !== null}

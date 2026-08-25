@@ -154,12 +154,21 @@ Simpan dengan `Ctrl+O`, `Enter`, lalu `Ctrl+X`.
 ```bash
 php artisan key:generate
 php artisan migrate --force
-php artisan db:seed --class=BusinessSeeder --force
+php artisan db:seed --force
 ```
 
 `--force` wajib di produksi; tanpa itu artisan menolak jalan karena takut merusak data.
 
-**`BusinessSeeder` saja**, bukan `SampleContentSeeder` — sesuai pilihan Anda mulai bersih. Yang dimasukkan hanya enam entitas (J Corp + lima anak usaha) tanpa isi karangan. Kelima anak usaha statusnya belum terbit.
+Yang ikut jalan hanya dua seeder, keduanya aman di server:
+
+| Seeder | Isinya |
+|---|---|
+| `BusinessSeeder` | Enam entitas (induk + lima anak usaha), tanpa teks apa pun |
+| `ClientContentSeeder` | **Materi asli dari client** — profil, kontak, produk, logo, warna aksen |
+
+`SampleContentSeeder` **tidak** ikut, dan memang tidak boleh: isinya teks karangan beserta nomor telepon palsu. Jangan menjalankannya di server yang sudah tayang.
+
+Sejak 23 Agustus 2026 keenam entitas sudah punya materi asli, jadi seluruhnya langsung terbit setelah perintah di atas.
 
 ---
 
@@ -288,12 +297,16 @@ Ketiganya mempercepat website. **Ingat:** setelah ini, perubahan `.env` tidak te
 
 Masuk ke `namadomain.com/jcorp-panel` dengan akun yang dibuat di Langkah 6.
 
-Urutan yang masuk akal:
+Anak usaha yang materinya sudah masuk lewat `ClientContentSeeder` **tidak perlu diisi ulang di sini** — profil, kontak, dan produknya sudah terisi dan halamannya sudah terbit. Yang tersisa biasanya hanya menambahkan foto produk.
+
+Untuk yang materinya belum masuk, urutan yang masuk akal:
 
 1. **Info Kontak** — nomor WhatsApp asli, Instagram, alamat, jam buka
 2. **Katalog** — item beserta foto
 3. **Kelola Anak Usaha** → nyalakan **portfolio** untuk yang memerlukannya (Nail's by Me, ngelash.id)
 4. **Kelola Anak Usaha** → **Terbitkan** setelah kontennya siap
+
+> Materi yang masuk lewat seeder tetap bisa disunting lewat panel, dan suntingannya **tidak akan tertimpa** kalau seeder dijalankan lagi — seeder hanya menyentuh kolom yang masih kosong atau masih berisi teks contoh.
 
 Anak usaha yang belum diterbitkan mengembalikan 404 dan tidak muncul di halaman induk — jadi bisa disiapkan tanpa terburu-buru.
 
@@ -309,33 +322,77 @@ tail -50 ~/jcorp/storage/logs/laravel.log
 
 | Gejala | Sebab |
 |---|---|
+| **Halaman putih kosong, tapi judul tab muncul** | **Aset belum disalin setelah `git pull`** — lihat bagian pembaruan di bawah. Ini penyebab paling sering, dan paling membingungkan karena statusnya tetap 200 |
 | 500 di semua halaman | Izin `storage/` belum 755, atau `APP_KEY` kosong |
 | Halaman tampil tanpa gaya | Isi `public/build/` belum tersalin ke `public_html/build/` |
 | Gambar unggahan tidak muncul | Symlink `storage` salah arah — ulangi Langkah 8 bagian akhir |
 | "could not find driver" | `pdo_mysql` belum aktif di PHP Configuration |
 | "Access denied for user" | Kredensial database di `.env` salah, atau lupa awalan `uXXXXXXXX_` |
 
+**Halaman putih tidak meninggalkan jejak di log server** — kegagalannya terjadi di browser, bukan di PHP. Jadi `laravel.log` akan bersih walaupun websitenya tidak tampil. Periksa lewat Console browser (F12) atau perintah `curl` di bagian pembaruan.
+
 ---
 
 ## Kalau ada pembaruan nanti
 
-Karena project di-clone dari git, pembaruannya singkat:
+**Jalankan seluruh rangkaian ini, jangan sebagian.** Melewatkan satu baris — terutama penyalinan aset — membuat halaman tampil kosong tanpa pesan error apa pun.
 
 ```bash
-cd ~/jcorp
+cd ~/domains/NAMA-DOMAIN/jcorp
+
 git pull origin main
 composer install --no-dev --optimize-autoloader
 php artisan migrate --force
 
-# Kalau public/build berubah, salin ulang asetnya
-cp -r ~/jcorp/public/build/. ~/public_html/build/
+# Materi client yang baru masuk. Aman diulang: kolom yang sudah
+# disunting admin lewat panel tidak ditimpa.
+php artisan db:seed --class=ClientContentSeeder --force
 
+# WAJIB, bukan opsional. Lihat penjelasan di bawah.
+cp -r public/build/. ../public_html/build/
+
+# Logo dan gambar. Sama wajibnya, dan penyebabnya sama:
+# public_html/ adalah SALINAN, bukan symlink — berkas baru di
+# public/images/ tidak sampai ke sana dengan sendirinya.
+#
+# Gejalanya berbeda dari aset build: halaman tetap tampil, hanya
+# logonya yang jadi kotak rusak. Itu justru lebih mudah terlewat.
+cp -r public/images/. ../public_html/images/
+
+php artisan config:clear
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 ```
 
-**Sebelum push dari komputer**, jalankan `npm run build` kalau ada yang menyentuh `resources/`. Kalau lupa, server memakai aset lama sementara kodenya sudah berubah — dan tidak ada yang memperingatkan.
+Setelah itu muat ulang browser dengan **Ctrl+Shift+R** — refresh biasa bisa memakai cache lama.
+
+### Kenapa penyalinan aset wajib, bukan "kalau berubah"
+
+Nama berkas hasil build memuat hash dari isinya, jadi berubah setiap kali ada perubahan CSS atau komponen. `manifest.json` yang ikut `git pull` menunjuk ke nama **baru**, sementara `public_html/build/` masih berisi berkas **lama**.
+
+Akibatnya halaman meminta berkas yang tidak ada:
+
+```
+GET /build/assets/app-D9DOzLlh.js   →  404
+```
+
+Yang terlihat di browser: **halaman putih kosong**, tanpa pesan error. Judul tab tetap muncul karena HTML-nya berhasil dimuat — yang gagal cuma JavaScript-nya.
+
+Ini pernah terjadi. Gejalanya membingungkan karena tidak ada yang tampak salah dari sisi server: status 200, log bersih, `.env` benar.
+
+**Cara memastikan berhasil**, tanpa menebak dari tampilan:
+
+```bash
+curl -s https://NAMA-DOMAIN | grep -oE 'assets/app-[A-Za-z0-9_-]+\.js'
+curl -s -o /dev/null -w "%{http_code}\n" https://NAMA-DOMAIN/build/assets/NAMA-BERKAS-DARI-ATAS
+```
+
+Harus `200`. Kalau `404`, penyalinan asetnya terlewat.
+
+### Sebelum push dari komputer
+
+Jalankan `npm run build` kalau ada yang menyentuh `resources/`, lalu commit hasilnya bersama perubahan kodenya. Kalau lupa, kebalikannya yang terjadi — server memakai aset lama sementara kodenya sudah berubah, dan juga tidak ada yang memperingatkan.
 
 ---
 

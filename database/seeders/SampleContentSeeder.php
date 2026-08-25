@@ -8,7 +8,7 @@ use App\Models\PortfolioItem;
 use Illuminate\Database\Seeder;
 
 /**
- * Mengisi SELURUH website dengan data contoh.
+ * Mengisi website dengan data contoh.
  *
  * Tujuannya supaya client bisa melihat bentuk jadi website ini sebelum
  * materi asli terkumpul — lengkap dengan katalog, portfolio, dan kontak.
@@ -18,6 +18,11 @@ use Illuminate\Database\Seeder;
  *     php artisan jcorp:clear-samples
  *
  * Aman dijalankan berulang: kolom yang sudah diisi admin tidak ditimpa.
+ *
+ * Anak usaha yang materi aslinya sudah masuk (ada di ClientContent) DILEWATI
+ * seluruhnya — lihat `hasClientContent()`. Tanpa itu, menjalankan seeder ini
+ * lagi akan menambahkan produk karangan berdampingan dengan produk asli di
+ * halaman yang sama.
  */
 class SampleContentSeeder extends Seeder
 {
@@ -26,10 +31,23 @@ class SampleContentSeeder extends Seeder
         $this->fillProfiles();
         $this->fillCatalogs();
         $this->fillPortfolios();
-        $this->attachSweetnessLogo();
 
-        $this->command->info('Seluruh anak usaha terisi data contoh dan diterbitkan.');
+        // Logo Sweetness tidak lagi diurus di sini — ClientContentSeeder yang
+        // memasangnya, karena berkas itu materi asli client, bukan contoh.
+
+        $this->command->info('Anak usaha yang belum punya materi asli terisi data contoh dan diterbitkan.');
         $this->command->line('Bersihkan sebelum tayang sungguhan: php artisan jcorp:clear-samples');
+    }
+
+    /**
+     * Anak usaha yang materi aslinya sudah masuk.
+     *
+     * Data contoh tidak boleh menyentuhnya sama sekali — bukan hanya
+     * kolomnya, tapi juga katalog dan portfolionya.
+     */
+    private function hasClientContent(string $slug): bool
+    {
+        return \array_key_exists($slug, ClientContent::businesses());
     }
 
     /**
@@ -40,6 +58,10 @@ class SampleContentSeeder extends Seeder
     private function fillProfiles(): void
     {
         foreach (SampleContent::businesses() as $slug => $content) {
+            if ($this->hasClientContent($slug)) {
+                continue;
+            }
+
             $business = Business::where('slug', $slug)->first();
 
             if (! $business) {
@@ -67,6 +89,10 @@ class SampleContentSeeder extends Seeder
     private function fillCatalogs(): void
     {
         foreach (SampleContent::catalogItems() as $slug => $items) {
+            if ($this->hasClientContent($slug)) {
+                continue;
+            }
+
             $business = Business::where('slug', $slug)->first();
 
             if (! $business) {
@@ -96,6 +122,10 @@ class SampleContentSeeder extends Seeder
     private function fillPortfolios(): void
     {
         foreach (SampleContent::portfolioItems() as $slug => $items) {
+            if ($this->hasClientContent($slug)) {
+                continue;
+            }
+
             $business = Business::where('slug', $slug)->first();
 
             if (! $business) {
@@ -114,23 +144,6 @@ class SampleContentSeeder extends Seeder
                     ],
                 );
             }
-        }
-    }
-
-    /**
-     * Menghubungkan logo Sweetness yang sudah diproses di Fase 2.
-     *
-     * Berkasnya ada di `public/images/brand/` — aset tetap yang ikut git,
-     * bukan unggahan admin di storage. Ini BUKAN data contoh: logonya asli
-     * dari client, jadi tidak ikut dibersihkan jcorp:clear-samples.
-     */
-    private function attachSweetnessLogo(): void
-    {
-        $sweetness = Business::where('slug', 'sweetness-things')->first();
-
-        if ($sweetness && $sweetness->logo_path === null) {
-            $sweetness->logo_path = SampleContent::SWEETNESS_LOGO;
-            $sweetness->save();
         }
     }
 }
