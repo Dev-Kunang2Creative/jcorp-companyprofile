@@ -1,6 +1,6 @@
 # PROGRESS — J-Corporate Group
 
-**Terakhir diperbarui:** 25 Agustus 2026
+**Terakhir diperbarui:** 27 Agustus 2026
 **Spec:** [`docs/superpowers/specs/2026-08-10-jcorp-company-profile-design.md`](docs/superpowers/specs/2026-08-10-jcorp-company-profile-design.md)
 
 > Baca spec lebih dulu sebelum mengerjakan apa pun. File ini hanya mencatat **sudah sampai mana**; spec yang menjelaskan **apa yang dibangun dan kenapa**.
@@ -34,6 +34,15 @@
 | Halaman error 404/500                               | ✅     |
 
 > Homepage induk memakai Luminous Editorial Glass. Kelima halaman anak usaha memakai Five Editorial Worlds — Luminous Pastel Edition. Panel admin memakai Calm Operations Studio; auth dan error tetap mengikuti arah A+B — lihat DESIGN_SYSTEM §-1, §0.A, dan §-0.3. §-0.5 serta §-0.4 tetap menyimpan kontrak data terdahulu yang masih berlaku.
+
+### Pembaruan 27 Agustus 2026 — Keterbacaan navbar publik
+
+- Navbar induk dan kelima anak usaha memakai opasitas latar **94%** agar tulisan section di belakang tidak mengganggu logo/menu. Tint serta identitas tiap brand tetap dipertahankan; panel glassmorphism lainnya tidak diubah.
+- Navbar memakai satu permukaan backdrop blur. Aturan standar dan fallback Safari dipisahkan karena minifier sebelumnya hanya menyisakan `-webkit-backdrop-filter`, sehingga blur tidak aktif di browser pengujian. Blur induk `16px`, anak usaha tetap mengikuti batas brand, dan mobile maksimal `8px`.
+- Menu hamburger terbuka memakai latar solid tanpa blur, termasuk tablet. Menu Sweetness yang terbuka memakai radius `1.25rem` sampai `70rem` agar logo/menu/tombol tutup tidak berada di luar kapsul; bentuk navbar tertutup dan dimensinya tetap.
+- Verifikasi browser lokal: keenam halaman diperiksa pada desktop `1440 × 900` dan mobile `390 × 844`, termasuk scroll dan buka/tutup menu. Nilai latar/blur terkonfirmasi melalui computed styles; tidak ditemukan overflow horizontal pada pemeriksaan tersebut. Tambahan pemeriksaan tablet `1024 × 900` untuk Sweetness/J-Land dan layar `320px` untuk Sweetness/Ayodya, serta switch bahasa Ayodya dan penutupan menu via Escape. Safari/iPhone fisik belum diuji.
+- TypeScript, ESLint, Prettier untuk file frontend yang berubah, `git diff --check`, dan build production lulus. `public/build` diperbarui melalui build, bukan diedit manual. Pengujian backend penuh tidak dijalankan ulang karena perubahan hanya pada material navbar dan class menu terbuka.
+- Tidak ada perubahan pada kata/data client, urutan section, route, panel admin, atau logika backend. Tidak menjalankan migrasi, seeder, maupun perubahan isi database. Perubahan masih lokal; belum di-commit, di-push, atau diterapkan ke Hostinger testing.
 
 ### Pembaruan 25 Agustus 2026 — Panel admin Calm Operations Studio
 

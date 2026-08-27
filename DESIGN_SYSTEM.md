@@ -12,6 +12,7 @@
 **Direvisi:** 24 Agustus 2026 — **content/order lock: visual boleh dirombak, kata dan urutan section tetap** (§-0.3)
 **Direvisi:** 24 Agustus 2026 — **locale-safe reveal Ayodya dan proporsi panel Tentang J-Land diperbaiki** (§-0.4)
 **Direvisi:** 24 Agustus 2026 — **grid ganjil, logo kontak, dan headline kontak desktop diseimbangkan** (§-1, §-0.4)
+**Direvisi:** 27 Agustus 2026 — **navbar publik lebih opak agar konten di belakang tidak mengganggu keterbacaan** (§-1, §-0.3)
 
 > Dokumen ini **mengikat**. Saat menulis kode UI, ikuti angka di sini — jangan menentukan warna, ukuran huruf, atau jarak baru secara mandiri. Kalau ada yang terasa kurang pas saat diterapkan, ubah dokumen ini lebih dulu, baru kodenya.
 
@@ -29,6 +30,7 @@ Aturan yang mengikat untuk homepage induk:
 - Tipografi tetap **Instrument Serif + Inter Tight**
 - Latar tetap dominan `#FFFFFF`; warna hangat hanya sebagai cahaya ambien tipis
 - Glassmorphism dipakai selektif pada navbar, panggung logo, kartu pernyataan, kartu unit, dan panel kontak
+- Navbar induk memakai satu permukaan putih dengan opasitas `94%` dan backdrop blur `16px` di desktop / maksimal `8px` di mobile. Tanpa dukungan blur, saat menu mobile terbuka, atau ketika pengguna memilih reduced transparency, permukaannya solid. Logo dan teks tidak diberi opacity atau blur; ukuran, posisi, serta animasi navbar tetap
 - Data unit memakai `accent_color` dari backend; tidak ada warna unit yang ditanam langsung di komponen
 - Headline dan logo hero wajib terlihat sejak frame pertama tanpa opacity nol, blur, mask, atau reveal tertunda. Motion landing hanya satu kali pada navbar, garis label, CTA, label bidang, dan jumlah unit; ring serta logo tetap statis. Tidak ada aura/glow bergerak, morph logo, ring berputar, pill mengambang, parallax, atau animasi berulang
 - **Content lock:** nama, tagline, deskripsi, visi, misi, data unit, serta kontak harus dirender persis dari props Laravel. Dilarang menambah, mengurangi, menerjemahkan, merangkum, atau mengarang copy/data. Data kosong membuat elemen tidak dirender
@@ -80,6 +82,7 @@ Aturan warna untuk setiap child page adalah **55% white canvas, 35% pastel atmos
 ### Material, motion, dan performance
 
 - Glassmorphism tetap selektif. Blur maksimum per dunia: Sweetness `18px`, Nail's `16px`, ngelash `16px`, Ayodya `12px`, dan J-Land `10px`; kartu berulang tidak diberi blur berat
+- Navbar kelima anak usaha dipisahkan dari opasitas kartu: satu permukaan tint putih khas brand dengan opasitas `94%`, tetap memakai batas blur tiap brand. Fallback tanpa blur dan menu hamburger terbuka wajib solid, termasuk ukuran tablet sampai `70rem`. Siluet navbar tertutup, warna aksen, ukuran, dan animasi tidak berubah; isi logo/menu tetap tajam tanpa opacity atau blur pada elemen induknya. Khusus menu Sweetness yang terbuka, radius `1.25rem` berlaku sampai `70rem` agar seluruh logo, tautan, dan tombol tutup berada di dalam permukaan yang sama
 - Bidang pastel, lash sweep, route line, blueprint grid, dan nail-tip adalah dekorasi CSS statis. Tidak ada particle system, orbit, parallax, atau animasi tanpa akhir
 - Landing motion hanya satu kali dan berbasis `transform`/`opacity` pada elemen pendukung. Sweetness settle berlapis, ngelash sweep, Ayodya route draw, dan J-Land plan assemble; headline utama serta logo tetap terlihat sejak frame pertama
 - Mobile memakai satu kolom, dekorasi lebih kecil, blur maksimal `8px`, serta tidak boleh menghasilkan horizontal overflow. `prefers-reduced-motion` dan `prefers-reduced-transparency` tetap wajib

@@ -351,9 +351,11 @@
 
     /* Setiap microsite memiliki siluet navbar sendiri. */
     .brand-page--sweetness .signature-nav-shell {
+        --signature-nav-surface: 255 252 242;
+        --signature-nav-filter: blur(18px) saturate(1.25);
         border-color: rgb(107 79 15 / 0.2);
         border-radius: 999px;
-        background: rgb(255 252 242 / 0.78);
+        background: rgb(var(--signature-nav-surface));
     }
 
     .brand-page--sweetness .signature-brand-mark {
@@ -362,9 +364,11 @@
     }
 
     .brand-page--ngelash .signature-nav-shell {
+        --signature-nav-surface: 255 250 247;
+        --signature-nav-filter: blur(16px) saturate(1.18);
         border-width: 0 0 1px;
         border-radius: 0 2.75rem 0 2.75rem;
-        background: rgb(255 253 251 / 0.78);
+        background: rgb(var(--signature-nav-surface));
         box-shadow: 0 22px 55px rgb(122 92 18 / 0.08);
     }
 
@@ -374,11 +378,13 @@
     }
 
     .brand-page--logistic .signature-nav-shell {
+        --signature-nav-surface: 255 253 253;
+        --signature-nav-filter: blur(12px) saturate(1.1);
         min-height: 4.5rem;
         border-color: rgb(158 27 33 / 0.22);
         border-width: 1px 0;
         border-radius: 0;
-        background: rgb(255 253 253 / 0.82);
+        background: rgb(var(--signature-nav-surface));
         box-shadow: 0 16px 42px rgb(158 27 33 / 0.07);
     }
 
@@ -391,10 +397,12 @@
     }
 
     .brand-page--property .signature-nav-shell {
+        --signature-nav-surface: 251 253 255;
+        --signature-nav-filter: blur(10px) saturate(1.08);
         border-color: rgb(20 72 140 / 0.2);
         border-radius: 0.25rem;
         border-left: 0.3125rem solid var(--unit-accent);
-        background: rgb(251 253 255 / 0.8);
+        background: rgb(var(--signature-nav-surface));
         box-shadow: 0 20px 52px rgb(20 72 140 / 0.08);
     }
 
@@ -405,9 +413,11 @@
     }
 
     .nails-page .signature-nav-shell {
+        --signature-nav-surface: 249 253 246;
+        --signature-nav-filter: blur(16px) saturate(1.2);
         border-color: rgb(42 65 4 / 0.18);
         border-radius: 2.75rem 1.125rem 2.75rem 1.125rem;
-        background: rgb(249 253 246 / 0.78);
+        background: rgb(var(--signature-nav-surface));
     }
 
     .nails-page .signature-brand-mark,
@@ -1092,7 +1102,6 @@
     /* Glass berbeda menurut material brand, bukan satu preset global. */
     @supports (backdrop-filter: blur(1px)) or
         (-webkit-backdrop-filter: blur(1px)) {
-        .brand-page--sweetness .signature-nav-shell,
         .brand-page--sweetness .brand-logo-vessel,
         .brand-page--sweetness .brand-story-panel,
         .brand-page--sweetness .brand-mission-card,
@@ -1103,7 +1112,6 @@
             -webkit-backdrop-filter: blur(18px) saturate(1.25);
         }
 
-        .brand-page--ngelash .signature-nav-shell,
         .brand-page--ngelash .brand-logo-vessel,
         .brand-page--ngelash .brand-story-panel,
         .brand-page--ngelash .brand-mission-card,
@@ -1114,7 +1122,6 @@
             -webkit-backdrop-filter: blur(16px) saturate(1.18);
         }
 
-        .brand-page--logistic .signature-nav-shell,
         .brand-page--logistic .brand-logo-vessel,
         .brand-page--logistic .brand-story-panel,
         .brand-page--logistic .brand-mission-card,
@@ -1125,7 +1132,6 @@
             -webkit-backdrop-filter: blur(12px) saturate(1.1);
         }
 
-        .brand-page--property .signature-nav-shell,
         .brand-page--property .brand-logo-vessel,
         .brand-page--property .brand-story-panel,
         .brand-page--property .brand-mission-card,
@@ -1136,7 +1142,6 @@
             -webkit-backdrop-filter: blur(10px) saturate(1.08);
         }
 
-        .nails-page .signature-nav-shell,
         .nails-logo-vessel,
         .nails-story-panel,
         .nails-mission-card,
@@ -1145,6 +1150,21 @@
             background: rgb(249 253 246 / 0.64);
             backdrop-filter: blur(16px) saturate(1.2);
             -webkit-backdrop-filter: blur(16px) saturate(1.2);
+        }
+
+        /* Satu lapisan kaca; navbar lebih menutup daripada panel konten. */
+        .brand-page .signature-nav-shell,
+        .nails-page .signature-nav-shell {
+            background: rgb(var(--signature-nav-surface) / 0.94);
+            backdrop-filter: var(--signature-nav-filter);
+        }
+
+        /* Pisahkan fallback Safari agar minifier tidak membuang properti standar. */
+        @supports not (backdrop-filter: blur(1px)) {
+            .brand-page .signature-nav-shell,
+            .nails-page .signature-nav-shell {
+                -webkit-backdrop-filter: var(--signature-nav-filter);
+            }
         }
     }
 
@@ -1241,6 +1261,16 @@
 
     /* Mobile: pastel tetap jelas, blur dan geometri dipangkas. */
     @media (max-width: 70rem) {
+        .brand-page .signature-nav-shell.is-menu-open,
+        .nails-page .signature-nav-shell.is-menu-open {
+            --signature-nav-filter: none;
+            background: rgb(var(--signature-nav-surface));
+        }
+
+        .brand-page--sweetness .signature-nav-shell.is-menu-open {
+            border-radius: 1.25rem;
+        }
+
         .brand-world-field,
         .nails-world-field {
             inset: -1rem -1.5rem;
@@ -1274,37 +1304,6 @@
         .brand-page,
         .nails-page {
             background-size: auto;
-        }
-
-        .brand-page--sweetness .signature-nav-shell.is-menu-open {
-            border-radius: 1.25rem;
-            background: #fffcf4;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-        }
-
-        .brand-page--ngelash .signature-nav-shell.is-menu-open {
-            background: #fffaf7;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-        }
-
-        .brand-page--logistic .signature-nav-shell.is-menu-open {
-            background: #fffdfd;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-        }
-
-        .brand-page--property .signature-nav-shell.is-menu-open {
-            background: #fbfdff;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
-        }
-
-        .nails-page .signature-nav-shell.is-menu-open {
-            background: #f9fdf6;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
         }
 
         .brand-world-field,
@@ -1355,12 +1354,15 @@
         @supports (backdrop-filter: blur(1px)) or
             (-webkit-backdrop-filter: blur(1px)) {
             .brand-page .signature-nav-shell,
+            .nails-page .signature-nav-shell {
+                --signature-nav-filter: blur(8px) saturate(1.08);
+            }
+
             .brand-logo-vessel,
             .brand-story-panel,
             .brand-mission-card,
             .brand-price-panel,
             .brand-contact-panel,
-            .nails-page .signature-nav-shell,
             .nails-logo-vessel,
             .nails-story-panel,
             .nails-mission-card,
@@ -1375,6 +1377,7 @@
     @media (prefers-reduced-transparency: reduce) {
         .brand-page .signature-glass,
         .nails-page .signature-glass {
+            --signature-nav-filter: none;
             background: var(--world-white);
             backdrop-filter: none;
             -webkit-backdrop-filter: none;
@@ -5736,9 +5739,10 @@
     }
 
     .home-glass-nav {
+        --home-nav-filter: blur(16px) saturate(1.1);
         border: 1px solid rgb(124 95 51 / 0.16);
         border-radius: 1.15rem;
-        background: rgb(255 255 255 / 0.96);
+        background: #fff;
         box-shadow:
             0 18px 55px rgb(75 54 22 / 0.09),
             inset 0 1px 0 rgb(255 255 255 / 0.9);
@@ -6288,9 +6292,20 @@
     @supports (backdrop-filter: blur(1px)) or
         (-webkit-backdrop-filter: blur(1px)) {
         .home-glass-nav {
-            background: rgb(255 255 255 / 0.68);
-            backdrop-filter: blur(20px) saturate(1.25);
-            -webkit-backdrop-filter: blur(20px) saturate(1.25);
+            background: rgb(255 255 255 / 0.94);
+            backdrop-filter: var(--home-nav-filter);
+        }
+
+        @supports not (backdrop-filter: blur(1px)) {
+            .home-glass-nav {
+                -webkit-backdrop-filter: var(--home-nav-filter);
+            }
+        }
+
+        @media (max-width: 47.999rem) {
+            .home-glass-nav {
+                --home-nav-filter: blur(8px) saturate(1.1);
+            }
         }
 
         .home-logo-glass,
@@ -6306,6 +6321,13 @@
         .home-social-link {
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+        }
+    }
+
+    @media (max-width: 47.999rem) {
+        .home-glass-nav.is-menu-open {
+            --home-nav-filter: none;
+            background: #fff;
         }
     }
 
@@ -6379,6 +6401,7 @@
         .home-unit-card,
         .home-action-secondary,
         .home-social-link {
+            --home-nav-filter: none;
             background: #fff;
             backdrop-filter: none;
             -webkit-backdrop-filter: none;

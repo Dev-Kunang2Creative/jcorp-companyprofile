@@ -119,7 +119,12 @@ export default function HomeNav({ businessName, logoUrl, links }: Props) {
                 <span style={{ transform: `scaleX(${scrollProgress})` }} />
             </div>
 
-            <header className="home-glass-nav fixed top-3 left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-[1380px] -translate-x-1/2 md:top-[18px] md:w-[calc(100%-3rem)]">
+            <header
+                className={cn(
+                    'home-glass-nav fixed top-3 left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-[1380px] -translate-x-1/2 md:top-[18px] md:w-[calc(100%-3rem)]',
+                    open && 'is-menu-open',
+                )}
+            >
                 <div className="home-mock-nav-bar min-h-16 px-4 md:px-3 md:pl-6">
                     <a
                         href="#top"
