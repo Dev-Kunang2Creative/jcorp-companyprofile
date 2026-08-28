@@ -49,6 +49,13 @@ out/
 /auth.json
 /storage/*.key
 
+# Pertahanan tambahan: backup harus tetap dibuat DI LUAR repo/webroot.
+jcorp-snapshot-*/
+/backups/
+/private-backups/
+client.cnf
+restore.cnf
+
 # Log
 *.log
 npm-debug.log*

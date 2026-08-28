@@ -2,15 +2,18 @@
 
 Satu website berisi enam company profile: J Corp sebagai induk, dan lima anak usaha di bawahnya. Dilengkapi panel admin tersembunyi untuk mengelola katalog, portfolio, dan info kontak.
 
-**Status:** Fase 1–4 selesai. Website sudah bisa diakses: halaman induk, profil Sweetness Things, dan panel admin yang berfungsi.
+**Status:** halaman induk, lima anak usaha, dan panel admin sudah diimplementasikan; rincian serta batas verifikasinya ada di `PROGRESS.md`. Domain Hostinger yang digunakan merupakan lingkungan **testing**, bukan peluncuran produksi.
 
-⚠️ **Isi website saat ini adalah data contoh.** Bersihkan dengan `php artisan jcorp:clear-samples` sebelum tayang sungguhan.
+Materi client sudah dimasukkan. Katalog/foto yang ditambahkan manual berada di database dan storage masing-masing lingkungan, bukan di Git. Jangan menjalankan pembersihan data contoh, seeder, atau reset database sebagai langkah update rutin.
 
 | Dokumen | Isi |
 |---|---|
 | [`docs/superpowers/specs/2026-08-10-jcorp-company-profile-design.md`](docs/superpowers/specs/2026-08-10-jcorp-company-profile-design.md) | Spesifikasi utama — **baca ini dulu** |
 | [`PROGRESS.md`](PROGRESS.md) | Sudah sampai mana, dan keputusan apa yang sudah final |
 | [`docs/catatan-pemrosesan-gambar.md`](docs/catatan-pemrosesan-gambar.md) | API library gambar yang sudah diverifikasi |
+| [`deploy/backup/README.md`](deploy/backup/README.md) | Skrip backup Windows/SSH, preflight, verifikasi, dan batas keamanan |
+| [`deploy/BACKUP-PEMULIHAN-ROLLBACK.md`](deploy/BACKUP-PEMULIHAN-ROLLBACK.md) | Pemulihan terisolasi, rollback kode vs data, dan checklist bukti |
+| [`deploy/CARA-DEPLOY-HOSTINGER.md`](deploy/CARA-DEPLOY-HOSTINGER.md) | Update testing yang sudah ada; bukan reset/pemasangan ulang |
 
 ---
 
@@ -59,6 +62,8 @@ PHP_BINARY="C:/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe"
 ```
 
 ### Langkah pemasangan
+
+Bagian ini khusus **instalasi baru dengan database kosong**. Jika project/database sudah berisi data, gunakan panduan backup dan deployment di atas, jangan ulangi inisialisasi ini.
 
 **1. Nyalakan MySQL** lewat tombol *Start All* di Laragon.
 

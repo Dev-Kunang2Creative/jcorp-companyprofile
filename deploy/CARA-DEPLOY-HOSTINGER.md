@@ -1,409 +1,107 @@
-# Deploy ke Hostinger — Shared Hosting dengan SSH
+# Update J-Corporate di Hostinger testing
 
-Panduan ini disesuaikan dengan situasi Anda:
+Diperbarui 28 Agustus 2026. Panduan ini menggantikan asumsi pemasangan awal/database kosong pada versi lama. **Jangan mengosongkan `public_html`, menimpa `.env`, generate APP_KEY, atau menjalankan seeder sebagai update rutin.**
 
-- Paket **shared hosting** (Premium / Business)
-- **Ada akses SSH** — jadi tidak perlu unggah zip sama sekali
-- Database **mulai bersih**, konten diisi lewat panel admin
+Domain `lemonchiffon-crane-249931.hostingersite.com` adalah **testing**, bukan peluncuran produksi. Layout terakhir yang dilaporkan pemilik: seluruh repository di `~/domains/lemonchiffon-crane-249931.hostingersite.com/public_html`, Laravel di subfolder `public/`. Konfigurasi server sekarang perlu dicek, bukan diasumsikan masih sama.
 
-Repo GitHub bersifat publik, jadi bisa di-clone langsung di server tanpa mengatur kunci SSH GitHub.
+## 1. Sebelum perubahan server
 
----
+Di komputer: jalankan pengecekan yang relevan, dan `npm run build` jika mengubah frontend. `public/build` sengaja tracked; commit build bersama kode. Push dilakukan pemilik.
 
-## Masalah yang harus dipahami dulu
-
-Laravel menaruh berkas yang boleh diakses publik di folder `public/`. Sisanya — termasuk `.env` yang memuat **password database** dan **APP_KEY** — sengaja berada di luar itu.
-
-Hostinger menyajikan `public_html/` sebagai akar website. Kalau seluruh project ditaruh di situ apa adanya, siapa pun bisa membuka:
-
-```
-namadomain.com/.env          <- password database bocor
-namadomain.com/storage/logs  <- isi log server
-```
-
-Karena itu susunannya dipisah: **project di luar `public_html`, hanya isi `public/` yang di dalamnya.**
-
----
-
-## Sebelum mulai
-
-Di hPanel, siapkan tiga hal:
-
-**1. PHP 8.3 atau lebih baru** — Advanced → PHP Configuration.
-Pastikan ekstensi ini aktif: `mbstring`, `openssl`, `pdo_mysql`, `fileinfo`, `gd`, `intl`, `tokenizer`, `ctype`, `dom`, `zip`.
-
-**2. Database MySQL** — Databases → Create new database. Catat empat hal ini:
-
-```
-Nama database : uXXXXXXXX_jcorp
-Pengguna      : uXXXXXXXX_jcorp
-Password      : (yang Anda buat)
-Host          : localhost
-```
-
-Hostinger menambahkan awalan `uXXXXXXXX_` otomatis — pakai nama lengkapnya.
-
-**3. SSH** — Advanced → SSH Access, nyalakan. Catat host, port, dan username.
-
----
-
-## Langkah 1 — Masuk lewat SSH
-
-Dari terminal komputer Anda:
+Di server: pilih checkout J-Corporate, bukan repository website lain. Perintah berikut hanya inspeksi:
 
 ```bash
-ssh -p PORT uXXXXXXXX@HOST
+cd "$HOME/domains/lemonchiffon-crane-249931.hostingersite.com/public_html"
+pwd
+git remote get-url origin
+git status --short
+git rev-parse HEAD
+ls -ld public storage/app/public
+ls -l .htaccess public/.htaccess public/index.php public/build/manifest.json
+php -v
 ```
 
-Host dan port ada di halaman SSH Access. Setelah masuk, periksa dulu:
+Jangan menampilkan isi `.env` ke chat. Bila file hilang/config berbeda/working tree kotor, tinjau dahulu. Jangan `git reset --hard` atau menghapus file untracked untuk memaksa update. Server bisa berada pada detached HEAD/shallow checkout; jangan mengasumsikan checkout lokal dan server sama.
+
+**Buat dan verifikasi snapshot sebelum pull/migration/config change.** Gunakan [toolkit backup](backup/README.md), lalu salinan off-host. Catat SHA sebelum update. Jika toolkit belum tersedia di server, pindahkan ke checkout terpercaya privat dengan `vendor/` dan arahkan `--project` ke aplikasi aktif; jangan melewatkan backup pertama hanya karena belum ada skripnya.
+
+## 2. Tinjau update yang akan masuk
 
 ```bash
-php -v                    # harus 8.3+
-composer --version        # kalau tidak ada, lihat catatan di bawah
-pwd                       # biasanya /home/uXXXXXXXX
+git fetch origin main
+git log --oneline HEAD..origin/main
+git diff --stat HEAD..origin/main
+git diff HEAD..origin/main -- database/migrations composer.json composer.lock
 ```
 
-**Kalau `php -v` menunjukkan versi lama** (7.x atau 8.0), PHP di SSH kadang berbeda dari yang dipakai website. Coba `php8.3 -v`. Kalau ada, pakai `php8.3` menggantikan `php` di seluruh perintah berikutnya.
+Jika tidak ada commit baru, tidak perlu memaksa deployment. Bila ada migration/konfigurasi/dependensi, baca dampaknya dan siapkan [rencana rollback](BACKUP-PEMULIHAN-ROLLBACK.md#4-rencana-rollback-saat-update-bermasalah). Sepakati maintenance sebelum perubahan yang dapat memutus layanan atau membuat schema/kode berbeda.
 
-**Kalau Composer tidak ada:**
+## 3. Terapkan update yang sudah ditinjau
 
-```bash
-curl -sS https://getcomposer.org/installer | php
-mv composer.phar ~/composer
-```
-
-Lalu pakai `php ~/composer` menggantikan `composer`.
-
----
-
-## Langkah 2 — Clone project
+Ini langkah mutasi, bukan perintah diagnosis. Jalankan hanya setelah snapshot berhasil dan perubahan memang disetujui:
 
 ```bash
-cd ~
-git clone https://github.com/Dev-Kunang2Creative/jcorp-companyprofile.git jcorp
-cd jcorp
-```
-
-Folder `jcorp` sengaja dibuat di `~` (yaitu `/home/uXXXXXXXX/`), **satu tingkat di atas** `public_html` — itu yang membuat `.env` tidak bisa diakses dari luar.
-
----
-
-## Langkah 3 — Pasang dependensi
-
-```bash
+git pull --ff-only origin main
 composer install --no-dev --optimize-autoloader
+php artisan migrate:status
 ```
 
-`--no-dev` melewatkan paket pengujian yang tidak dipakai di server — menghemat sekitar 85 MB.
+`migrate:status` hanya memeriksa. **Hanya bila ada migration pending yang sudah ditinjau** dan target DB benar, jalankan `php artisan migrate --force`. `--force` melewati konfirmasi lingkungan, bukan menjadikan migration aman. Jangan jalankan `migrate:fresh`, `db:wipe`, atau seeder untuk update visual.
 
-**Node tidak perlu dipasang.** Folder `public/build/` sudah ikut di repo, jadi aset frontend sudah jadi.
+Di layout saat ini, build berada langsung di `public/build`; tidak perlu menyalin ke `../public_html/build` seperti pada panduan layout salinan lama. Jika layout server ternyata berbeda, hentikan dan cocokkan document root terlebih dahulu.
 
----
-
-## Langkah 4 — Buat `.env`
+Setelah kode/konfigurasi siap:
 
 ```bash
-cp .env.example .env
-nano .env
-```
-
-Ubah bagian ini:
-
-```
-APP_NAME="J Corp"
-APP_ENV=production
-APP_KEY=
-APP_DEBUG=false
-APP_URL=https://namadomain.com
-
-APP_LOCALE=id
-APP_TIMEZONE=Asia/Jakarta
-
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_PORT=3306
-DB_DATABASE=uXXXXXXXX_jcorp
-DB_USERNAME=uXXXXXXXX_jcorp
-DB_PASSWORD=password-database-anda
-
-SESSION_DRIVER=database
-CACHE_STORE=database
-QUEUE_CONNECTION=database
-
-MAIL_MAILER=log
-
-PHP_BINARY=
-```
-
-Simpan dengan `Ctrl+O`, `Enter`, lalu `Ctrl+X`.
-
-**Tiga kesalahan yang akibatnya fatal:**
-
-| Salah | Akibat |
-|---|---|
-| `APP_DEBUG=true` | Halaman error menampilkan isi `.env` ke pengunjung — password bocor |
-| `APP_ENV=local` | Pengoptimalan produksi tidak aktif |
-| `APP_URL` masih `localhost` | Tautan dan gambar mengarah ke alamat salah |
-
-`PHP_BINARY` dikosongkan — itu hanya untuk Laragon di Windows.
-
----
-
-## Langkah 5 — Kunci aplikasi dan database
-
-```bash
-php artisan key:generate
-php artisan migrate --force
-php artisan db:seed --force
-```
-
-`--force` wajib di produksi; tanpa itu artisan menolak jalan karena takut merusak data.
-
-Yang ikut jalan hanya dua seeder, keduanya aman di server:
-
-| Seeder | Isinya |
-|---|---|
-| `BusinessSeeder` | Enam entitas (induk + lima anak usaha), tanpa teks apa pun |
-| `ClientContentSeeder` | **Materi asli dari client** — profil, kontak, produk, logo, warna aksen |
-
-`SampleContentSeeder` **tidak** ikut, dan memang tidak boleh: isinya teks karangan beserta nomor telepon palsu. Jangan menjalankannya di server yang sudah tayang.
-
-Sejak 23 Agustus 2026 keenam entitas sudah punya materi asli, jadi seluruhnya langsung terbit setelah perintah di atas.
-
----
-
-## Langkah 6 — Akun admin
-
-```bash
-php artisan jcorp:make-admin
-```
-
-Interaktif: nama, email, peran, anak usaha. Password diketik tersembunyi.
-
-**Pakai password baru**, jangan yang dipakai di localhost.
-
-Buat minimal satu **super_admin** dulu. Admin per anak usaha bisa menyusul.
-
----
-
-## Langkah 7 — Storage link dan izin folder
-
-```bash
-php artisan storage:link
-chmod -R 755 storage bootstrap/cache
-```
-
-`storage:link` membuat jalan supaya foto yang diunggah admin bisa dilihat pengunjung. Tanpa itu, semua gambar unggahan tidak muncul.
-
----
-
-## Langkah 8 — Sambungkan ke `public_html`
-
-Ini bagian yang menentukan. Isi `public/` harus berada di `public_html/`, sementara sisanya tetap di luar.
-
-**Kosongkan dulu `public_html`** kalau isinya masih halaman bawaan Hostinger:
-
-```bash
-rm -rf ~/public_html/*
-rm -f ~/public_html/.htaccess
-```
-
-> Periksa dulu isinya dengan `ls -la ~/public_html` sebelum menghapus. Kalau ada website lain di domain ini, **jangan** dijalankan.
-
-**Lalu salin isi `public/`:**
-
-```bash
-cp -r ~/jcorp/public/. ~/public_html/
-```
-
-Titik setelah `public/` penting — artinya "isi folder ini", bukan foldernya.
-
-**Perbaiki symlink storage**, karena yang tersalin menunjuk ke jalur lama:
-
-```bash
-rm -f ~/public_html/storage
-ln -s ~/jcorp/storage/app/public ~/public_html/storage
-```
-
----
-
-## Langkah 9 — Arahkan `index.php`
-
-```bash
-nano ~/public_html/index.php
-```
-
-Cari baris yang memuat `__DIR__.'/../'`, ubah jadi `__DIR__.'/../jcorp/'`:
-
-```php
-// SEBELUM
-require __DIR__.'/../vendor/autoload.php';
-$app = require_once __DIR__.'/../bootstrap/app.php';
-
-// SESUDAH
-require __DIR__.'/../jcorp/vendor/autoload.php';
-$app = require_once __DIR__.'/../jcorp/bootstrap/app.php';
-```
-
-Kalau ada baris `maintenance` yang juga memuat `__DIR__.'/../'`, ubah juga.
-
-Susunan akhirnya:
-
-```
-/home/uXXXXXXXX/
-├── jcorp/              <- project, TIDAK bisa diakses publik
-│   ├── app/
-│   ├── vendor/
-│   ├── storage/
-│   ├── public/         (dibiarkan, sudah disalin isinya)
-│   └── .env            <- AMAN di sini
-└── public_html/        <- akar website
-    ├── index.php       (diarahkan ke ../jcorp)
-    ├── .htaccess
-    ├── build/
-    ├── images/
-    └── storage -> ~/jcorp/storage/app/public
-```
-
----
-
-## Langkah 10 — Optimalkan
-
-```bash
-cd ~/jcorp
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
+git log -1 --oneline
 ```
 
-Ketiganya mempercepat website. **Ingat:** setelah ini, perubahan `.env` tidak terbaca sampai `php artisan config:clear` dijalankan.
+Jangan `key:generate`: gunakan APP_KEY yang sudah ada. Jangan `optimize:clear` untuk sekadar refresh view tanpa memahami bahwa perintah itu juga membersihkan cache aplikasi. Restart hanya worker yang memang dikelola dan diperlukan. Jika maintenance tadi diaktifkan, buka kembali sesudah smoke test yang memungkinkan dan periksa ulang setelah terbuka.
 
----
+## 4. Periksa routing dan file penting
 
-## Langkah 11 — Periksa
+Laravel perlu disajikan dari `public/index.php`, dengan hanya direktori `public/` terbuka ke web. [Dokumentasi Laravel](https://laravel.com/framework/docs/13.x/deployment) menjelaskan document root yang dianjurkan. Jangan memindahkan `index.php` ke akar source.
 
-| Alamat | Harus |
-|---|---|
-| `namadomain.com` | Halaman induk J Corp |
-| `namadomain.com/jcorp-panel` | Halaman login |
-| `namadomain.com/sweetness-things` | **404** — belum diterbitkan, itu benar |
-| **`namadomain.com/.env`** | **403 atau 404** |
+Root `.htaccess` manual pernah hilang pada riwayat testing sehingga homepage 403. Jika masih menggunakan rewrite akar ke `public/`, file itu berbeda fungsi dari `public/.htaccess` dan harus tetap ada serta dibackup. Jangan otomatis menyalin aturan layout lain, atau menganggap semua 403 disebabkan Git/CSS.
 
-**Yang terakhir wajib diperiksa.** Kalau isi `.env` terlihat, susunannya salah — hentikan, perbaiki, lalu **ganti password database** karena sudah terlanjur terlihat.
-
----
-
-## Langkah 12 — Isi konten lewat panel
-
-Masuk ke `namadomain.com/jcorp-panel` dengan akun yang dibuat di Langkah 6.
-
-Anak usaha yang materinya sudah masuk lewat `ClientContentSeeder` **tidak perlu diisi ulang di sini** — profil, kontak, dan produknya sudah terisi dan halamannya sudah terbit. Yang tersisa biasanya hanya menambahkan foto produk.
-
-Untuk yang materinya belum masuk, urutan yang masuk akal:
-
-1. **Info Kontak** — nomor WhatsApp asli, Instagram, alamat, jam buka
-2. **Katalog** — item beserta foto
-3. **Kelola Anak Usaha** → nyalakan **portfolio** untuk yang memerlukannya (Nail's by Me, ngelash.id)
-4. **Kelola Anak Usaha** → **Terbitkan** setelah kontennya siap
-
-> Materi yang masuk lewat seeder tetap bisa disunting lewat panel, dan suntingannya **tidak akan tertimpa** kalau seeder dijalankan lagi — seeder hanya menyentuh kolom yang masih kosong atau masih berisi teks contoh.
-
-Anak usaha yang belum diterbitkan mengembalikan 404 dan tidak muncul di halaman induk — jadi bisa disiapkan tanpa terburu-buru.
-
----
-
-## Kalau muncul error 500
-
-`APP_DEBUG` mati, jadi pesannya tidak muncul di layar. Lihat:
+Periksa storage link:
 
 ```bash
-tail -50 ~/jcorp/storage/logs/laravel.log
+ls -ld public/storage storage/app/public
+readlink public/storage
 ```
 
-| Gejala | Sebab |
-|---|---|
-| **Halaman putih kosong, tapi judul tab muncul** | **Aset belum disalin setelah `git pull`** — lihat bagian pembaruan di bawah. Ini penyebab paling sering, dan paling membingungkan karena statusnya tetap 200 |
-| 500 di semua halaman | Izin `storage/` belum 755, atau `APP_KEY` kosong |
-| Halaman tampil tanpa gaya | Isi `public/build/` belum tersalin ke `public_html/build/` |
-| Gambar unggahan tidak muncul | Symlink `storage` salah arah — ulangi Langkah 8 bagian akhir |
-| "could not find driver" | `pdo_mysql` belum aktif di PHP Configuration |
-| "Access denied for user" | Kredensial database di `.env` salah, atau lupa awalan `uXXXXXXXX_` |
-
-**Halaman putih tidak meninggalkan jejak di log server** — kegagalannya terjadi di browser, bukan di PHP. Jadi `laravel.log` akan bersih walaupun websitenya tidak tampil. Periksa lewat Console browser (F12) atau perintah `curl` di bagian pembaruan.
-
----
-
-## Kalau ada pembaruan nanti
-
-**Jalankan seluruh rangkaian ini, jangan sebagian.** Melewatkan satu baris — terutama penyalinan aset — membuat halaman tampil kosong tanpa pesan error apa pun.
+Jika `public/storage` **belum ada**, dan `php artisan storage:link` gagal karena PHP exec dinonaktifkan, dari root project standar bisa dibuat dengan:
 
 ```bash
-cd ~/domains/NAMA-DOMAIN/jcorp
-
-git pull origin main
-composer install --no-dev --optimize-autoloader
-php artisan migrate --force
-
-# Materi client yang baru masuk. Aman diulang: kolom yang sudah
-# disunting admin lewat panel tidak ditimpa.
-php artisan db:seed --class=ClientContentSeeder --force
-
-# WAJIB, bukan opsional. Lihat penjelasan di bawah.
-cp -r public/build/. ../public_html/build/
-
-# Logo dan gambar. Sama wajibnya, dan penyebabnya sama:
-# public_html/ adalah SALINAN, bukan symlink — berkas baru di
-# public/images/ tidak sampai ke sana dengan sendirinya.
-#
-# Gejalanya berbeda dari aset build: halaman tetap tampil, hanya
-# logonya yang jadi kotak rusak. Itu justru lebih mudah terlewat.
-cp -r public/images/. ../public_html/images/
-
-php artisan config:clear
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+ln -s ../storage/app/public public/storage
 ```
 
-Setelah itu muat ulang browser dengan **Ctrl+Shift+R** — refresh biasa bisa memakai cache lama.
+Jika sudah ada, jangan hapus/ganti sebelum memeriksa arah dan isi targetnya. Jangan menjalankan chmod rekursif pada seluruh project atau membuka `.env`/backup ke pengunjung untuk menyelesaikan error izin.
 
-### Kenapa penyalinan aset wajib, bukan "kalau berubah"
-
-Nama berkas hasil build memuat hash dari isinya, jadi berubah setiap kali ada perubahan CSS atau komponen. `manifest.json` yang ikut `git pull` menunjuk ke nama **baru**, sementara `public_html/build/` masih berisi berkas **lama**.
-
-Akibatnya halaman meminta berkas yang tidak ada:
-
-```
-GET /build/assets/app-D9DOzLlh.js   →  404
-```
-
-Yang terlihat di browser: **halaman putih kosong**, tanpa pesan error. Judul tab tetap muncul karena HTML-nya berhasil dimuat — yang gagal cuma JavaScript-nya.
-
-Ini pernah terjadi. Gejalanya membingungkan karena tidak ada yang tampak salah dari sisi server: status 200, log bersih, `.env` benar.
-
-**Cara memastikan berhasil**, tanpa menebak dari tampilan:
+## 5. Pemeriksaan setelah update
 
 ```bash
-curl -s https://NAMA-DOMAIN | grep -oE 'assets/app-[A-Za-z0-9_-]+\.js'
-curl -s -o /dev/null -w "%{http_code}\n" https://NAMA-DOMAIN/build/assets/NAMA-BERKAS-DARI-ATAS
+curl -sS -o /dev/null -w 'Website: %{http_code}\n' 'https://lemonchiffon-crane-249931.hostingersite.com/'
+curl -sS -I -o /dev/null -w 'ENV: %{http_code}\n' 'https://lemonchiffon-crane-249931.hostingersite.com/.env'
 ```
 
-Harus `200`. Kalau `404`, penyalinan asetnya terlewat.
+Homepage yang diterbitkan diharapkan 200. `.env` harus 403/404; jangan meminta body untuk ditampilkan ke terminal/chat. Periksa juga aturan akses `.git/config`, `composer.json`, log, dan folder privat. Jika ada indikasi rahasia terlayani, blok akses melalui konfigurasi hosting dahulu, lalu lakukan penanganan kredensial; jangan sekadar menghapus log.
 
-### Sebelum push dari komputer
+Di browser, cek:
 
-Jalankan `npm run build` kalau ada yang menyentuh `resources/`, lalu commit hasilnya bersama perubahan kodenya. Kalau lupa, kebalikannya yang terjadi — server memakai aset lama sementara kodenya sudah berubah, dan juga tidak ada yang memperingatkan.
+- Homepage dan kelima profil sesuai status terbit, termasuk Ayodya ID/EN.
+- JS/CSS dari manifest tidak 404; logo, foto katalog, dan galeri muncul.
+- Login panel oleh pemilik, data akun/peran, katalog, galeri, kontak, serta penerbitan sesuai keadaan sebelumnya. Jangan membuat undangan/CRUD nyata hanya demi tes tanpa persetujuan.
+- Tidak ada data localhost yang dianggap otomatis ikut Git. Jika perlu memindahkan katalog manual, itu pekerjaan migrasi data tersendiri.
 
----
+HTTP 200 saja bukan bukti semua fitur atau data aman. Jika gagal, gunakan [runbook rollback](BACKUP-PEMULIHAN-ROLLBACK.md), jangan reset database sebagai langkah pertama.
 
-## Catatan keamanan
+## Instalasi baru atau pemindahan layout
 
-Setelah website berjalan, periksa sekali lagi:
+Belum ada prosedur otomatis untuk mengganti document root/release di hosting ini. Untuk domain/server **baru**, siapkan rencana terpisah: document root `public/`, database kosong baru, akun DB terbatas, `.env` privat, PHP/dependensi yang sesuai, dan storage. Generate key hanya untuk aplikasi baru yang tidak memulihkan data terenkripsi lama. Migration/seeding awal harus ditinjau sebagai inisialisasi, bukan langkah pemeliharaan situs yang sudah berisi data.
 
-- `namadomain.com/.env` → tidak bisa dibuka
-- `namadomain.com/storage/logs/laravel.log` → tidak bisa dibuka
-- `namadomain.com/vendor/` → tidak bisa dibuka
-
-Ketiganya harus 403 atau 404. Kalau salah satu bisa dibuka, ada yang salah pada susunan folder.
-
-Alamat panel `/jcorp-panel` sengaja tidak ditautkan dari mana pun, tapi itu **penyamaran, bukan kunci**. Yang melindungi adalah password yang kuat, pembatasan percobaan login, dan pengecekan kepemilikan di setiap aksi.
+Tidak ada bagian panduan ini yang meminta menghapus seluruh `public_html`, database lama, atau backup sebelumnya.
