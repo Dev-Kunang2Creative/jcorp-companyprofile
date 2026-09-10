@@ -35,16 +35,18 @@
         @php
             $favicon = data_get($page, 'props.business.favicon_url')
                 ?? data_get($page, 'props.parent.favicon_url');
-            $homeHeroLogo = data_get($page, 'component') === 'home'
-                ? data_get($page, 'props.parent.logo_url')
-                : null;
+            $heroImage = data_get($page, 'props.business.cover_image_url')
+                ?? data_get($page, 'props.parent.cover_image_url')
+                ?? (data_get($page, 'component') === 'home'
+                    ? data_get($page, 'props.parent.logo_url')
+                    : null);
         @endphp
 
         {{-- Logo induk dapat menjadi elemen LCP di desktop. Props sudah
              tersedia pada HTML awal, jadi browser tidak perlu menunggu
              React selesai hydration untuk menemukan permintaan gambarnya. --}}
-        @if ($homeHeroLogo)
-            <link rel="preload" as="image" href="{{ $homeHeroLogo }}" fetchpriority="high">
+        @if ($heroImage)
+            <link rel="preload" as="image" href="{{ $heroImage }}" fetchpriority="high">
         @endif
 
         @if ($favicon)

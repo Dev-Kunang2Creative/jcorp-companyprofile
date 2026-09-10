@@ -362,6 +362,57 @@ class ImageUploadTest extends TestCase
         $this->assertStringEndsWith('.webp', $item->image_path);
         Storage::disk('public')->assertExists($item->image_path);
     }
+
+    public function test_an_admin_can_upload_and_remove_a_business_cover_image(): void
+    {
+        $payload = [
+            'catalog_label' => $this->business->catalog_label,
+            'portfolio_label' => $this->business->portfolio_label,
+        ];
+
+        $this->actingAs($this->admin)
+            ->post(route('panel.profile.update'), [
+                '_method' => 'put',
+                ...$payload,
+                'cover_image' => UploadedFile::fake()->image('pembuka.jpg', 1200, 1500),
+            ])
+            ->assertSessionHasNoErrors();
+
+        $path = $this->business->refresh()->cover_image_path;
+
+        $this->assertNotNull($path);
+        $this->assertStringStartsWith('sweetness-things/profile/', $path);
+        Storage::disk('public')->assertExists($path);
+
+        $this->actingAs($this->admin)
+            ->put(route('panel.profile.update'), [
+                ...$payload,
+                'remove_cover_image' => '1',
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertNull($this->business->refresh()->cover_image_path);
+        Storage::disk('public')->assertMissing($path);
+    }
+
+    public function test_only_one_portfolio_photo_per_business_is_featured_on_home(): void
+    {
+        $first = PortfolioItem::factory()->for($this->business)->create([
+            'is_featured_on_home' => true,
+        ]);
+        $second = PortfolioItem::factory()->for($this->business)->create();
+
+        $this->actingAs($this->admin)
+            ->put(route('panel.portfolio.update', $second), [
+                'caption' => $second->caption,
+                'sort_order' => 1,
+                'is_featured_on_home' => true,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertFalse($first->refresh()->is_featured_on_home);
+        $this->assertTrue($second->refresh()->is_featured_on_home);
+    }
     // -------------------------------------------------------- hapus foto
 
     /**

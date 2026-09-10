@@ -27,6 +27,17 @@
       "_createLucideIcon-CyC9cf8x.js"
     ]
   },
+  "_confirm-delete-CIdsGSIV.js": {
+    "file": "assets/confirm-delete-CIdsGSIV.js",
+    "name": "confirm-delete",
+    "imports": [
+      "_rolldown-runtime-CbXtAM7H.js",
+      "_jsx-runtime-wQyte_5K.js",
+      "_wayfinder-2Pj9xoE2.js",
+      "_createLucideIcon-CyC9cf8x.js",
+      "_dialog-B8xzOnOw.js"
+    ]
+  },
   "_createLucideIcon-CyC9cf8x.js": {
     "file": "assets/createLucideIcon-CyC9cf8x.js",
     "name": "createLucideIcon",
@@ -127,16 +138,14 @@
       "_jsx-runtime-wQyte_5K.js"
     ]
   },
-  "_image-input-Bez0Tu0v.js": {
-    "file": "assets/image-input-Bez0Tu0v.js",
+  "_image-input-CY5aokxF.js": {
+    "file": "assets/image-input-CY5aokxF.js",
     "name": "image-input",
     "imports": [
       "_rolldown-runtime-CbXtAM7H.js",
       "_jsx-runtime-wQyte_5K.js",
       "_wayfinder-2Pj9xoE2.js",
-      "_createLucideIcon-CyC9cf8x.js",
-      "_label-PmRnDbS4.js",
-      "_dialog-B8xzOnOw.js"
+      "_label-PmRnDbS4.js"
     ]
   },
   "_input-DXec2YjG.js": {
@@ -353,7 +362,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-CgU1F4Bb.css",
+    "file": "assets/app-mBuclHaQ.css",
     "name": "app",
     "names": [
       "app.css"
@@ -362,7 +371,7 @@
     "isEntry": true
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-DzDnIvMy.js",
+    "file": "assets/app-C-bilDs9.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -483,7 +492,7 @@
     ]
   },
   "resources/js/pages/home.tsx": {
-    "file": "assets/home-BrAn2i1F.js",
+    "file": "assets/home-DbK0yujg.js",
     "name": "home",
     "src": "resources/js/pages/home.tsx",
     "isDynamicEntry": true,
@@ -509,7 +518,7 @@
     ]
   },
   "resources/js/pages/panel/catalog/index.tsx": {
-    "file": "assets/catalog-4DBWMFXN.js",
+    "file": "assets/catalog-DWdno6i4.js",
     "name": "catalog",
     "src": "resources/js/pages/panel/catalog/index.tsx",
     "isDynamicEntry": true,
@@ -517,12 +526,13 @@
       "_rolldown-runtime-CbXtAM7H.js",
       "_jsx-runtime-wQyte_5K.js",
       "_wayfinder-2Pj9xoE2.js",
-      "_image-input-Bez0Tu0v.js",
+      "_confirm-delete-CIdsGSIV.js",
       "_input-DXec2YjG.js",
       "_catalog-C8jgDl0Z.js",
       "_heading-B_-vL4eX.js",
       "_label-PmRnDbS4.js",
-      "_form-modal-BqfgV4Tn.js"
+      "_form-modal-BqfgV4Tn.js",
+      "_image-input-CY5aokxF.js"
     ]
   },
   "resources/js/pages/panel/dashboard.tsx": {
@@ -543,7 +553,7 @@
     ]
   },
   "resources/js/pages/panel/portfolio/index.tsx": {
-    "file": "assets/portfolio-NAvrs8QN.js",
+    "file": "assets/portfolio-CTzsgQFN.js",
     "name": "portfolio",
     "src": "resources/js/pages/panel/portfolio/index.tsx",
     "isDynamicEntry": true,
@@ -551,16 +561,17 @@
       "_rolldown-runtime-CbXtAM7H.js",
       "_jsx-runtime-wQyte_5K.js",
       "_wayfinder-2Pj9xoE2.js",
-      "_image-input-Bez0Tu0v.js",
+      "_confirm-delete-CIdsGSIV.js",
       "_input-DXec2YjG.js",
       "_portfolio-BAYnF7XB.js",
       "_heading-B_-vL4eX.js",
       "_label-PmRnDbS4.js",
-      "_form-modal-BqfgV4Tn.js"
+      "_form-modal-BqfgV4Tn.js",
+      "_image-input-CY5aokxF.js"
     ]
   },
   "resources/js/pages/panel/profile.tsx": {
-    "file": "assets/profile-BtXWcgyN2.js",
+    "file": "assets/profile-7Qz8VHgf.js",
     "name": "profile",
     "src": "resources/js/pages/panel/profile.tsx",
     "isDynamicEntry": true,
@@ -570,7 +581,8 @@
       "_input-DXec2YjG.js",
       "_profile-3B8EPSrz.js",
       "_heading-B_-vL4eX.js",
-      "_label-PmRnDbS4.js"
+      "_label-PmRnDbS4.js",
+      "_image-input-CY5aokxF.js"
     ]
   },
   "resources/js/pages/panel/users/index.tsx": {
@@ -593,7 +605,7 @@
     ]
   },
   "resources/js/pages/public/business.tsx": {
-    "file": "assets/business-y0NmUvPI.js",
+    "file": "assets/business-BIlujNWU.js",
     "name": "business",
     "src": "resources/js/pages/public/business.tsx",
     "isDynamicEntry": true,
@@ -607,7 +619,7 @@
     ]
   },
   "resources/js/pages/settings/profile.tsx": {
-    "file": "assets/profile-baBaX4PU.js",
+    "file": "assets/profile-baBaX4PU2.js",
     "name": "profile",
     "src": "resources/js/pages/settings/profile.tsx",
     "isDynamicEntry": true,

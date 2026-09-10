@@ -145,6 +145,7 @@ export default function BusinessProfile({
                         name={business.name}
                         tagline={business.tagline}
                         logoUrl={business.logo_url}
+                        coverImageUrl={business.cover_image_url}
                         whatsapp={whatsapp}
                     />
 

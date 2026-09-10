@@ -97,7 +97,29 @@ export default function NailsBusinessPage({
                 />
 
                 <main>
-                    <section id="top" className="nails-hero">
+                    <section
+                        id="top"
+                        className={
+                            business.cover_image_url
+                                ? 'nails-hero nails-hero--with-cover'
+                                : 'nails-hero'
+                        }
+                    >
+                        {business.cover_image_url && (
+                            <div
+                                className="nails-hero-background"
+                                aria-hidden="true"
+                            >
+                                <img
+                                    src={business.cover_image_url}
+                                    alt=""
+                                    width={1200}
+                                    height={675}
+                                    fetchPriority="high"
+                                />
+                            </div>
+                        )}
+
                         <div className="signature-container nails-hero-grid">
                             <div
                                 className="nails-world-field"
@@ -126,10 +148,10 @@ export default function NailsBusinessPage({
                                 )}
                             </div>
 
-                            {business.logo_url && (
+                            {business.logo_url && !business.cover_image_url && (
                                 <div
                                     className="nails-hero-stage"
-                                    aria-label={`Logo ${business.name}`}
+                                    aria-label={`Identitas ${business.name}`}
                                 >
                                     <div
                                         className="nails-stage-aura"
@@ -146,7 +168,7 @@ export default function NailsBusinessPage({
                                     </div>
                                     <div className="nails-logo-vessel signature-glass">
                                         <img
-                                            src={business.logo_url}
+                                            src={business.logo_url ?? undefined}
                                             alt={`Logo ${business.name}`}
                                             width={600}
                                             height={384}

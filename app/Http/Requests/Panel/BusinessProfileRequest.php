@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Panel;
 
+use App\Services\ImageService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BusinessProfileRequest extends FormRequest
 {
@@ -22,6 +24,13 @@ class BusinessProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'cover_image' => [
+                'nullable',
+                Rule::imageFile()
+                    ->extensions(['jpeg', 'jpg', 'png', 'webp'])
+                    ->max(ImageService::MAX_UPLOAD_KB),
+            ],
+            'remove_cover_image' => ['nullable', 'boolean'],
             // Format wa.me: 62 diikuti 8-13 digit, tanpa spasi/tanda plus.
             // Divalidasi ketat karena dipakai membentuk link, bukan sekadar
             // ditampilkan — nomor berformat salah menghasilkan link mati.
@@ -46,6 +55,9 @@ class BusinessProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'cover_image.max' => 'Ukuran foto pembuka melebihi batas 4 MB.',
+            'cover_image.image' => 'Berkas foto pembuka harus berupa gambar.',
+            'cover_image.mimes' => 'Format foto pembuka harus JPEG, PNG, atau WebP.',
             'whatsapp.regex' => 'Nomor WhatsApp harus diawali 62 tanpa spasi atau tanda plus, contoh: 6281234567890.',
             'whatsapp_alt.regex' => 'Nomor WhatsApp kedua harus diawali 62 tanpa spasi atau tanda plus, contoh: 6281234567890.',
             'instagram.regex' => 'Isi username Instagram saja, tanpa @ atau alamat lengkap.',
@@ -59,6 +71,7 @@ class BusinessProfileRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'cover_image' => 'foto pembuka',
             'whatsapp' => 'nomor WhatsApp',
             'whatsapp_alt' => 'nomor WhatsApp kedua',
             'address' => 'alamat',

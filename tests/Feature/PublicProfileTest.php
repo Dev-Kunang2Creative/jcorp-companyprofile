@@ -88,6 +88,19 @@ class PublicProfileTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->where('business.description', null));
     }
 
+    public function test_a_cover_image_reaches_the_public_profile(): void
+    {
+        $this->business([
+            'cover_image_path' => 'sweetness-things/profile/pembuka.webp',
+        ]);
+
+        $this->get('/sweetness-things')
+            ->assertInertia(fn (Assert $page) => $page->where(
+                'business.cover_image_url',
+                'http://localhost:8000/storage/sweetness-things/profile/pembuka.webp',
+            ));
+    }
+
     public function test_the_old_lumintu_address_redirects_permanently(): void
     {
         // Link yang terlanjur dibagikan sebelum namanya berganti harus tetap
@@ -140,10 +153,8 @@ class PublicProfileTest extends TestCase
 
     public function test_a_catalog_note_survives_an_empty_catalog(): void
     {
-        // Nail's by Me belum punya rincian per layanan — yang ada hanya
-        // "Mulai dari Rp 30.000". Kalau section katalog hilang begitu
-        // daftarnya kosong, satu-satunya keterangan harga yang dimiliki
-        // pengunjung tidak pernah muncul di layar.
+        // Catatan umum tetap dikirim walau daftar item kosong. Komponen
+        // publik boleh menampilkan konteks harga tanpa membuat item karangan.
         $this->business([
             'catalog_note' => 'Mulai dari Rp 30.000.',
         ]);

@@ -604,40 +604,55 @@ class ClientContentSeederTest extends TestCase
         $this->assertSame('nails.bymeeeeeee', $business->tiktok);
     }
 
-    /**
-     * "Start From 30K" harus BENAR-BENAR SAMPAI KE HALAMAN.
-     *
-     * Materi client hanya menyebut harga terendahnya tanpa rincian per
-     * layanan, sementara halaman ini sempat menampilkan enam tarif karangan
-     * (Manicure Rp60.000, Gel Polish Rp90.000, dst) yang tidak berasal dari
-     * mana pun.
-     *
-     * Sempat ditaruh di `catalog_note` — dan di situ cacatnya: katalognya
-     * kosong, section yang kosong tidak dirender (spec §3), jadi catatan
-     * harganya ikut hilang bersamanya. Satu-satunya petunjuk harga yang
-     * diberikan client tidak akan pernah terlihat pengunjung, tanpa satu pun
-     * error. Karena itu dipindah ke `contact_note`, yang sectionnya memang
-     * dirender.
-     */
-    public function test_nails_starting_price_actually_reaches_the_page(): void
+    public function test_nails_price_list_reaches_the_page(): void
     {
         $this->seedOverSamples();
 
         $business = $this->nails();
 
-        $this->assertSame(0, $business->catalogItems()->count());
+        $this->assertSame(10, $business->catalogItems()->count());
+        $this->assertSame(
+            'Harga di atas berlaku untuk tangan atau kaki, serta bebas pilih warna sesuka hati.',
+            $business->catalog_note,
+        );
 
         $this->get('/nails-by-me')
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                // Katalog memang hilang — tidak ada tarif karangan tersisa.
-                ->where('catalog', null)
-                // Tapi harga terendahnya tetap terbaca pengunjung.
-                ->where(
-                    'contact.contact_note',
-                    fn (?string $note) => str_contains((string) $note, 'Rp 30.000'),
-                )
+                ->has('catalog', 10)
+                ->where('catalog.0.name', 'Nail Art Polos')
+                ->where('catalog.0.formatted_price', 'Rp'."\u{00A0}".'50.000')
+                ->where('catalog.1.name', 'Nail Art Ombre')
+                ->where('catalog.1.price_note', 'per kuku')
+                ->where('catalog.6.price_note', 'Rp 5.000–25.000 per kuku')
+                ->where('catalog.9.name', 'Remove Nail Art')
+                ->where('catalog.9.formatted_price', 'Rp'."\u{00A0}".'30.000')
+                ->where('business.catalog_note', $business->catalog_note)
             );
+    }
+
+    public function test_nails_price_list_is_not_duplicated_when_seeded_again(): void
+    {
+        $this->seedFresh();
+        $this->seed(ClientContentSeeder::class);
+
+        $this->assertSame(10, $this->nails()->catalogItems()->count());
+    }
+
+    public function test_nails_previous_starting_price_note_is_upgraded(): void
+    {
+        $this->seed(BusinessSeeder::class);
+
+        $business = $this->nails();
+        $business->contact_note = 'Nail art mulai dari Rp 30.000, harga akhir menyesuaikan tingkat kerumitan desain. Pemesanan lewat chat WhatsApp dengan sistem janji temu (appointment only), dan tersedia home service.';
+        $business->save();
+
+        $this->seed(ClientContentSeeder::class);
+
+        $this->assertSame(
+            'Pemesanan lewat chat WhatsApp dengan sistem janji temu (appointment only), dan tersedia home service.',
+            $business->refresh()->contact_note,
+        );
     }
 
     public function test_nails_placeholder_photos_are_swept(): void

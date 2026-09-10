@@ -2365,49 +2365,82 @@
 
     .nails-price-panel {
         overflow: hidden;
-        border-radius: 2rem 2rem 6rem 2rem;
-        padding: 1.5rem 2rem 2rem;
+        border: 2px solid rgb(42 65 4 / 0.72);
+        border-radius: 2rem;
+        background: color-mix(in srgb, var(--nails-pale) 48%, white);
+        padding: 0 2rem 2rem;
     }
 
-    .nails-price-panel section + section,
     .nails-price-note {
         border-top: 1px solid var(--nails-line-soft);
     }
 
-    .nails-price-panel h3 {
-        padding-block: 1rem 0.75rem;
+    .nails-price-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    .nails-price-table col:first-child {
+        width: 68%;
+    }
+
+    .nails-price-table col:last-child {
+        width: 32%;
+    }
+
+    .nails-price-category th {
+        border-top: 1px solid var(--nails-line-soft);
+        padding: 1.35rem 0 0.65rem;
         color: var(--unit-accent);
         font-size: 0.75rem;
         font-weight: 600;
         letter-spacing: 0.15em;
+        text-align: left;
         text-transform: uppercase;
     }
 
-    .nails-price-panel li {
-        display: flex;
-        align-items: baseline;
-        justify-content: space-between;
-        gap: 1.5rem;
+    .nails-price-category:first-child th {
+        border-top: 0;
+    }
+
+    .nails-price-row > * {
         border-top: 1px solid var(--nails-line-soft);
         padding-block: 1rem;
+        vertical-align: top;
     }
 
-    .nails-price-panel li p {
+    .nails-price-row th {
+        padding-right: 2rem;
         color: var(--nails-ink);
         font-size: 1rem;
+        font-weight: 500;
+        text-align: left;
     }
 
-    .nails-price-panel li small,
-    .nails-price-note p {
+    .nails-price-row th > span,
+    .nails-price-row th > small,
+    .nails-price-row td > * {
         display: block;
+    }
+
+    .nails-price-row th > small,
+    .nails-price-row td > small,
+    .nails-price-note p {
         margin-top: 0.25rem;
         color: var(--nails-ink-soft);
         font-size: 0.875rem;
         line-height: 1.55;
     }
 
-    .nails-price-panel li strong {
-        flex: 0 0 auto;
+    .nails-price-row td {
+        color: var(--unit-accent);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .nails-price-row td > strong {
         color: var(--unit-accent);
         font-size: 0.9375rem;
         font-weight: 600;
@@ -3070,14 +3103,26 @@
         }
 
         .nails-price-panel {
-            border-radius: 1.75rem 1.75rem 5rem 1.75rem;
-            padding: 1rem 1.25rem 1.75rem;
+            border-radius: 1.5rem;
+            padding: 0 1.125rem 1.5rem;
         }
 
-        .nails-price-panel li {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 0.5rem;
+        .nails-price-table col:first-child {
+            width: 62%;
+        }
+
+        .nails-price-table col:last-child {
+            width: 38%;
+        }
+
+        .nails-price-row th {
+            padding-right: 1rem;
+            font-size: 0.9375rem;
+        }
+
+        .nails-price-row td,
+        .nails-price-row td > strong {
+            font-size: 0.875rem;
         }
 
         .nails-price-note .signature-button {
@@ -3183,6 +3228,279 @@
         .nails-service-card:hover,
         .nails-catalog-card:hover,
         .nails-gallery-item a:hover img {
+            transform: none;
+        }
+    }
+}
+
+/* ========================================================================
+   REVISI MEDIA CLIENT — 9 September 2026
+   Kontrak visualnya ada di DESIGN_SYSTEM.md §-2.
+   ======================================================================== */
+@layer components {
+    .brand-cover-window,
+    .nails-cover-window {
+        position: relative;
+        width: min(100%, 40rem);
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border: 1px solid
+            color-mix(in srgb, var(--unit-accent) 24%, transparent);
+        border-radius: 2rem;
+        background: color-mix(in srgb, var(--unit-accent) 7%, white);
+        box-shadow: 0 32px 90px
+            color-mix(in srgb, var(--unit-accent) 14%, transparent);
+    }
+
+    .brand-cover-window > img,
+    .nails-cover-window > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .brand-cover-window::after,
+    .nails-cover-window::after {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            transparent 55%,
+            color-mix(in srgb, var(--unit-accent) 24%, transparent)
+        );
+        content: '';
+        pointer-events: none;
+    }
+
+    .brand-cover-logo,
+    .nails-cover-logo {
+        position: absolute;
+        z-index: 2;
+        left: 1rem;
+        bottom: 1rem;
+        display: grid;
+        width: 6.25rem;
+        height: 4.75rem;
+        place-items: center;
+        border: 1px solid rgb(255 255 255 / 0.78);
+        border-radius: 1rem;
+        background: rgb(255 255 255 / 0.9);
+        box-shadow: 0 14px 36px rgb(26 26 26 / 0.14);
+        padding: 0.65rem;
+    }
+
+    .brand-cover-logo img,
+    .nails-cover-logo img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .brand-page--sweetness .brand-cover-window {
+        border-radius: 6rem 6rem 2rem 2rem;
+    }
+
+    .brand-page--ngelash .brand-cover-window {
+        border-radius: 50% 50% 2rem 2rem;
+    }
+
+    .brand-page--logistic .brand-cover-window {
+        width: min(100%, 48rem);
+        aspect-ratio: 16 / 9;
+        border-left: 0.4375rem solid var(--unit-accent);
+        border-radius: 0.75rem;
+    }
+
+    .brand-page--property .brand-cover-window {
+        width: min(100%, 40rem);
+        border-top: 0.375rem solid var(--unit-accent);
+        border-radius: 0;
+    }
+
+    .home-hero-media-window {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 26rem);
+        aspect-ratio: 4 / 5;
+        overflow: hidden;
+        border: 1px solid rgb(124 95 51 / 0.2);
+        border-radius: 48% 48% 2rem 2rem;
+        background: var(--color-wash);
+        box-shadow: 0 30px 90px rgb(75 54 22 / 0.14);
+    }
+
+    .home-hero-media-window > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .home-hero-media-window::after {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            transparent 58%,
+            rgb(124 95 51 / 0.2)
+        );
+        content: '';
+        pointer-events: none;
+    }
+
+    .home-hero-logo-badge {
+        position: absolute;
+        z-index: 2;
+        right: 1.25rem;
+        bottom: 1.25rem;
+        display: grid;
+        width: 7.5rem;
+        height: 6rem;
+        place-items: center;
+        border: 1px solid rgb(255 255 255 / 0.8);
+        border-radius: 1.25rem;
+        background: rgb(255 255 255 / 0.9);
+        box-shadow: 0 16px 42px rgb(75 54 22 / 0.15);
+        padding: 0.85rem;
+    }
+
+    .home-hero-logo-badge img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .home-hero-logo-badge span {
+        color: var(--color-ink);
+        font-family: var(--font-display);
+        text-align: center;
+    }
+
+    .home-unit-card.has-media {
+        min-height: 33rem;
+    }
+
+    .home-unit-media {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: hidden;
+        border-radius: inherit;
+        background: var(--color-wash);
+    }
+
+    .home-unit-media::after {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            rgb(15 15 12 / 0.08) 0%,
+            rgb(15 15 12 / 0.12) 30%,
+            rgb(15 15 12 / 0.82) 100%
+        );
+        content: '';
+    }
+
+    .home-unit-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 700ms var(--ease-brand);
+    }
+
+    .home-unit-card > :not(.home-unit-media) {
+        position: relative;
+        z-index: 2;
+    }
+
+    .home-unit-card.has-media {
+        color: white;
+    }
+
+    .home-unit-card.has-media .home-unit-logo {
+        width: fit-content;
+        min-height: 4rem;
+        border: 1px solid rgb(255 255 255 / 0.7);
+        border-radius: 1rem;
+        background: rgb(255 255 255 / 0.9);
+        padding: 0.65rem 0.8rem;
+    }
+
+    .home-unit-card.has-media h3,
+    .home-unit-card.has-media p,
+    .home-unit-card.has-media .text-ink,
+    .home-unit-card.has-media .text-ink-soft {
+        color: white !important;
+    }
+
+    .home-unit-card.has-media .home-unit-link {
+        border: 1px solid rgb(255 255 255 / 0.7);
+        border-radius: 999px;
+        background: rgb(255 255 255 / 0.94);
+        padding: 0.7rem 0.9rem 0.7rem 1rem;
+        color: var(--unit-card-accent);
+    }
+
+    .home-unit-card:hover .home-unit-media img {
+        transform: scale(1.035);
+    }
+
+    .brand-footer,
+    .nails-footer,
+    .home-mock-footer {
+        background: linear-gradient(
+            180deg,
+            transparent,
+            color-mix(in srgb, var(--unit-accent) 9%, white)
+        );
+    }
+
+    @media (min-width: 70.0625rem) {
+        .brand-cover-window,
+        .nails-cover-window {
+            width: min(100%, 40rem);
+        }
+    }
+
+    @media (max-width: 47.999rem) {
+        .brand-cover-window,
+        .nails-cover-window,
+        .home-hero-media-window {
+            width: min(100%, 20rem);
+            margin-inline: auto;
+        }
+
+        .brand-cover-window,
+        .nails-cover-window {
+            aspect-ratio: 4 / 3;
+        }
+
+        .brand-cover-window > img,
+        .nails-cover-window > img {
+            object-position: 68% center;
+        }
+
+        .brand-cover-logo,
+        .nails-cover-logo {
+            left: 0.75rem;
+            bottom: 0.75rem;
+            width: 5.5rem;
+            height: 4.125rem;
+            border-radius: 0.75rem;
+            padding: 0.5rem;
+        }
+
+        .home-unit-card.has-media {
+            min-height: 30rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .home-unit-media img {
+            transition: none;
+        }
+
+        .home-unit-card:hover .home-unit-media img {
             transform: none;
         }
     }
@@ -6289,6 +6607,171 @@
         transform: translateY(-2px);
     }
 
+    .home-leadership-section {
+        padding-top: 2rem;
+    }
+
+    .home-leadership-panel {
+        display: grid;
+        gap: clamp(2rem, 6vw, 5rem);
+        border-top: 1px solid var(--color-hair-soft);
+        padding-top: clamp(2rem, 5vw, 4rem);
+    }
+
+    .home-leadership-intro {
+        max-width: 31rem;
+    }
+
+    .home-leadership-intro h2 {
+        max-width: 10ch;
+        color: var(--color-ink);
+        font-family: var(--font-display);
+        font-size: clamp(2.8rem, 7vw, 5.6rem);
+        font-weight: 400;
+        letter-spacing: -0.06em;
+        line-height: 0.93;
+    }
+
+    .home-leadership-intro h2 em {
+        color: var(--color-brass);
+        font-style: italic;
+    }
+
+    .home-leadership-intro > p:last-child {
+        max-width: 34ch;
+        margin-top: 1.25rem;
+        color: var(--color-ink-soft);
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
+
+    .home-leadership-profile {
+        display: grid;
+        gap: 1.5rem;
+        border: 1px solid var(--color-hair-soft);
+        border-radius: 1.35rem;
+        background: rgb(255 255 255 / 0.54);
+        padding: 1rem;
+    }
+
+    .home-leadership-photo-placeholder {
+        position: relative;
+        display: grid;
+        min-height: 18rem;
+        place-items: center;
+        overflow: hidden;
+        border-radius: 1rem;
+        background:
+            linear-gradient(135deg, rgb(124 95 51 / 0.08), transparent 56%),
+            repeating-linear-gradient(
+                -45deg,
+                rgb(124 95 51 / 0.035) 0,
+                rgb(124 95 51 / 0.035) 1px,
+                transparent 1px,
+                transparent 16px
+            ),
+            var(--color-wash);
+    }
+
+    .home-leadership-avatar {
+        position: relative;
+        z-index: 1;
+        width: 4.75rem;
+        height: 4.75rem;
+        border: 1px solid rgb(124 95 51 / 0.26);
+        border-radius: 50%;
+        background: rgb(255 255 255 / 0.58);
+    }
+
+    .home-leadership-shoulders {
+        position: absolute;
+        bottom: 2.8rem;
+        width: 11rem;
+        height: 6.5rem;
+        border: 1px solid rgb(124 95 51 / 0.24);
+        border-radius: 8rem 8rem 1.5rem 1.5rem;
+        background: rgb(255 255 255 / 0.58);
+    }
+
+    .home-leadership-photo-label {
+        position: absolute;
+        right: 1rem;
+        bottom: 0.85rem;
+        color: var(--color-brass);
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+    }
+
+    .home-leadership-details {
+        padding: 0.5rem;
+    }
+
+    .home-leadership-copy-placeholder {
+        display: grid;
+        gap: 0.6rem;
+        margin-top: 1rem;
+    }
+
+    .home-leadership-copy-placeholder span {
+        display: block;
+        width: min(100%, 18rem);
+        border-bottom: 1px solid var(--color-hair-soft);
+        padding-bottom: 0.55rem;
+        color: var(--color-ink-soft);
+        font-family: var(--font-display);
+        font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+        line-height: 1.15;
+    }
+
+    .home-leadership-copy-placeholder span:nth-child(2) {
+        width: min(100%, 12rem);
+        color: var(--color-brass);
+        font-family: var(--font-sans);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+    }
+
+    .home-leadership-copy-placeholder span:nth-child(3) {
+        width: min(100%, 15rem);
+        color: rgb(98 95 87 / 0.62);
+        font-family: var(--font-sans);
+        font-size: 0.83rem;
+    }
+
+    .home-leadership-status {
+        max-width: 34ch;
+        margin-top: 1.25rem;
+        color: var(--color-ink-soft);
+        font-size: 0.8rem;
+        line-height: 1.65;
+    }
+
+    @media (min-width: 768px) {
+        .home-leadership-panel {
+            grid-template-columns: minmax(13rem, 0.72fr) minmax(0, 1.28fr);
+            align-items: center;
+        }
+
+        .home-leadership-profile {
+            grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 1.2fr);
+            align-items: stretch;
+            padding: 1.25rem;
+        }
+
+        .home-leadership-photo-placeholder {
+            min-height: 21rem;
+        }
+
+        .home-leadership-details {
+            align-self: center;
+            padding: 1rem;
+        }
+    }
+
     @supports (backdrop-filter: blur(1px)) or
         (-webkit-backdrop-filter: blur(1px)) {
         .home-glass-nav {
@@ -7236,6 +7719,189 @@
         .panel-save-bar {
             background: var(--color-paper);
             backdrop-filter: none;
+        }
+    }
+}
+
+@layer editorial-worlds {
+    /* Override terakhir: poster client tidak dipotong kembali menjadi kotak
+       oleh aturan galeri yang lebih lama di atas. */
+    .brand-gallery-item a {
+        aspect-ratio: 4 / 5;
+        padding: 0.5rem;
+    }
+
+    .brand-gallery-item img {
+        height: 100%;
+        aspect-ratio: auto;
+        border-radius: calc(var(--brand-card-radius) * 0.72);
+        object-fit: contain;
+    }
+
+    /* Foto pembuka mengikuti arahan revisi client: gambar menjadi latar
+       penuh hero, bukan kartu media yang berdiri di samping teks. */
+    .brand-hero--with-cover,
+    .nails-hero--with-cover {
+        position: relative;
+        min-height: clamp(44rem, calc(100svh - 2rem), 56rem);
+        overflow: hidden;
+        isolation: isolate;
+        padding-block: 0;
+    }
+
+    .brand-hero-background,
+    .nails-hero-background {
+        position: absolute;
+        z-index: -2;
+        inset: 0;
+    }
+
+    .brand-hero-background img,
+    .nails-hero-background img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        scale: 1.002;
+    }
+
+    .brand-hero-background::after,
+    .nails-hero-background::after {
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(
+                90deg,
+                color-mix(in srgb, var(--brand-pale) 98%, white) 0%,
+                color-mix(in srgb, var(--brand-pale) 94%, transparent) 25%,
+                color-mix(in srgb, var(--brand-pale) 72%, transparent) 43%,
+                color-mix(in srgb, var(--brand-pale) 22%, transparent) 66%,
+                transparent 84%
+            ),
+            linear-gradient(
+                180deg,
+                rgb(255 255 255 / 0.12),
+                transparent 58%,
+                color-mix(in srgb, var(--unit-accent) 14%, transparent)
+            );
+        content: '';
+        pointer-events: none;
+    }
+
+    .nails-hero-background::after {
+        background:
+            linear-gradient(
+                90deg,
+                color-mix(in srgb, var(--nails-pale) 98%, white) 0%,
+                color-mix(in srgb, var(--nails-pale) 94%, transparent) 25%,
+                color-mix(in srgb, var(--nails-pale) 72%, transparent) 43%,
+                color-mix(in srgb, var(--nails-pale) 22%, transparent) 66%,
+                transparent 84%
+            ),
+            linear-gradient(
+                180deg,
+                rgb(255 255 255 / 0.12),
+                transparent 58%,
+                color-mix(in srgb, var(--unit-accent) 14%, transparent)
+            );
+    }
+
+    .brand-page .brand-hero--with-cover .brand-hero-grid,
+    .nails-page .nails-hero--with-cover .nails-hero-grid {
+        display: flex;
+        min-height: inherit;
+        align-items: center;
+        padding-block: 7rem 5rem;
+    }
+
+    .brand-page .brand-hero--with-cover .brand-world-field,
+    .nails-page .nails-hero--with-cover .nails-world-field {
+        display: none;
+    }
+
+    .brand-page .brand-hero--with-cover .brand-hero-copy,
+    .nails-page .nails-hero--with-cover .nails-hero-copy {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: min(100%, 42rem);
+        grid-column: auto;
+        grid-row: auto;
+        align-self: auto;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+    }
+
+    .brand-page--logistic .brand-hero--with-cover .brand-hero-copy > *,
+    .brand-page--logistic .brand-hero--with-cover .brand-hero-cta {
+        grid-column: auto;
+        grid-row: auto;
+        align-self: auto;
+    }
+
+    .brand-page--logistic .brand-hero--with-cover .brand-hero-cta {
+        margin-bottom: 0;
+    }
+
+    .brand-page .brand-hero--with-cover h1,
+    .nails-page .nails-hero--with-cover h1 {
+        text-shadow: 0 1px 0 rgb(255 255 255 / 0.32);
+    }
+
+    @media (max-width: 47.999rem) {
+        .brand-hero--with-cover,
+        .nails-hero--with-cover {
+            min-height: 43rem;
+        }
+
+        .brand-hero-background img,
+        .nails-hero-background img {
+            object-position: 68% center;
+        }
+
+        .brand-hero-background::after,
+        .nails-hero-background::after {
+            background:
+                linear-gradient(
+                    180deg,
+                    color-mix(in srgb, var(--brand-pale) 50%, transparent) 0%,
+                    color-mix(in srgb, var(--brand-pale) 18%, transparent) 34%,
+                    color-mix(in srgb, var(--brand-pale) 90%, transparent) 70%,
+                    color-mix(in srgb, var(--brand-pale) 98%, white) 100%
+                ),
+                linear-gradient(
+                    90deg,
+                    color-mix(in srgb, var(--brand-pale) 72%, transparent),
+                    transparent 88%
+                );
+        }
+
+        .nails-hero-background::after {
+            background:
+                linear-gradient(
+                    180deg,
+                    color-mix(in srgb, var(--nails-pale) 50%, transparent) 0%,
+                    color-mix(in srgb, var(--nails-pale) 18%, transparent) 34%,
+                    color-mix(in srgb, var(--nails-pale) 90%, transparent) 70%,
+                    color-mix(in srgb, var(--nails-pale) 98%, white) 100%
+                ),
+                linear-gradient(
+                    90deg,
+                    color-mix(in srgb, var(--nails-pale) 72%, transparent),
+                    transparent 88%
+                );
+        }
+
+        .brand-page .brand-hero--with-cover .brand-hero-grid,
+        .nails-page .nails-hero--with-cover .nails-hero-grid {
+            align-items: flex-end;
+            padding-block: 13rem 3.5rem;
+        }
+
+        .brand-page .brand-hero--with-cover .brand-hero-copy,
+        .nails-page .nails-hero--with-cover .nails-hero-copy {
+            width: 100%;
         }
     }
 }

@@ -17,13 +17,14 @@ use Illuminate\Support\Carbon;
  * @property int $business_id
  * @property string $image_path
  * @property string|null $caption
+ * @property bool $is_featured_on_home
  * @property int $sort_order
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
 // `business_id` sengaja tidak fillable — lihat alasannya di CatalogItem.
-#[Fillable(['image_path', 'caption', 'sort_order'])]
+#[Fillable(['image_path', 'caption', 'is_featured_on_home', 'sort_order'])]
 #[UsePolicy(PortfolioItemPolicy::class)]
 class PortfolioItem extends Model
 {
@@ -36,6 +37,7 @@ class PortfolioItem extends Model
     protected function casts(): array
     {
         return [
+            'is_featured_on_home' => 'boolean',
             'sort_order' => 'integer',
         ];
     }

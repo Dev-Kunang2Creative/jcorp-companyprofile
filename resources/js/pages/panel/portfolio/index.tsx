@@ -14,6 +14,7 @@ import { destroy, store, update } from '@/routes/panel/portfolio';
 type PortfolioItem = {
     id: number;
     caption: string | null;
+    is_featured_on_home: boolean;
     sort_order: number;
     image_url: string | null;
     thumb_url: string | null;
@@ -77,6 +78,7 @@ export default function PortfolioIndex({ business, items }: Props) {
                                         <tr>
                                             <th>Foto</th>
                                             <th>Keterangan</th>
+                                            <th>Halaman induk</th>
                                             <th>Urutan</th>
                                             <th className="text-right">Aksi</th>
                                         </tr>
@@ -96,6 +98,17 @@ export default function PortfolioIndex({ business, items }: Props) {
                                                 <td className="font-medium text-ink">
                                                     {item.caption ??
                                                         'Tanpa keterangan'}
+                                                </td>
+                                                <td>
+                                                    {item.is_featured_on_home ? (
+                                                        <span className="inline-flex rounded-full bg-[color-mix(in_srgb,var(--unit-accent)_12%,white)] px-2.5 py-1 text-xs font-semibold text-[var(--unit-accent)]">
+                                                            Ditampilkan
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-sm text-muted-foreground">
+                                                            —
+                                                        </span>
+                                                    )}
                                                 </td>
                                                 <td className="tabular-nums">
                                                     {item.sort_order}
@@ -151,6 +164,8 @@ export default function PortfolioIndex({ business, items }: Props) {
                                             </p>
                                             <p className="mb-2 text-xs text-muted-foreground">
                                                 urutan {item.sort_order}
+                                                {item.is_featured_on_home &&
+                                                    ' · tampil di halaman induk'}
                                             </p>
 
                                             <div className="mt-auto grid gap-2 sm:grid-cols-2">
@@ -254,6 +269,30 @@ function Fields({
                     menggambarkan isinya.
                 </p>
                 <InputError message={errors.caption} />
+            </div>
+
+            <div className="rounded-sm border border-hair bg-wash p-4">
+                <input type="hidden" name="is_featured_on_home" value="0" />
+                <label className="flex cursor-pointer items-start gap-3">
+                    <input
+                        type="checkbox"
+                        name="is_featured_on_home"
+                        value="1"
+                        defaultChecked={item?.is_featured_on_home ?? false}
+                        className="mt-0.5 size-4 accent-[var(--unit-accent)]"
+                    />
+                    <span>
+                        <strong className="block text-sm font-medium text-ink">
+                            Tampilkan di halaman induk
+                        </strong>
+                        <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                            Foto ini dipakai pada kartu unit usaha. Jika
+                            dipilih, pilihan pada foto lain di unit ini akan
+                            dilepas.
+                        </span>
+                    </span>
+                </label>
+                <InputError message={errors.is_featured_on_home} />
             </div>
 
             <div className="grid gap-2">

@@ -1,6 +1,7 @@
 import { Form, Head } from '@inertiajs/react';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
+import ImageInput from '@/components/panel/image-input';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +19,7 @@ type Props = {
     business: {
         slug: string;
         name: string;
+        cover_image_url: string | null;
         whatsapp: string | null;
         whatsapp_alt: string | null;
         instagram: string | null;
@@ -34,12 +36,12 @@ type Props = {
 export default function PanelBusinessProfile({ business }: Props) {
     return (
         <>
-            <Head title="Info Kontak" />
+            <Head title="Profil & Kontak" />
 
             <main className="panel-page space-y-6">
                 <Heading
-                    title="Kontak & Label"
-                    description={`Kontak dan label section ${business.name}`}
+                    title="Profil & Kontak"
+                    description={`Foto pembuka, kontak, dan sebutan bagian ${business.name}`}
                 />
 
                 <Form
@@ -193,8 +195,29 @@ export default function PanelBusinessProfile({ business }: Props) {
 
                             <section className="panel-surface grid content-start gap-5 p-5 sm:p-6">
                                 <h2 className="font-legacy-display text-xl font-semibold text-ink">
-                                    Sebutan section
+                                    Foto pembuka
                                 </h2>
+
+                                <ImageInput
+                                    name="cover_image"
+                                    label="Foto bagian atas halaman"
+                                    currentUrl={business.cover_image_url}
+                                    error={errors.cover_image}
+                                    removable
+                                    hint="JPEG, PNG, atau WebP. Maksimal 4 MB. Gunakan foto asli yang paling mewakili usaha."
+                                />
+
+                                <p className="text-xs text-muted-foreground">
+                                    Jika dikosongkan, halaman tetap memakai
+                                    susunan logo yang sekarang tanpa kotak foto
+                                    kosong.
+                                </p>
+
+                                <div className="border-t border-hair pt-5">
+                                    <h2 className="font-legacy-display text-xl font-semibold text-ink">
+                                        Sebutan bagian
+                                    </h2>
+                                </div>
 
                                 <div className="grid gap-4 sm:grid-cols-2">
                                     <div className="grid gap-2">

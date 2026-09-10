@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import SignatureSectionLabel from '@/components/public/signature/signature-section-label';
 import SignatureWhatsappButton from '@/components/public/signature/signature-whatsapp-button';
 import { stagger } from '@/hooks/use-reveal';
@@ -8,32 +7,6 @@ import type {
     PublicContact,
     PublicPortfolioItem,
 } from '@/types/public';
-
-type CatalogImageProps = {
-    item: PublicCatalogItem;
-};
-
-function NailsCatalogImage({ item }: CatalogImageProps) {
-    const [failed, setFailed] = useState(false);
-
-    if (!item.image_url || failed) {
-        return (
-            <div className="nails-catalog-fallback" aria-hidden="true">
-                {item.initials}
-            </div>
-        );
-    }
-
-    return (
-        <img
-            src={item.image_url}
-            alt={item.name}
-            loading="lazy"
-            onError={() => setFailed(true)}
-            className="nails-catalog-image"
-        />
-    );
-}
 
 type CatalogProps = {
     label: string;
@@ -50,80 +23,17 @@ export function NailsCatalogSection({
     businessName,
     whatsapp,
 }: CatalogProps) {
-    const hasAnyImage = items.some((item) => item.image_url);
-
     return (
         <section id="katalog" className="nails-section">
             <div className="signature-container">
                 <SignatureSectionLabel>{label}</SignatureSectionLabel>
 
-                {hasAnyImage ? (
-                    <ul className="nails-catalog-grid">
-                        {items.map((item, index) => (
-                            <li
-                                key={item.id}
-                                className="nails-catalog-card reveal"
-                                style={stagger(index)}
-                            >
-                                <NailsCatalogImage item={item} />
-
-                                <div className="nails-catalog-content">
-                                    {item.category && (
-                                        <p className="signature-small-label">
-                                            {item.category}
-                                        </p>
-                                    )}
-                                    <h3>{item.name}</h3>
-                                    {item.description && (
-                                        <p>{item.description}</p>
-                                    )}
-
-                                    {(item.formatted_price ||
-                                        item.price_note ||
-                                        whatsapp) && (
-                                        <div className="nails-catalog-footer">
-                                            {(item.formatted_price ||
-                                                item.price_note) && (
-                                                <div className="nails-catalog-price">
-                                                    {item.price_note && (
-                                                        <span>
-                                                            {item.price_note}
-                                                        </span>
-                                                    )}
-                                                    {item.formatted_price && (
-                                                        <strong>
-                                                            {
-                                                                item.formatted_price
-                                                            }
-                                                        </strong>
-                                                    )}
-                                                </div>
-                                            )}
-
-                                            {whatsapp && (
-                                                <SignatureWhatsappButton
-                                                    number={whatsapp}
-                                                    businessName={businessName}
-                                                    itemName={item.name}
-                                                    className="nails-catalog-cta"
-                                                >
-                                                    Tanya
-                                                </SignatureWhatsappButton>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <NailsPriceList
-                        items={items}
-                        note={note}
-                        businessName={businessName}
-                        whatsapp={whatsapp}
-                    />
-                )}
+                <NailsPriceList
+                    items={items}
+                    note={note}
+                    businessName={businessName}
+                    whatsapp={whatsapp}
+                />
             </div>
         </section>
     );
@@ -152,29 +62,23 @@ function NailsPriceList({
 
     return (
         <div className="nails-price-panel signature-glass reveal">
-            {groups.map((group, groupIndex) => (
-                <section key={`${group.category}-${groupIndex}`}>
-                    {group.category && <h3>{group.category}</h3>}
-                    <ul>
-                        {group.items.map((item) => (
-                            <li key={item.id}>
-                                <div>
-                                    <p>{item.name}</p>
-                                    {item.description && (
-                                        <small>{item.description}</small>
-                                    )}
-                                </div>
-                                {(item.formatted_price || item.price_note) && (
-                                    <strong>
-                                        {item.formatted_price ??
-                                            item.price_note}
-                                    </strong>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            ))}
+            <table className="nails-price-table">
+                <caption className="sr-only">
+                    Daftar layanan dan harga {businessName}
+                </caption>
+                <colgroup>
+                    <col />
+                    <col />
+                </colgroup>
+                <tbody>
+                    {groups.map((group, groupIndex) => (
+                        <PriceGroup
+                            key={`${group.category}-${groupIndex}`}
+                            group={group}
+                        />
+                    ))}
+                </tbody>
+            </table>
 
             {(note || whatsapp) && (
                 <div className="nails-price-note">
@@ -190,6 +94,47 @@ function NailsPriceList({
                 </div>
             )}
         </div>
+    );
+}
+
+type PriceGroupProps = {
+    group: {
+        category: string | null;
+        items: PublicCatalogItem[];
+    };
+};
+
+function PriceGroup({ group }: PriceGroupProps) {
+    return (
+        <>
+            {group.category && (
+                <tr className="nails-price-category">
+                    <th colSpan={2}>{group.category}</th>
+                </tr>
+            )}
+            {group.items.map((item) => (
+                <tr key={item.id} className="nails-price-row">
+                    <th scope="row">
+                        <span>{item.name}</span>
+                        {item.description && <small>{item.description}</small>}
+                    </th>
+                    <td>
+                        {item.formatted_price ? (
+                            <>
+                                <strong>{item.formatted_price}</strong>
+                                {item.price_note && (
+                                    <small>{item.price_note}</small>
+                                )}
+                            </>
+                        ) : (
+                            item.price_note && (
+                                <strong>{item.price_note}</strong>
+                            )
+                        )}
+                    </td>
+                </tr>
+            ))}
+        </>
     );
 }
 

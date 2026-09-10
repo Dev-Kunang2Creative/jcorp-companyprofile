@@ -82,21 +82,42 @@ export default function HomeHero({
                         </span>
                     ))}
 
-                    <div className="home-logo-glass">
-                        {parent.logo_url ? (
+                    {parent.cover_image_url ? (
+                        <figure className="home-hero-media-window">
                             <img
-                                src={parent.logo_url}
-                                alt={`Logo ${parent.name}`}
+                                src={parent.cover_image_url}
+                                alt={`Foto ${parent.name}`}
                                 loading="eager"
                                 fetchPriority="high"
-                                className="h-[58%] w-[58%] object-contain drop-shadow-[0_18px_22px_rgb(68_47_17/0.12)]"
                             />
-                        ) : (
-                            <span className="max-w-[11ch] text-center font-display text-3xl leading-tight text-ink">
-                                {parent.name}
-                            </span>
-                        )}
-                    </div>
+                            <div className="home-hero-logo-badge">
+                                {parent.logo_url ? (
+                                    <img
+                                        src={parent.logo_url}
+                                        alt={`Logo ${parent.name}`}
+                                    />
+                                ) : (
+                                    <span>{parent.name}</span>
+                                )}
+                            </div>
+                        </figure>
+                    ) : (
+                        <div className="home-logo-glass">
+                            {parent.logo_url ? (
+                                <img
+                                    src={parent.logo_url}
+                                    alt={`Logo ${parent.name}`}
+                                    loading="eager"
+                                    fetchPriority="high"
+                                    className="h-[58%] w-[58%] object-contain drop-shadow-[0_18px_22px_rgb(68_47_17/0.12)]"
+                                />
+                            ) : (
+                                <span className="max-w-[11ch] text-center font-display text-3xl leading-tight text-ink">
+                                    {parent.name}
+                                </span>
+                            )}
+                        </div>
+                    )}
 
                     {hasUnits && (
                         <div className="home-mock-stage-caption">

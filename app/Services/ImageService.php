@@ -9,6 +9,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Interfaces\ImageManagerInterface;
+use InvalidArgumentException;
 
 /**
  * Pemrosesan gambar unggahan (spec §5).
@@ -59,13 +60,35 @@ class ImageService
         // Nama berkas dibuat ulang sistem. Nama asli dari pengguna tidak
         // pernah dipakai — bisa memuat karakter jalur ("../"), karakter yang
         // bermasalah di sistem berkas, atau akhiran ganda yang menyesatkan.
-        $name = Str::uuid()->toString();
+        return $this->storeFromPath(
+            $file->getRealPath(),
+            $folder,
+            Str::uuid()->toString(),
+        );
+    }
+
+    /**
+     * Memproses aset statis dengan nama keluaran yang tetap.
+     *
+     * Dipakai untuk materi client yang ikut Git. Nama yang deterministik
+     * membuat proses impor aman dijalankan ulang tanpa membuat berkas baru
+     * dan baris portfolio ganda setiap kali deployment.
+     */
+    public function storeFromPath(string $source, string $folder, string $name): string
+    {
+        if (! is_file($source)) {
+            throw new InvalidArgumentException("Berkas gambar tidak ditemukan: {$source}");
+        }
 
         $folder = trim($folder, '/');
-        $webPath = "{$folder}/{$name}.webp";
-        $thumbPath = "{$folder}/{$name}_thumb.webp";
+        $safeName = Str::slug($name);
 
-        $source = $file->getRealPath();
+        if ($folder === '' || $safeName === '') {
+            throw new InvalidArgumentException('Folder dan nama gambar tidak boleh kosong.');
+        }
+
+        $webPath = "{$folder}/{$safeName}.webp";
+        $thumbPath = "{$folder}/{$safeName}_thumb.webp";
 
         $web = $this->manager->decodePath($source)
             ->scaleDown(width: self::WEB_MAX_WIDTH)

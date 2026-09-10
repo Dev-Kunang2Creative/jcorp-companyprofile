@@ -17,6 +17,7 @@ type Props = {
     name: string;
     tagline: string | null;
     logoUrl: string | null;
+    coverImageUrl?: string | null;
     whatsapp?: string;
     /** Label bidang usaha di atas judul. Berbeda per anak usaha. */
     eyebrow?: string;
@@ -26,6 +27,7 @@ export default function HeroSection({
     name,
     tagline,
     logoUrl,
+    coverImageUrl,
     whatsapp,
     eyebrow,
 }: Props) {
@@ -34,51 +36,66 @@ export default function HeroSection({
             id="top"
             className="px-4 pt-14 pb-12 md:px-8 md:pt-24 md:pb-16"
         >
-            <div className="mx-auto max-w-6xl">
-                {logoUrl && (
-                    <img
-                        src={logoUrl}
-                        alt={`Logo ${name}`}
-                        className="reveal mb-8 h-12 w-auto md:h-16"
-                    />
-                )}
+            <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.72fr)] md:gap-16">
+                <div>
+                    {logoUrl && (
+                        <img
+                            src={logoUrl}
+                            alt={`Logo ${name}`}
+                            className="reveal mb-8 h-12 w-auto md:h-16"
+                        />
+                    )}
 
-                <p
-                    className="reveal mb-5 text-[10.5px] font-medium tracking-[0.2em] text-brass uppercase"
-                    style={{ transitionDelay: '60ms' }}
-                >
-                    {eyebrow ?? 'Profil Usaha'}
-                </p>
-
-                <h1
-                    className="reveal max-w-[13ch] font-display text-[40px] leading-[0.99] font-normal tracking-[-0.028em] text-ink md:text-[78px]"
-                    style={{ transitionDelay: '120ms' }}
-                >
-                    {name}
-                </h1>
-
-                {tagline && (
                     <p
-                        className="reveal mt-7 max-w-[45ch] text-[16px] leading-[1.7] text-ink-soft md:text-[17px]"
-                        style={{ transitionDelay: '180ms' }}
+                        className="reveal mb-5 text-[10.5px] font-medium tracking-[0.2em] text-brass uppercase"
+                        style={{ transitionDelay: '60ms' }}
                     >
-                        {tagline}
+                        {eyebrow ?? 'Profil Usaha'}
                     </p>
-                )}
 
-                {whatsapp && (
-                    <div
-                        className="reveal mt-9"
-                        style={{ transitionDelay: '240ms' }}
+                    <h1
+                        className="reveal max-w-[13ch] font-display text-[40px] leading-[0.99] font-normal tracking-[-0.028em] text-ink md:text-[78px]"
+                        style={{ transitionDelay: '120ms' }}
                     >
-                        <WhatsappButton
-                            number={whatsapp}
-                            businessName={name}
-                            className="w-full md:w-auto"
+                        {name}
+                    </h1>
+
+                    {tagline && (
+                        <p
+                            className="reveal mt-7 max-w-[45ch] text-[16px] leading-[1.7] text-ink-soft md:text-[17px]"
+                            style={{ transitionDelay: '180ms' }}
                         >
-                            Hubungi lewat WhatsApp
-                        </WhatsappButton>
-                    </div>
+                            {tagline}
+                        </p>
+                    )}
+
+                    {whatsapp && (
+                        <div
+                            className="reveal mt-9"
+                            style={{ transitionDelay: '240ms' }}
+                        >
+                            <WhatsappButton
+                                number={whatsapp}
+                                businessName={name}
+                                className="w-full md:w-auto"
+                            >
+                                Hubungi lewat WhatsApp
+                            </WhatsappButton>
+                        </div>
+                    )}
+                </div>
+
+                {coverImageUrl && (
+                    <figure className="reveal relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-hair bg-wash shadow-[0_24px_70px_rgb(26_26_26/0.1)]">
+                        <img
+                            src={coverImageUrl}
+                            alt={`Foto ${name}`}
+                            width={1200}
+                            height={1500}
+                            fetchPriority="high"
+                            className="h-full w-full object-cover"
+                        />
+                    </figure>
                 )}
             </div>
         </section>

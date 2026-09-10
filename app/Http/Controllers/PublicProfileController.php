@@ -40,6 +40,7 @@ class PublicProfileController extends Controller
                 'tagline' => $business->tagline,
                 'description' => $business->description,
                 'logo_url' => $this->images->url($business->logo_path),
+                'cover_image_url' => $this->images->url($business->cover_image_path),
 
                 // Warna aksen halaman (DESIGN_SYSTEM §2.3). Lewat
                 // safeAccentColor(), bukan kolomnya langsung: nilainya
@@ -150,9 +151,11 @@ class PublicProfileController extends Controller
             ->map(fn (PortfolioItem $item) => [
                 'id' => $item->id,
                 'caption' => $item->caption,
-                'image_url' => $this->images->url(
-                    $this->images->thumbnailPath($item->image_path)
-                ),
+                // Galeri revisi client memakai poster portrait. Thumbnail
+                // kotak akan memotong teks dan produk, jadi halaman publik
+                // memakai versi web 1200 px yang tetap utuh. Thumbnail tetap
+                // dipakai di tabel panel agar pemindaian daftar cepat.
+                'image_url' => $this->images->url($item->image_path),
                 'full_url' => $this->images->url($item->image_path),
             ])
             // values() memaksa kunci berurutan 0,1,2. Tanpa itu kunci asli

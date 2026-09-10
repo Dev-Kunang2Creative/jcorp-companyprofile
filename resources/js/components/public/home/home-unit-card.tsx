@@ -5,6 +5,7 @@ type Props = {
     name: string;
     tagline: string | null;
     logoUrl: string | null;
+    featuredImageUrl: string | null;
     accentColor: string;
     index: string;
     initials: string;
@@ -15,16 +16,19 @@ export default function HomeUnitCard({
     name,
     tagline,
     logoUrl,
+    featuredImageUrl,
     accentColor,
     index,
     initials,
 }: Props) {
     const [logoFailed, setLogoFailed] = useState(false);
+    const [imageFailed, setImageFailed] = useState(false);
     const showFallback = !logoUrl || logoFailed;
+    const showImage = Boolean(featuredImageUrl && !imageFailed);
 
     return (
         <article
-            className="home-unit-card group"
+            className={`home-unit-card group ${showImage ? 'has-media' : ''}`}
             style={{ '--unit-card-accent': accentColor } as React.CSSProperties}
         >
             <div className="flex items-start justify-between gap-4">
@@ -34,7 +38,21 @@ export default function HomeUnitCard({
                 <span className="home-unit-accent" aria-hidden="true" />
             </div>
 
-            <div className="my-8 flex h-24 items-center">
+            {showImage && (
+                <div className="home-unit-media">
+                    <img
+                        src={featuredImageUrl ?? undefined}
+                        alt={`Foto pilihan ${name} untuk halaman induk`}
+                        loading="lazy"
+                        decoding="async"
+                        onError={() => setImageFailed(true)}
+                    />
+                </div>
+            )}
+
+            <div
+                className={`home-unit-logo ${showImage ? 'my-5' : 'my-8'} flex items-center`}
+            >
                 {showFallback ? (
                     <div className="home-unit-fallback" aria-hidden="true">
                         {initials}
@@ -45,7 +63,7 @@ export default function HomeUnitCard({
                         alt={`Logo ${name}`}
                         loading="lazy"
                         onError={() => setLogoFailed(true)}
-                        className="max-h-20 max-w-[220px] object-contain object-left transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                        className={`${showImage ? 'max-h-12 max-w-[160px]' : 'max-h-20 max-w-[220px]'} object-contain object-left transition-transform duration-700 ease-out group-hover:scale-[1.04]`}
                     />
                 )}
             </div>
@@ -64,7 +82,7 @@ export default function HomeUnitCard({
                 href={`/${slug}`}
                 target="_blank"
                 rel="noopener"
-                className="home-unit-link mt-auto pt-8"
+                className="home-unit-link mt-auto"
             >
                 Lihat profil
                 <span className="sr-only"> {name} (membuka tab baru)</span>

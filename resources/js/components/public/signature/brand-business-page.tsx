@@ -287,7 +287,29 @@ export default function BrandBusinessPage({
                 />
 
                 <main className="brand-world-main">
-                    <section id="top" className="brand-hero">
+                    <section
+                        id="top"
+                        className={
+                            displayBusiness.cover_image_url
+                                ? 'brand-hero brand-hero--with-cover'
+                                : 'brand-hero'
+                        }
+                    >
+                        {displayBusiness.cover_image_url && (
+                            <div
+                                className="brand-hero-background"
+                                aria-hidden="true"
+                            >
+                                <img
+                                    src={displayBusiness.cover_image_url}
+                                    alt=""
+                                    width={1200}
+                                    height={675}
+                                    fetchPriority="high"
+                                />
+                            </div>
+                        )}
+
                         <div className="signature-container brand-hero-grid">
                             <div
                                 className="brand-world-field"
@@ -323,32 +345,36 @@ export default function BrandBusinessPage({
                                 )}
                             </div>
 
-                            {displayBusiness.logo_url && (
-                                <div
-                                    className="brand-hero-stage"
-                                    aria-label={`Logo ${displayBusiness.name}`}
-                                >
+                            {displayBusiness.logo_url &&
+                                !displayBusiness.cover_image_url && (
                                     <div
-                                        className="brand-hero-motif"
-                                        aria-hidden="true"
+                                        className="brand-hero-stage"
+                                        aria-label={`Identitas ${displayBusiness.name}`}
                                     >
-                                        <span />
-                                        <span />
-                                        <span />
-                                        <span />
-                                    </div>
+                                        <div
+                                            className="brand-hero-motif"
+                                            aria-hidden="true"
+                                        >
+                                            <span />
+                                            <span />
+                                            <span />
+                                            <span />
+                                        </div>
 
-                                    <div className="brand-logo-vessel signature-glass">
-                                        <img
-                                            src={displayBusiness.logo_url}
-                                            alt={`Logo ${displayBusiness.name}`}
-                                            width={600}
-                                            height={384}
-                                            fetchPriority="high"
-                                        />
+                                        <div className="brand-logo-vessel signature-glass">
+                                            <img
+                                                src={
+                                                    displayBusiness.logo_url ??
+                                                    undefined
+                                                }
+                                                alt={`Logo ${displayBusiness.name}`}
+                                                width={600}
+                                                height={384}
+                                                fetchPriority="high"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                            )}
+                                )}
                         </div>
                     </section>
 

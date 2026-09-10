@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -26,6 +27,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $services_label
  * @property list<array{title: string, description: string}>|null $highlights
  * @property string|null $logo_path
+ * @property string|null $cover_image_path
  * @property string|null $accent_color
  * @property string $catalog_label
  * @property string|null $catalog_note
@@ -60,6 +62,7 @@ use Illuminate\Support\Carbon;
     'tagline',
     'description',
     'logo_path',
+    'cover_image_path',
     'catalog_label',
     'catalog_note',
     'portfolio_label',
@@ -174,6 +177,15 @@ class Business extends Model
     public function portfolioItems(): HasMany
     {
         return $this->hasMany(PortfolioItem::class);
+    }
+
+    /** @return HasOne<PortfolioItem, $this> */
+    public function featuredPortfolioItem(): HasOne
+    {
+        return $this->hasOne(PortfolioItem::class)
+            ->where('is_featured_on_home', true)
+            ->orderBy('sort_order')
+            ->orderBy('id');
     }
 
     /** @return HasMany<User, $this> */

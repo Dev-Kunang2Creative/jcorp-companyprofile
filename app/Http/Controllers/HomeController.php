@@ -59,6 +59,7 @@ class HomeController extends Controller
                 'tagline' => $parent->tagline,
                 'description' => $parent->description,
                 'logo_url' => $this->images->url($parent->logo_path),
+                'cover_image_url' => $this->images->url($parent->cover_image_path),
 
                 // Lihat catatan di PublicProfileController: nilainya masuk
                 // ke atribut `style`, jadi bentuknya dipastikan dulu.
@@ -78,6 +79,7 @@ class HomeController extends Controller
             'subsidiaries' => Business::query()
                 ->subsidiaries()
                 ->published()
+                ->with('featuredPortfolioItem')
                 ->orderBy('sort_order')
                 ->get()
                 ->map(fn (Business $business) => [
@@ -86,6 +88,9 @@ class HomeController extends Controller
                     'tagline' => $business->tagline
                         ?: (self::HOME_CARD_TAGLINES[$business->slug] ?? null),
                     'logo_url' => $this->images->url($business->logo_path),
+                    'featured_image_url' => $this->images->url(
+                        $business->featuredPortfolioItem?->image_path,
+                    ),
                     'accent_color' => $business->safeAccentColor(),
                     'initials' => $this->initials($business->name),
                     'sector_label' => self::HOME_SECTOR_LABELS[$business->slug] ?? null,

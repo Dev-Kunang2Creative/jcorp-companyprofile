@@ -1,6 +1,6 @@
 # PROGRESS — J-Corporate Group
 
-**Terakhir diperbarui:** 28 Agustus 2026
+**Terakhir diperbarui:** 9 September 2026
 **Spec:** [`docs/superpowers/specs/2026-08-10-jcorp-company-profile-design.md`](docs/superpowers/specs/2026-08-10-jcorp-company-profile-design.md)
 
 > Baca spec lebih dulu sebelum mengerjakan apa pun. File ini hanya mencatat **sudah sampai mana**; spec yang menjelaskan **apa yang dibangun dan kenapa**.
@@ -21,7 +21,7 @@
 | **6.1** | **Luminous Editorial Glass** — revisi khusus homepage induk              | ✅ Implementasi 23 Agu — child page & panel tidak diubah |
 | **6.2** | **One Family, Five Signatures** — lima identitas dalam satu family shell | ✅ Implementasi 24 Agu — seluruh anak usaha aktif        |
 | **6.3** | **Five Editorial Worlds — Luminous Pastel Edition**                      | ✅ Implementasi 24 Agu — desktop & mobile                |
-| **6.4** | **Calm Operations Studio** — revisi sistem antarmuka panel admin         | ✅ Implementasi 25 Agu — logika tetap dipertahankan       |
+| **6.4** | **Calm Operations Studio** — revisi sistem antarmuka panel admin         | ✅ Implementasi 25 Agu — logika tetap dipertahankan      |
 
 **Cakupan Fase 6 — apa saja yang sudah pindah:**
 
@@ -72,6 +72,62 @@
 - Test toolkit dijalankan ulang tanpa konfigurasi PHPUnit aplikasi: **25 lulus / 94 assertion dan 1 drill MySQL opt-in dilewati** pada masing-masing Windows PowerShell 5.1 dan PowerShell 7. Test ini hanya memakai fixture temporer dan tidak mem-boot Laravel atau mengakses database aplikasi. Drill MySQL tidak dijalankan ulang pada tahap pra-commit ini.
 - Pemeriksaan Pint, sintaks 4 file PHP, 4 skrip PowerShell, Bash `backup.sh`, serta `git diff --check` lulus. Aturan ignore untuk `.env`, folder snapshot/backup, dan file credential sementara diperiksa; tidak ada SQL/credential/arsip snapshot dalam kandidat commit.
 - Pesan commit yang disiapkan: `feat: add backup toolkit and recovery runbook`. Belum ada staging, commit, push, snapshot baru, atau tindakan Hostinger. Commit toolkit adalah prasyarat baseline kode berikutnya, bukan bukti rollback penuh sudah diuji.
+
+#### Backup dan latihan pemulihan Hostinger testing — 31 Agustus–3 September 2026
+
+- Toolkit backup sudah di-commit secara lokal pada `31a5dfe` (`feat: add backup toolkit and recovery runbook`). Pada pemeriksaan 3 September, `origin/main` masih `0ecb4d4`; commit toolkit belum di-push. Checkout Hostinger terakhir juga masih `0ecb4d4`, sehingga tiga file runtime (`backup.sh`, `Backup.php`, dan `tool.php`) dipindahkan manual ke folder privat `$HOME/private-tools/jcorp-backup-runtime`, bukan menarik perubahan ke checkout server yang kotor.
+- Preflight read-only Hostinger berhasil terhadap database `u713441903_jcorp` pada MariaDB `11.8.8-MariaDB-log`. Saat snapshot dibuat terdapat 6 usaha, 19 item katalog, 5 entri galeri, 2 akun, dan 12 migration. Root `.htaccess` terdeteksi tersedia.
+- Snapshot `jcorp-snapshot-20260831T064549Z-a2fa6ff2` berhasil dibuat di `$HOME/private-backups/jcorp/hostinger-testing/`, memiliki marker `COMPLETE`, lalu lolos verifikasi integritas. Payload-nya mencakup `database.sql`, `files.zip`, `source.zip`, `manifest.json`, dan metadata Git; `dump-error.log` kosong. Total snapshot sekitar 5,3 MB dan masih **belum dienkripsi**.
+- Saat backup, checkout Hostinger memiliki file untracked root `.htaccess` serta tiga aset lama di `public/build/assets/`. `source.zip` hanya berisi commit Git sehingga tidak mencakup file untracked, sedangkan konfigurasi/file runtime yang diperlukan tetap dibawa oleh `files.zip`. Kondisi ini harus ditinjau lagi sebelum rollback atau deployment berikutnya.
+- Salinan snapshot sudah diunduh ke `D:\JCorp-Backups\hostinger-testing\jcorp-snapshot-20260831T064549Z-a2fa6ff2` dan verifikasi checksum lokal lulus. Belum ada salinan cloud/perangkat lain dan belum ada enkripsi; folder snapshot tidak boleh dimasukkan ke Git, webroot, atau chat karena memuat `.env` dan data akun.
+- `files.zip` diekstrak secara terisolasi ke `D:\JCorp-Recovery\hostinger-20260831-a2fa6ff2`. `database.sql` diimpor ke schema baru `jcorp_restore_hostinger_20260831_a2fa6ff2` memakai akun MySQL lokal yang haknya dibatasi ke schema tersebut; database localhost utama dan database Hostinger tidak menjadi target impor.
+- Hasil restore database cocok dengan manifest untuk seluruh 12 tabel: 6 usaha, 19 katalog, 5 galeri, 2 akun, 12 migration, 8 cache, 8 session, dan tabel pendukung lain sesuai hitungan snapshot. `CHECK TABLE` untuk `businesses`, `catalog_items`, `portfolio_items`, dan `users` berstatus `OK`; katalog, galeri, dan akun tidak memiliki relasi usaha yatim.
+- `source.zip` diekstrak ke `D:\JCorp-Recovery\hostinger-app-20260831-a2fa6ff2`. Dependensi production dipasang dari `composer.lock` memakai `composer install --no-dev --optimize-autoloader --no-scripts --no-interaction`. File public, unggahan, storage, dan root `.htaccess` dari snapshot kemudian dipasangkan ke salinan aplikasi ini tanpa menimpa checkout project utama.
+- `.env` aplikasi recovery diarahkan ke `127.0.0.1:8019` dan schema restore lokal di atas. `APP_KEY` dipertahankan dari snapshot; session/cache menggunakan file, queue sinkron, mail hanya log, dan disk file menggunakan `public`. Password maupun nilai key tidak dicatat di repository. Junction `public/storage` menunjuk ke `storage/app/public` pada folder recovery.
+- `package:discover` dan `config:clear` pada aplikasi recovery berhasil. `migrate:status` membaca seluruh 12 migration sebagai `Ran`; tidak ada migration, seeder, reset password, atau perubahan schema baru yang dijalankan.
+- Server recovery lokal berhasil dijalankan hanya pada `http://127.0.0.1:8019`. Browser membuka homepage, kelima halaman unit usaha, Ayodya bahasa Indonesia/Inggris, serta halaman login tanpa server error. Sebanyak 70 file PNG/WebP pada aset brand dan storage lolos pembacaan format/dimensi; permintaan HTTP perwakilan untuk logo brand dan thumbnail unggahan memberi `200 image/webp`.
+- **Titik lanjut untuk sesi berikutnya:** login pada `http://127.0.0.1:8019/jcorp-panel/login` memakai akun yang ikut snapshot, lalu verifikasi dashboard, data panel, foto, dan pembatasan peran secara read-only lebih dulu. Login recovery Hostinger, CRUD/unggah pada database restore ini, serta rollback rilis penuh **belum diuji** dan tidak boleh ditandai selesai. Jangan menjalankan migration/seeder atau mengarahkan `.env` recovery ke database aktif.
+- Latihan ini membuktikan snapshot Hostinger dapat diverifikasi, file dapat dipulihkan, SQL dapat diimpor dan direkonsiliasi, serta aplikasi publik dapat dijalankan dari hasil recovery. Hasil tersebut belum membuktikan RPO/RTO terjamin, pemulihan langsung ke Hostinger, atau prosedur pergantian rilis yang bersifat atomik.
+
+### Revisi client 28 Agustus 2026 — tahap media awal diterapkan
+
+- Sumber revisi adalah `C:\Users\Mario Sianturi\Downloads\REVISI 1.pdf` (4 slide, berada di luar repository). Tahap media awal sudah diterapkan memakai materi yang tersedia; revisi belum boleh ditandai selesai seluruhnya karena materi tiga unit, direksi, dan kontak induk belum diterima.
+- Keputusan cakupan dari pemilik project: **slide 3 khusus halaman induk J-Corporate**; slide 1, 2, dan 4 diterapkan ke halaman induk serta seluruh unit usaha.
+- Permintaan umum untuk induk dan semua unit: bagian atas halaman diberi foto yang mewakili identitas usahanya; komposisi warna dan gradasi diperkuat memakai palet masing-masing brand; bagian bawah diberi gradasi yang tetap rapi/profesional; informasi orang yang bisa dihubungi dibuat lengkap. Slide 2 hanya contoh keseimbangan warna dan penempatan foto, bukan instruksi menyalin tampilan atau warna Pertamina.
+- Permintaan khusus halaman induk dari slide 3: bagian tengah yang menampilkan lima unit memakai logo serta foto asli produk/pekerjaan tiap unit; tambahkan foto direksi J-Corporate beserta nama dan jabatan yang sudah disetujui.
+- Permintaan dokumentasi client: perkaya foto produk/hasil kerja/pekerjaan yang benar-benar pernah dilakukan. Sebelas materi baru dari client sudah masuk; foto lama lain yang sebelumnya diunggah pemilik tetap dianggap sementara.
+
+**Yang sudah diterapkan pada 9–10 September 2026:**
+
+- Schema dan panel mendukung satu foto pembuka per induk/unit. Foto dapat diunggah, diganti, atau dihapus dari menu **Profil & Kontak** tanpa menanam path di komponen frontend.
+- Galeri diaktifkan untuk kelima anak usaha. Setiap foto memiliki pilihan **Tampilkan di halaman induk**; controller memastikan hanya satu foto per unit yang terpilih.
+- Empat poster Sweetness Things dan tujuh poster ngelash.id diproses menjadi WebP + thumbnail dan diimpor lewat perintah idempoten `php artisan jcorp:import-client-media`. Perintah aman dijalankan ulang tanpa menggandakan baris dan tidak menimpa pilihan/foto pembuka yang sudah dibuat admin.
+- Lima anak usaha mendapat foto pembuka ilustratif fotorealistik berasio `16:9`: dessert dan cookies untuk Sweetness Things, proses manicure untuk Nail's by Me, proses eyelash untuk ngelash.id, kegiatan bongkar muat untuk Ayodya, serta rumah satu lantai kelas menengah Indonesia untuk J-Land. Versi web diproses menjadi WebP `1200 × 675` dengan ukuran sekitar 49–135 KB. Foto tampil sebagai background penuh section hero, bukan kartu gambar di samping teks; gradasi menjaga teks tetap terbaca dan objek utama tetap terlihat.
+- Foto ilustratif hanya dipakai sebagai background hero dekoratif. Foto tersebut tidak dimasukkan ke katalog, galeri/portfolio, atau kartu Unit Usaha halaman induk karena tidak boleh terbaca sebagai bukti produk, pekerjaan, armada, properti, staf, maupun lokasi asli client.
+- Importer memigrasikan cover poster lama Sweetness/ngelash secara terarah ke hero baru dan melepas penandaan kartu induk yang dulu dibuat otomatis. Cover lain yang dipilih admin tetap dipertahankan, termasuk ketika perintah impor dijalankan ulang.
+- Galeri publik memakai rasio portrait dan versi web utuh agar poster tidak dipotong oleh thumbnail kotak. Foto katalog dan data harga tidak diubah karena hubungan nama poster Sweetness dengan item katalog belum dikonfirmasi.
+- Gradasi lembut ditambahkan pada bagian bawah halaman. Hero kelima unit diperiksa melalui browser pada desktop `1440 × 900` dan mobile `390 × 844`; seluruh gambar termuat, tidak ada error console, dan tidak ada gulir horizontal.
+- Verifikasi otomatis 10 September: ESLint, Prettier, TypeScript, Pint, PHPStan, dan build production lulus; suite backend mencatat **354 test, 353 lulus, 1 dilewati, dan 1.472 assertion**.
+- Setelah koreksi foto pembuka dari kartu menjadi background penuh, regression test profil publik dan importer kembali lulus: **38 test dan 318 assertion**. Build, lint, format, serta pemeriksaan visual kelima hero di desktop/mobile juga kembali lulus.
+- Daftar harga Nail's by Me dari materi 10 September dimasukkan sebagai 10 baris layanan. Foto pricelist hanya menjadi sumber data dan tidak dipublikasikan; halaman Nail's selalu menampilkan katalog sebagai tabel dua kolom responsif. Ejaan `Frech` dinormalkan menjadi `French`, sedangkan seluruh angka dan satuan harga tetap mengikuti materi client.
+- Foto `Browncho` Sweetness Things dan `Volume 12–13 mm — Cat Eye` ngelash dipilih sebagai foto asli untuk background penuh kartu unit di halaman induk. Ayodya, J-Land, dan Nail's tetap tanpa foto kartu karena materi asli belum tersedia.
+- Satu foto lama ngelash disembunyikan dari galeri lewat soft delete; berkasnya tetap dipertahankan agar masih bisa dipulihkan dari backup. Tidak ada foto dari unit yang belum diberikan client yang ditambahkan.
+- Section `Direksi J-Corporate` ditambahkan dengan placeholder foto, nama, jabatan, dan profil singkat. Isinya sengaja belum mengarang identitas dan siap diganti setelah materi resmi diterima.
+
+**Materi yang masih diperlukan per induk/unit:**
+
+- **J-Corporate Group:** foto pembuka asli; satu atau beberapa foto wakil dari masing-masing lima unit untuk bagian tengah; foto direksi, nama, jabatan, dan teks singkat jika ingin ditampilkan; kontak resmi induk berupa nama PIC, nomor WhatsApp yang lengkap/valid, email, serta alamat. Nomor induk `081176265` pada materi lama hanya sembilan digit dan tidak boleh dipakai sebelum dikonfirmasi.
+- **Sweetness Things:** foto asli setiap produk/menu termasuk `Dessert Box Series` dan `Soft Cookies`; data final per produk berupa nama, kategori, deskripsi, harga atau catatan harga, status tersedia, dan urutan tampil. Foto pembuka asli hanya diperlukan jika client ingin mengganti ilustrasi hero. Foto produk yang ada sekarang masih sementara. WhatsApp, Instagram, TikTok, dan alamat kota sudah ada—jangan diminta ulang kecuali client ingin memperbaikinya.
+- **Nail's by Me:** foto hasil nail art asli beserta keterangan dan urutan. Daftar 10 layanan/harga sudah diterima dan dimasukkan; foto pembuka asli hanya diperlukan jika client ingin mengganti ilustrasi hero. Tanyakan alamat/tempat layanan hanya bila akan ditampilkan sebagai kontak lengkap. WhatsApp, Instagram, TikTok, sistem appointment, dan home service sudah ada; nomor WhatsApp yang sama dengan PIC Sekar di J-Land masih perlu dikonfirmasi, bukan diminta ulang tanpa konteks.
+- **ngelash.id:** foto hasil eyelash asli beserta keterangan dan urutan. Daftar 15 layanan, kategori, dan harganya sudah ada; yang belum ada adalah deskripsi tiap layanan jika client memang ingin menambahkannya. Foto pembuka asli hanya diperlukan jika client ingin mengganti ilustrasi hero. WhatsApp, Instagram, alamat, sistem appointment, dan home service sudah ada—jangan diminta ulang kecuali ada koreksi. Foto galeri yang ada sekarang masih sementara.
+- **PT. Ayodya Utama Logistic:** foto asli kegiatan/pekerjaan logistik yang pernah dilakukan beserta keterangannya; bila akan dimasukkan sebagai katalog, lengkapi nama layanan, kategori, deskripsi, harga atau catatan bahwa tarif melalui penawaran, status tersedia, dan urutan tampil. Foto pembuka asli hanya diperlukan jika client ingin mengganti ilustrasi hero. PIC, WhatsApp, alamat, telepon kantor, fax, email, dan situs sudah tersedia—jangan diminta ulang kecuali ada koreksi.
+- **J-Land Property:** foto properti asli beserta keterangan; data setiap unit yang akan ditampilkan berupa nama, kategori/jenis properti, deskripsi, harga sewa/jual atau catatan harga, status tersedia, dan urutan tampil. Foto pembuka asli hanya diperlukan jika client ingin mengganti ilustrasi hero. Dua PIC WhatsApp, Instagram, alamat, dan jam buka sudah ada—jangan diminta ulang kecuali ada koreksi. Foto properti yang ada sekarang masih sementara.
+
+**Yang tetap menunggu materi/konfirmasi client:**
+
+- Katalog memakai isian panel yang sudah ada: nama, deskripsi, harga, catatan harga, kategori, urutan, status tersedia, dan foto. Galeri/portfolio memakai foto, keterangan, dan urutan.
+- Foto wakil Ayodya, J-Land, dan Nail's pada halaman induk tetap menunggu foto asli dari client; foto ilustratif hero tidak dipakai untuk mengisi kebutuhan tersebut. Section direksi sudah tersedia sebagai placeholder, tetapi identitas dan foto resminya masih menunggu client.
+- Pertahankan route, otorisasi, alur publikasi, bilingual Ayodya, dan logika panel yang sudah berjalan. Perubahan visual harus diperiksa ulang pada desktop dan mobile setelah foto asli dipasang.
 
 ### Pembaruan 27 Agustus 2026 — Keterbacaan navbar publik
 

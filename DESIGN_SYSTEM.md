@@ -1,5 +1,51 @@
 # DESIGN SYSTEM — J-Corporate Group
 
+## -2. Revisi media client — 9–10 September 2026
+
+Bagian ini adalah tambahan yang mengikat untuk revisi media terbaru. Aturan di
+bawah tidak mengganti identitas visual tiap unit; ia menambahkan tempat foto
+yang konsisten dan mudah dikelola.
+
+- Halaman induk dan setiap anak usaha mendukung satu **foto pembuka** yang
+  dapat dikelola admin. Untuk lima anak usaha, aset bawaan saat ini adalah
+  foto ilustratif fotorealistik yang dibuat khusus sesuai bidang usahanya.
+  Foto ini hanya membangun konteks visual di hero; ia bukan bukti pekerjaan,
+  produk, properti, armada, staf, maupun lokasi asli milik client.
+- Foto pembuka anak usaha memakai sumber lebar `16:9` sebagai **background
+  penuh section hero**, mengikuti interpretasi contoh pada slide 2 revisi
+  client. Foto bukan kartu terpisah di samping teks. Teks berada langsung di
+  atas foto dengan gradasi terang dari sisi kiri pada desktop; objek utama
+  foto dijaga di sisi kanan. Pada mobile, titik fokus foto tetap di kanan dan
+  gradasi menguat ke bagian bawah agar judul serta tombol tetap terbaca.
+- Setiap anak usaha memakai Galeri/Portfolio. Satu foto galeri dapat ditandai
+  **Tampil di halaman induk** dan menjadi gambar kartu unit usaha. Dalam satu
+  unit hanya boleh ada satu foto yang ditandai.
+- Galeri/Portfolio hanya memuat materi asli dari client atau unggahan admin.
+  Foto ilustratif hero tidak boleh dimasukkan ke galeri, katalog, maupun
+  pilihan gambar kartu halaman induk karena ketiganya terbaca sebagai bukti
+  produk/hasil kerja yang benar-benar tersedia.
+- Jika admin sudah memilih foto pembuka sendiri, proses impor tidak boleh
+  menimpanya. Jika foto pembuka atau foto kartu belum tersedia, komposisi lama
+  tetap dipakai; tidak ada placeholder data atau klaim pekerjaan yang dikarang.
+- Materi Sweetness Things dan ngelash.id yang diterima saat ini berbentuk
+  poster vertikal. Poster hanya ditampilkan utuh di galeri dengan rasio
+  portrait; poster tidak otomatis menjadi foto pembuka atau gambar kartu pada
+  halaman induk.
+- Bagian bawah halaman memakai gradasi lembut dari warna dunia masing-masing
+  menuju putih. Gradasi tidak boleh mengurangi keterbacaan isi atau membuat
+  satu warna baru terlihat sebagai warna resmi merek.
+- Desktop memakai teks di sisi kiri di atas background penuh. Mobile
+  menempatkan teks di bagian bawah background yang sama; tidak ada kartu foto
+  terpisah dan tidak ada gulir horizontal.
+- Warna aksen yang sudah tersimpan tetap dipakai sampai client memberikan
+  warna resmi. Foto baru bukan dasar untuk menebak atau mengganti warna merek.
+
+Materi asli yang tersedia: tujuh poster ngelash.id dan empat poster Sweetness
+Things. Materi ini tidak otomatis menjadi item katalog karena hubungan antara
+nama pada poster dan produk/layanan di database belum dikonfirmasi client.
+Lima foto pembuka yang dibuat pada 10 September tetap diberi batas penggunaan
+sebagai ilustrasi hero dan tidak mengubah status materi asli tersebut.
+
 **Dibuat:** 11 Agustus 2026 · **Fase 2**
 **Direvisi:** 12 Agustus 2026 — glassmorphism diperluas ke seluruh aplikasi
 **Direvisi:** 23 Agustus 2026 — **seluruh aplikasi pindah ke arah A+B** (§0), panel admin ikut
@@ -26,7 +72,7 @@ Kelima halaman anak usaha memakai override **Five Editorial Worlds — Luminous 
 
 Aturan yang mengikat untuk homepage induk:
 
-- Urutan section: **Beranda → Tentang → Visi & Misi → Unit Usaha → Hubungi Kami**
+- Urutan section: **Beranda → Tentang → Visi & Misi → Unit Usaha → Direksi → Hubungi Kami**
 - Tipografi tetap **Instrument Serif + Inter Tight**
 - Latar tetap dominan `#FFFFFF`; warna hangat hanya sebagai cahaya ambien tipis
 - Glassmorphism dipakai selektif pada navbar, panggung logo, kartu pernyataan, kartu unit, dan panel kontak
@@ -45,7 +91,8 @@ Komposisi homepage yang disetujui dan tidak boleh dikembalikan ke layout generik
 - Visi & Misi memakai quote visi di kiri dan satu kartu untuk setiap butir misi di kanan; teksnya tidak boleh ditulis ulang
 - Baris indeks bernomor dan label di ujung kanan section tidak dipakai. Setiap section langsung dibuka label garis berukuran `14–16px`: `Tentang Kami`, `Visi`, `Misi`, `Unit Usaha`, atau `Kontak`
 - Headline nama induk di Tentang wajib dua baris: `J-Corporate` lalu `Group`; ukurannya lebih tenang daripada headline hero
-- **Unit Usaha tetap memakai grid kartu compact yang sudah ada**, bukan daftar horizontal panjang dari prototype
+- **Unit Usaha tetap memakai grid kartu compact yang sudah ada**, bukan daftar horizontal panjang dari prototype. Jika ada foto asli yang dipilih admin, foto tersebut menjadi background penuh kartu dengan overlay agar logo, nama, dan CTA tetap terbaca; unit tanpa foto tetap memakai kartu identitas biasa.
+- Direksi memakai satu panel editorial dengan placeholder foto, nama, jabatan, dan profil singkat sampai materi resmi client diterima. Placeholder tidak boleh mengandung nama, foto, atau jabatan rekaan.
 - Hubungi Kami memakai headline editorial dan susunan dua kolom; label garis `Kontak` berada di luar serta di atas panel glassmorphism, sedangkan seluruh akun dan detail kontak tetap berasal dari props Laravel
 - Headline `Hubungi Kami` pada panel kontak induk wajib satu baris di desktop agar bidang atas tidak menyisakan ruang kanan berlebihan. Pada mobile kedua kata kembali bertumpuk supaya tidak menimbulkan overflow
 - Container editorial memakai maksimum `1380px`, sedangkan grid Unit Usaha tetap `max-w-6xl` agar kepadatannya tidak berubah
@@ -72,6 +119,7 @@ Aturan warna untuk setiap child page adalah **55% white canvas, 35% pastel atmos
 
 - **Sweetness Things:** hero memiliki panggung logo bundar dan overlap editorial; katalog tetap pada posisi informasi yang sudah disetujui serta memakai ukuran kartu compact yang sama dengan Nail's by Me
 - **Nail's by Me:** copy lebih sempit, panggung brand lebih lebar, detail nail-tip statis, dan galeri diperlakukan sebagai portfolio presisi dengan semua item tetap seragam
+- **Daftar harga Nail's by Me:** selalu berupa tabel dua kolom tanpa foto pada halaman publik, dengan nama/keterangan di kiri dan harga di kanan. Warna krem-hijau mengikuti materi client, tetapi tipografi tetap memakai sistem website agar mudah dibaca di desktop dan mobile
 - **ngelash.id:** logo menjadi fashion stage di kiri, copy berada di kanan, daftar layanan/harga terasa seperti editorial menu, dan galeri memakai sapuan lengkung tanpa membesarkan item pertama
 - **Ayodya:** headline dan informasi utama tersusun di atas wide route-logo band; layanan menjadi baris operasional horizontal. Switch `ID / EN`, isi bilingual yang sudah disetujui, serta data kontak terstruktur tetap dipertahankan
 - **J-Land:** panggung logo dan copy memakai grid arsitektural; kartu layanan, keunggulan, dan panel lain disusun seperti dossier/modul denah

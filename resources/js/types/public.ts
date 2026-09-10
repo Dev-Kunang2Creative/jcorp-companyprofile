@@ -18,6 +18,8 @@ export type PublicBusiness = {
     tagline: string | null;
     description: string | null;
     logo_url: string | null;
+    /** Foto pembuka yang dikelola dari halaman Profil di panel. */
+    cover_image_url: string | null;
     /**
      * Warna aksen halaman, sudah dipastikan berbentuk #RRGGBB di server
      * (Business::safeAccentColor). Dipasang sebagai CSS custom property

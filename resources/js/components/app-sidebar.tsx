@@ -50,7 +50,7 @@ export function AppSidebar() {
     }
 
     contentNavItems.push({
-        title: 'Kontak & Label',
+        title: 'Profil & Kontak',
         href: profileEdit(),
         icon: Phone,
     });

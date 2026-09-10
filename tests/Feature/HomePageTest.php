@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Business;
+use App\Models\PortfolioItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -202,6 +203,22 @@ class HomePageTest extends TestCase
                 ->where('subsidiaries.1.name', 'Kedua')
                 ->where('subsidiaries.2.name', 'Ketiga')
             );
+    }
+
+    public function test_a_featured_portfolio_photo_reaches_its_home_card(): void
+    {
+        $this->parent();
+        $business = Business::factory()->create(['name' => 'Unit Berfoto']);
+        PortfolioItem::factory()->for($business)->create([
+            'image_path' => 'unit/portfolio/unggulan.webp',
+            'is_featured_on_home' => true,
+        ]);
+
+        $this->get('/')
+            ->assertInertia(fn (Assert $page) => $page->where(
+                'subsidiaries.0.featured_image_url',
+                'http://localhost:8000/storage/unit/portfolio/unggulan.webp',
+            ));
     }
 
     public function test_known_subsidiaries_carry_their_home_sector_labels(): void

@@ -137,6 +137,11 @@ class ClientContentSeeder extends Seeder
             'portfolio_label' => ['Portfolio'],
             'name' => ['J Corp', 'J-Corporette Group'],
             'tagline' => ['Tumbuh Bersama, Melayani Semua'],
+            // Isi lama dari materi Nail's sebelum daftar harga lengkap masuk.
+            // Sekarang keterangan harga berada di tabel, bukan di Kontak.
+            'contact_note' => [
+                'Nail art mulai dari Rp 30.000, harga akhir menyesuaikan tingkat kerumitan desain. Pemesanan lewat chat WhatsApp dengan sistem janji temu (appointment only), dan tersedia home service.',
+            ],
         ];
 
         if (\in_array($current, $defaults[$column] ?? [], true)) {

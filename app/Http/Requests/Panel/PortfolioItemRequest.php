@@ -8,6 +8,13 @@ use Illuminate\Validation\Rule;
 
 class PortfolioItemRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if (! $this->has('is_featured_on_home')) {
+            $this->merge(['is_featured_on_home' => false]);
+        }
+    }
+
     /**
      * Kepemilikan diperiksa di controller lewat Policy — lihat
      * CatalogItemRequest untuk alasannya.
@@ -35,6 +42,7 @@ class PortfolioItemRequest extends FormRequest
                     ->max(ImageService::MAX_UPLOAD_KB),
             ],
             'caption' => ['nullable', 'string', 'max:255'],
+            'is_featured_on_home' => ['required', 'boolean'],
             'sort_order' => ['required', 'integer', 'min:0', 'max:9999'],
         ];
     }
@@ -62,6 +70,7 @@ class PortfolioItemRequest extends FormRequest
         return [
             'image' => 'foto',
             'caption' => 'keterangan',
+            'is_featured_on_home' => 'pilihan tampil di halaman induk',
             'sort_order' => 'urutan',
         ];
     }

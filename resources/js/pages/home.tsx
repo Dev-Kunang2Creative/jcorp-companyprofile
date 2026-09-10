@@ -1,6 +1,7 @@
 import { Head } from '@inertiajs/react';
 import HomeContact from '@/components/public/home/home-contact';
 import HomeHero from '@/components/public/home/home-hero';
+import HomeLeadership from '@/components/public/home/home-leadership';
 import HomeNav from '@/components/public/home/home-nav';
 import type { HomeNavLink } from '@/components/public/home/home-nav';
 import HomeUnitCard from '@/components/public/home/home-unit-card';
@@ -204,6 +205,9 @@ export default function Home({ parent, subsidiaries, contact }: HomeProps) {
                                                 name={subsidiary.name}
                                                 tagline={subsidiary.tagline}
                                                 logoUrl={subsidiary.logo_url}
+                                                featuredImageUrl={
+                                                    subsidiary.featured_image_url
+                                                }
                                                 accentColor={
                                                     subsidiary.accent_color
                                                 }
@@ -218,6 +222,8 @@ export default function Home({ parent, subsidiaries, contact }: HomeProps) {
                             </div>
                         </section>
                     )}
+
+                    <HomeLeadership />
 
                     {contact && (
                         <section

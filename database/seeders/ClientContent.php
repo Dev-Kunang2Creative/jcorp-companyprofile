@@ -343,22 +343,10 @@ class ClientContent
                 'instagram' => 'nails.bymeeeeeee',
                 'tiktok' => 'nails.bymeeeeeee',
 
-                // "Start From 30K" + "Home Service Available" + "Appointment
-                // only" dari INFORMASI LAIN, digabung jadi satu kalimat
-                // pembuka section kontak.
-                //
-                // Harganya ditaruh DI SINI, bukan di `catalog_note`. Alasannya
-                // penting: katalog Nail's by Me masih kosong (rincian tarif
-                // per layanan belum dikirim client), dan section yang kosong
-                // tidak dirender sama sekali (spec §3) — catatan katalog
-                // ikut hilang bersamanya, jadi satu-satunya petunjuk harga
-                // yang diberikan client tidak akan pernah terlihat pengunjung.
-                'contact_note' => 'Nail art mulai dari Rp 30.000, harga akhir menyesuaikan tingkat kerumitan desain. Pemesanan lewat chat WhatsApp dengan sistem janji temu (appointment only), dan tersedia home service.',
+                'contact_note' => 'Pemesanan lewat chat WhatsApp dengan sistem janji temu (appointment only), dan tersedia home service.',
 
-                // `catalog_note` sengaja TIDAK diisi — lihat alasan di atas.
-                // Begitu rincian tarif dikirim client, catatan harga pindah
-                // ke sana dan kalimat kontak dipendekkan lagi.
                 'catalog_label' => 'Layanan & Harga',
+                'catalog_note' => 'Harga di atas berlaku untuk tangan atau kaki, serta bebas pilih warna sesuka hati.',
                 'portfolio_label' => 'Hasil Kerja',
             ],
 
@@ -646,6 +634,34 @@ class ClientContent
                     'price' => null,
                     'price_note' => 'hubungi kami',
                 ],
+            ],
+
+            /*
+             * Daftar harga Nail's by Me dari materi client 10 September 2026.
+             *
+             * Foto sumber hanya menjadi acuan data dan tidak dipublikasikan.
+             * Halaman Nail's menampilkannya sebagai tabel dua kolom. Ejaan
+             * "Frech" pada materi dinormalkan menjadi istilah layanan yang
+             * umum, "French"; angka serta satuan harga tetap disalin apa
+             * adanya.
+             */
+            'nails-by-me' => [
+                [
+                    'name' => 'Nail Art Polos',
+                    'description' => 'Manicure kutikula, vitamin kutikula, dan hand body.',
+                    'price' => 50000,
+                ],
+
+                ['name' => 'Nail Art Ombre', 'price' => 5000, 'price_note' => 'per kuku', 'category' => 'Add ++'],
+                ['name' => 'Nail Art Glitter', 'price' => 3000, 'price_note' => 'per kuku', 'category' => 'Add ++'],
+                ['name' => 'Nail Art Marble', 'price' => 5000, 'price_note' => 'per kuku', 'category' => 'Add ++'],
+                ['name' => 'Nail Art Cat Eye', 'price' => 6000, 'price_note' => 'per kuku', 'category' => 'Add ++'],
+                ['name' => 'Nail Art French', 'price' => 5000, 'price_note' => 'per kuku', 'category' => 'Add ++'],
+                ['name' => 'Nail Art Motif', 'price' => null, 'price_note' => 'Rp 5.000–25.000 per kuku', 'category' => 'Add ++'],
+
+                ['name' => 'Fake Nails', 'price' => 3500, 'price_note' => 'per kuku', 'category' => 'Lainnya'],
+                ['name' => 'Accessories', 'price' => null, 'price_note' => 'Rp 1.000–15.000 per kuku', 'category' => 'Lainnya'],
+                ['name' => 'Remove Nail Art', 'price' => 30000, 'category' => 'Lainnya'],
             ],
 
             /*

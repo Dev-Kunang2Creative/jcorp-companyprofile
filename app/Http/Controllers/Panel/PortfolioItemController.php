@@ -10,6 +10,7 @@ use App\Models\PortfolioItem;
 use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -53,6 +54,7 @@ class PortfolioItemController extends Controller
                 ->map(fn (PortfolioItem $item) => [
                     'id' => $item->id,
                     'caption' => $item->caption,
+                    'is_featured_on_home' => $item->is_featured_on_home,
                     'sort_order' => $item->sort_order,
                     'image_url' => $this->images->url($item->image_path),
                     'thumb_url' => $this->images->url(
@@ -69,10 +71,21 @@ class PortfolioItemController extends Controller
         $this->ensureUsesPortfolio($business);
         $this->authorize('create', [PortfolioItem::class, $business]);
 
-        $business->portfolioItems()->create([
-            ...$request->safe()->except('image'),
-            'image_path' => $this->images->store($request->file('image'), $business->slug),
-        ]);
+        DB::transaction(function () use ($business, $request): void {
+            $attributes = $request->safe()->except('image');
+
+            if ($attributes['is_featured_on_home']) {
+                $business->portfolioItems()->update(['is_featured_on_home' => false]);
+            }
+
+            $business->portfolioItems()->create([
+                ...$attributes,
+                'image_path' => $this->images->store(
+                    $request->file('image'),
+                    "{$business->slug}/portfolio",
+                ),
+            ]);
+        });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Foto portfolio ditambahkan.']);
 
@@ -93,7 +106,16 @@ class PortfolioItemController extends Controller
             );
         }
 
-        $portfolioItem->update($attributes);
+        DB::transaction(function () use ($portfolioItem, $attributes): void {
+            if ($attributes['is_featured_on_home']) {
+                $portfolioItem->business
+                    ->portfolioItems()
+                    ->whereKeyNot($portfolioItem->getKey())
+                    ->update(['is_featured_on_home' => false]);
+            }
+
+            $portfolioItem->update($attributes);
+        });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Foto portfolio diperbarui.']);
 
