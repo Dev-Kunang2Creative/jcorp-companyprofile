@@ -7,7 +7,7 @@
 set -euo pipefail
 
 DEPLOY_PATH="${DEPLOY_PATH:-$HOME/domains/j-corp.id/public_html}"
-PHP="${PHP_BIN:-php8.3}"
+PHP="${PHP_BIN:-php}"
 
 cd "$DEPLOY_PATH"
 
