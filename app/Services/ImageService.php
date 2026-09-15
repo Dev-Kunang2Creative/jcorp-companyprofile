@@ -91,12 +91,12 @@ class ImageService
         $thumbPath = "{$folder}/{$safeName}_thumb.webp";
 
         $web = $this->manager->decodePath($source)
-            ->scaleDown(width: self::WEB_MAX_WIDTH)
-            ->encode(new WebpEncoder(quality: self::WEB_QUALITY));
+            ->scaleDown(self::WEB_MAX_WIDTH)
+            ->encode(new WebpEncoder(self::WEB_QUALITY));
 
         $thumb = $this->manager->decodePath($source)
             ->coverDown(self::THUMB_SIZE, self::THUMB_SIZE)
-            ->encode(new WebpEncoder(quality: self::THUMB_QUALITY));
+            ->encode(new WebpEncoder(self::THUMB_QUALITY));
 
         $disk = Storage::disk('public');
         $disk->put($webPath, (string) $web);
@@ -177,8 +177,7 @@ class ImageService
             return asset($path);
         }
 
-        // Harus disk 'public' secara eksplisit — FILESYSTEM_DISK default-nya
-        // 'local', yang tidak bisa diakses lewat URL sama sekali.
-        return Storage::disk('public')->url($path);
+        // Gunakan asset('storage/...') agar URL selalu mengikuti host & port request aktif
+        return asset('storage/'.ltrim($path, '/'));
     }
 }

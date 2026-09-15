@@ -90,7 +90,7 @@ const ayodyaEnglishContent = {
         {
             title: 'Land Transportation',
             description:
-                'Land delivery using our own fleet, supported by transportation partners. Available fleet: trailer trucks, CDD boxes, fuso boxes, wing boxes, and pickup boxes. Insurance is available for cargo security.',
+                'Land delivery using our own fleet, supported by transportation partners. Available fleet: trailer trucks, CDD boxes, fuso boxes, wing boxes, and closed pickup boxes. Serving corporate logistics as well as student community service (KKN) and relocation transport. Insurance is available for cargo security.',
         },
         {
             title: 'Sea Transportation',
@@ -158,13 +158,37 @@ export function localizeAyodyaCatalog(
         return catalog;
     }
 
-    return catalog.map((item) => ({
-        ...item,
-        description:
-            item.description === 'Melayani Jasa Pickup Box'
-                ? 'Pickup box service.'
-                : item.description,
-    }));
+    return catalog.map((item) => {
+        if (item.name.includes('KKN')) {
+            return {
+                ...item,
+                name: 'Box Truck Rental & Student KKN Transport',
+                description:
+                    'Spacious, fully enclosed box truck fleet, protected from weather. Reliable and trusted choice for student community service (KKN) supplies, campus activity logistics, and boarding house moves.',
+                price_note: null,
+                category: 'Land Fleet',
+            };
+        }
+
+        if (item.name.includes('Charter')) {
+            return {
+                ...item,
+                name: 'Expedition & Logistics Truck Charter',
+                description:
+                    'Box truck fleet rental service for commercial cargo, distribution, and intercity freight across Central Java and beyond with cargo safety assurance.',
+                price_note: null,
+                category: 'Land Fleet',
+            };
+        }
+
+        return {
+            ...item,
+            description:
+                item.description === 'Melayani Jasa Pickup Box'
+                    ? 'Pickup box service.'
+                    : item.description,
+        };
+    });
 }
 
 export function localizeAyodyaContact(

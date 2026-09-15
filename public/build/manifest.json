@@ -362,7 +362,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-mBuclHaQ.css",
+    "file": "assets/app-B2xeBAVG.css",
     "name": "app",
     "names": [
       "app.css"
@@ -371,7 +371,7 @@
     "isEntry": true
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-C-bilDs9.js",
+    "file": "assets/app-6_c0llXU.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -605,7 +605,7 @@
     ]
   },
   "resources/js/pages/public/business.tsx": {
-    "file": "assets/business-BIlujNWU.js",
+    "file": "assets/business-B5jc5V3g.js",
     "name": "business",
     "src": "resources/js/pages/public/business.tsx",
     "isDynamicEntry": true,

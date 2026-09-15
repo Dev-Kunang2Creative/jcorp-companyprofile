@@ -1,4 +1,38 @@
-# Update J-Corporate di Hostinger testing
+# Update J-Corporate di Hostinger
+
+## Produksi: j-corp.id (otomatis lewat CI/CD)
+
+Sejak 15 September 2026 produksi berada di `j-corp.id`, dan **deploy tidak lagi manual**.
+Push ke `main` memicu [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml),
+yang membangun `vendor/` dan aset frontend di GitHub Actions lalu rsync ke server,
+kemudian menjalankan [`deploy/remote-deploy.sh`](remote-deploy.sh) lewat SSH.
+
+| | |
+|---|---|
+| Domain produksi | `j-corp.id` |
+| Docroot | `/home/u713441903/domains/j-corp.id/public_html` |
+| Entry Laravel | `public/` (via `.htaccess` rewrite di root) |
+| PHP | 8.3.33 |
+| Database | `u713441903_jcorp` di `srv1981.hstgr.io:3306` |
+| SSH | `srv1981.hstgr.io` port 65002 |
+
+Dua batasan server yang membentuk desain pipeline ini, jangan dilawan:
+
+- `proc_open` ada di `disable_functions`, jadi **composer tidak bisa jalan di server**.
+  Karena itu `vendor/` dibangun di CI dan dikirim lewat rsync.
+- `symlink` ada di `disable_functions`, jadi **`php artisan storage:link` selalu gagal**.
+  Symlink `public/storage` dibuat dengan `ln -sfn` di `remote-deploy.sh`.
+
+Yang **tidak** ikut rsync dan karenanya aman dari deploy: `.env`, `storage/`, dan
+`public/storage`. Jangan menambahkan ketiganya ke rsync — `--delete` akan menghapus
+upload pengguna dan log.
+
+Bagian di bawah ini adalah runbook manual untuk domain testing lama. Simpan sebagai
+rujukan pemulihan; untuk update rutin produksi, cukup push ke `main`.
+
+---
+
+## Arsip: update manual di domain testing
 
 Diperbarui 28 Agustus 2026. Panduan ini menggantikan asumsi pemasangan awal/database kosong pada versi lama. **Jangan mengosongkan `public_html`, menimpa `.env`, generate APP_KEY, atau menjalankan seeder sebagai update rutin.**
 

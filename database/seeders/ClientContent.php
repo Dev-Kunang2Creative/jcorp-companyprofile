@@ -390,7 +390,7 @@ class ClientContent
                 'featured_services' => [
                     [
                         'title' => 'Land Transportation',
-                        'description' => 'Pengiriman darat dengan armada sendiri, didukung rekan-rekan transportasi. Armada tersedia: truck trailer, CDD box, fuso box, wing box, dan pickup box. Tersedia asuransi untuk keamanan barang.',
+                        'description' => 'Pengiriman darat dengan armada sendiri, didukung rekan-rekan transportasi. Armada tersedia: truck trailer, CDD box, fuso box, wing box, dan pickup box tertutup. Melayani ekspedisi logistik perusahaan hingga sewa angkutan barang KKN mahasiswa dan pindahan. Tersedia asuransi untuk keamanan barang.',
                     ],
                     [
                         'title' => 'Sea Transportation',
@@ -698,6 +698,25 @@ class ClientContent
                 ['name' => 'Single – 3D', 'price' => 60000, 'category' => 'Retouch'],
                 ['name' => 'Special Lash', 'price' => 65000, 'category' => 'Retouch'],
             ],
+
+            'ayodya-logistic' => [
+                [
+                    'name' => 'Sewa Truk Box & Angkutan KKN',
+                    'category' => 'Armada Darat',
+                    'description' => 'Armada truk box tertutup dan berkapasitas besar, aman dari panas dan hujan. Pilihan tepat dan terpercaya untuk pengangkutan barang perlengkapan KKN mahasiswa, logistik kegiatan kampus, maupun pindahan kost/kontrakan.',
+                    'price' => null,
+                    'price_note' => null,
+                    'image_path' => 'ayodya-logistic/armada-truk-box-aul.webp',
+                ],
+                [
+                    'name' => 'Charter Truk Ekspedisi & Logistik',
+                    'category' => 'Armada Darat',
+                    'description' => 'Layanan sewa armada truk box untuk kebutuhan distribusi barang, kargo komersial, maupun pengiriman antar kota di Jawa Tengah dan sekitarnya dengan jaminan keamanan muatan.',
+                    'price' => null,
+                    'price_note' => null,
+                    'image_path' => 'ayodya-logistic/charter-truk-ekspedisi.webp',
+                ],
+            ],
         ];
     }
 
@@ -716,7 +735,7 @@ class ClientContent
      */
     public static function withPortfolio(): array
     {
-        return ['ngelash', 'nails-by-me'];
+        return ['ngelash', 'nails-by-me', 'ayodya-logistic'];
     }
 
     /**
