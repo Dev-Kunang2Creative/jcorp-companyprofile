@@ -52,13 +52,25 @@ jobs:
           npm ci
           npm run build
 
+      # Kunci dikirim sebagai base64 satu baris, bukan PEM multi-baris.
+      # Secret multi-baris gampang rusak tanpa jejak - spasi tersembunyi, CRLF
+      # dari paste lewat browser, atau baris akhir yang hilang - dan semuanya
+      # muncul sebagai "error in libcrypto" yang tidak menunjuk ke penyebabnya.
       - name: Configure SSH
         run: |
           install -m 700 -d ~/.ssh
-          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s' "${{ secrets.SSH_PRIVATE_KEY_B64 }}" | base64 -d > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
+
+          # Gagal di sini dengan pesan yang jelas, bukan di tengah rsync.
+          if ! ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null 2>&1; then
+            echo "::error::SSH_PRIVATE_KEY_B64 tidak menghasilkan kunci yang valid setelah di-decode."
+            echo "Perbarui secret itu dengan keluaran: base64 < id_ed25519 | tr -d '\\n'"
+            exit 1
+          fi
+          echo "Kunci SSH valid."
 
       - name: Upload build to server
         run: |
