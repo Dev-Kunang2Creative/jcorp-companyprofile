@@ -71,6 +71,7 @@ class ClientContentSeeder extends Seeder
             $business->save();
 
             $this->replaceCatalog($business, $slug);
+            $this->purgeLegacyCatalog($business, $slug);
             $this->clearSamplePhotos($business);
 
             $this->command->info("Materi asli {$business->name} dimasukkan.");
@@ -239,6 +240,26 @@ class ClientContentSeeder extends Seeder
      * Yang disapu HANYA yang bertanda SAMPLE_MARKER dan HANYA milik anak
      * usaha ini — produk yang ditambahkan admin sendiri tidak tersentuh.
      */
+    /**
+     * Menghapus permanen item katalog lama yang tercatat di
+     * ClientContent::legacyCatalogNames(). Berbeda dari replaceCatalog yang
+     * hanya menyapu SAMPLE_MARKER, method ini menyasar item nyata yang sudah
+     * tidak relevan — misalnya placeholder sebelum materi asli client masuk.
+     */
+    private function purgeLegacyCatalog(Business $business, string $slug): void
+    {
+        $names = ClientContent::legacyCatalogNames()[$slug] ?? [];
+
+        if ($names === []) {
+            return;
+        }
+
+        CatalogItem::withTrashed()
+            ->where('business_id', $business->id)
+            ->whereIn('name', $names)
+            ->forceDelete();
+    }
+
     private function replaceCatalog(Business $business, string $slug): void
     {
         CatalogItem::withTrashed()

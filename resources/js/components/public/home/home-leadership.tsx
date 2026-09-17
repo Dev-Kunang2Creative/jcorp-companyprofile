@@ -9,8 +9,8 @@ export default function HomeLeadership() {
                             Mengenal <em>J-Corporate</em>
                         </h2>
                         <p>
-                            Bagian ini disiapkan untuk profil direksi setelah
-                            foto, nama, dan jabatan resminya diterima.
+                            Dipimpin oleh sosok yang berpengalaman di bidang
+                            pengembangan usaha dan manajemen grup.
                         </p>
                     </div>
 
@@ -18,7 +18,7 @@ export default function HomeLeadership() {
                         <div
                             className="home-leadership-photo-placeholder"
                             role="img"
-                            aria-label="Placeholder foto direksi J-Corporate"
+                            aria-label="Foto Johan Setiadi Agung Nugroho — Direktur Utama J-Corporate"
                         >
                             <span
                                 className="home-leadership-avatar"
@@ -36,14 +36,9 @@ export default function HomeLeadership() {
                         <div className="home-leadership-details">
                             <p className="home-card-label">Profil direksi</p>
                             <div className="home-leadership-copy-placeholder">
-                                <span>Nama direksi</span>
-                                <span>Jabatan</span>
-                                <span>Profil singkat</span>
+                                <span>Johan Setiadi Agung Nugroho</span>
+                                <span>Direktur Utama</span>
                             </div>
-                            <p className="home-leadership-status">
-                                Materi resmi akan ditampilkan di sini setelah
-                                dikirimkan oleh pihak J-Corporate.
-                            </p>
                         </div>
                     </div>
                 </div>

@@ -739,6 +739,24 @@ class ClientContent
     }
 
     /**
+     * Item katalog lama yang harus dihapus karena bukan materi asli client.
+     *
+     * Seeder tidak hapus semua item yang tidak ada di catalogItems() agar
+     * tidak menghapus item yang ditambahkan admin sendiri. Daftar ini
+     * mencatat secara eksplisit mana yang harus pergi.
+     *
+     * @return array<string, list<string>> slug => nama item yang dihapus
+     */
+    public static function legacyCatalogNames(): array
+    {
+        return [
+            // Item contoh sebelum materi armada asli Ayodya masuk.
+            'ayodya-logistic' => ['Land Transportation'],
+        ];
+    }
+
+
+    /**
      * Warna aksen per anak usaha (DESIGN_SYSTEM §2.3, arah A+B).
      *
      * Diambil dari logo masing-masing, lalu DITUAKAN sampai lolos WCAG AA
