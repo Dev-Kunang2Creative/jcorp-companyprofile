@@ -99,6 +99,18 @@ class ImportClientMediaCommand extends Command
                 'caption' => 'Brownchio',
             ],
         ],
+        'ayodya-logistic' => [
+            [
+                'source' => 'images/ayodya/aul-truck-box.jpg',
+                'name' => 'armada-truk-box-aul',
+                'caption' => 'Truk Box AUL — Armada Darat',
+            ],
+            [
+                'source' => 'images/ayodya/aul-charter-truck.jpg',
+                'name' => 'charter-truk-ekspedisi',
+                'caption' => 'Charter Truk Ekspedisi — Armada Darat',
+            ],
+        ],
         'ngelash' => [
             [
                 'source' => 'images/ngelash/4d4d405e-b7f2-4eb8-bb8b-4b7d1ddffe8a.jpg',
@@ -268,7 +280,7 @@ class ImportClientMediaCommand extends Command
             }
         });
 
-        $this->info('Materi client berhasil diimpor: 4 foto Sweetness Things dan 7 foto ngelash.id.');
+        $this->info('Materi client berhasil diimpor: 4 foto Sweetness Things, 7 foto ngelash.id, dan 2 foto armada Ayodya Logistic.');
         $this->info('Lima ilustrasi hero diterapkan tanpa memasukkannya sebagai portfolio atau katalog.');
         $this->info('Foto Browncho dan Volume Cat Eye dipilih sebagai latar kartu halaman induk.');
         $this->info('Foto lama ngelash disembunyikan dari galeri; unit tanpa foto tetap tanpa placeholder.');

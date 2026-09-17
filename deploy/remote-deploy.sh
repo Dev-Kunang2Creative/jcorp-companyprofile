@@ -26,6 +26,15 @@ ln -sfn "$DEPLOY_PATH/storage/app/public" "$DEPLOY_PATH/public/storage"
 
 "$PHP" artisan migrate --force --no-interaction
 
+# Konversi foto client (truk Ayodya dll.) ke WebP di storage.
+# Perintah ini idempoten — aman dijalankan ulang di setiap deploy.
+"$PHP" artisan jcorp:import-client-media
+
+# Seed konten client (katalog, profil) ke database.
+# ClientContentSeeder idempoten: hanya mengisi/memperbarui data yang
+# masih kosong atau masih berisi teks contoh.
+"$PHP" artisan db:seed --class=ClientContentSeeder --force --no-interaction
+
 "$PHP" artisan optimize:clear
 "$PHP" artisan config:cache
 "$PHP" artisan route:cache
